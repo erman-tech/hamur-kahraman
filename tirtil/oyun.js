@@ -1,6 +1,6 @@
 /* Hamur Kahraman 2: Uzaylı Tırtıl — tek bölüm. Tek dosya, kütüphane yok.
    Akış: kapak → açılış filmi → kahraman seçimi → oyun → sonuç.
-   Oyun: uzaylı tırtıl Vıcık labirentten gelip hamur lavı iter; lav aradaki kapıyı, kapı da kahramanı sağdaki tuzağa
+   Oyun: uzaylı tırtıl Zorgo labirentten gelip hamur lavı iter; lav aradaki kapıyı, kapı da kahramanı sağdaki tuzağa
    (kodda lav topakları eski adıyla "tas" diye geçer)
    (yerde bekleyen uzay gemisine) doğru sürükler. Yerin altındaki şeker tahtasında bir şeker komşusuyla yer değiştirir (kaydırarak); en az üç aynı şeker
    yan yana ya da alt alta gelince patlarlar; açılan boşluğa taşlar akar, tahtanın altına kadar yol açılırsa suya dökülür. Taş azaldıkça itme
@@ -20,7 +20,9 @@
   addEventListener("resize", olcekle); olcekle();
 
   // ---------- varlıklar ----------
-  var KAHRAMANLAR = ["e1", "e2", "e3", "e4", "k1", "k2", "k3", "k4"];
+  var KAHRAMANLAR = ["e1", "e2", "e3", "e4", "k1", "k2", "k3", "k4"], ACIK = [];
+  try { ACIK = JSON.parse(localStorage.getItem("hk_kostum") || "[]").filter(function (x) { return ["k", "s", "kl", "sl"].indexOf(x) >= 0; }); } catch (e) { ACIK = []; }
+  if (ACIK.length) KAHRAMANLAR = ACIK; // 1. oyunda açılan kostümler varsa yalnız onlar seçilir
   var SEKER = ["j_ayi", "j_kola", "s_lolipop", "j_yumurta", "s_yildiz"];   // beş çeşit: eşleşme bulmak kolay olsun (s_mor sonraki bölümlere)           // jelibonlar ve şekerler
   var SRENK = ["#e23b2e", "#8a5a2b", "#2f8fe0", "#fff3c4", "#f7d514", "#8d4fc4"];
   var R = {};
@@ -66,7 +68,7 @@
   ["touchstart", "mousedown", "keydown"].forEach(function (o) { addEventListener(o, sesAc, true); });
 
   // ---------- ekranlar ----------
-  var D = { ekran: "kapak", kahraman: "e4", oyun: null };
+  var D = { ekran: "kapak", kahraman: ACIK.length ? ACIK[ACIK.length - 1] : "e4", oyun: null };
   function ekranAc(ad) {
     D.ekran = ad;
     ["kapak", "secim", "sonuc"].forEach(function (e) { $(e).classList.toggle("acik", e === ad); });
@@ -84,7 +86,8 @@
   $("gec").addEventListener("click", filmBitti);
   function secimAc() { muzikDur(); ekranAc("secim"); cal("p_sec", 1); }
   KAHRAMANLAR.forEach(function (k) {
-    var d = document.createElement("button"); d.style.backgroundImage = "url(varlik/kart_" + k + ".jpg)"; d.setAttribute("aria-label", "Kahraman " + k);
+    var d = document.createElement("button"); d.style.backgroundImage = "url(varlik/kart_" + k + ".jpg)";
+    if (ACIK.length) { d.style.backgroundImage = "url(varlik/" + k + "_dur.png)"; d.style.backgroundSize = "auto 88%"; d.style.backgroundColor = "#2c3f8f"; } d.setAttribute("aria-label", "Kahraman " + k);
     d.addEventListener("click", function () { D.kahraman = k; oyunBaslat(); });
     $("kartlar").appendChild(d);
   });
@@ -98,7 +101,7 @@
     film.src = "video/giris.mp4"; var p = film.play();
     if (p && p.then) p.then(function () { filmBitince = secimAc; ekranAc("film"); }).catch(function () {});
   }, 200);
-  $("kacis").addEventListener("click", function () { $("sonucYazi").textContent = "Uzaylı gezegeninden kaçış oyunu hazırlanıyor. Çok yakında!"; });
+  $("kacis").addEventListener("click", function () { muzikDur(); location.href = "../kacis/index.html?k=" + D.kahraman + "&seri=" + (BAG.get("seri") === "kotu" ? "kotu" : "iyi"); });
 
   // ---------- bölüm ölçüleri ----------
   var H = 78, SUT = 8, SAT = 11;                        // şeker hücresi, tahta sütun/satır
@@ -361,8 +364,8 @@
     var o = D.oyun; if (o.durum === "bitti") return;
     o.yildiz = kazandi ? (o.kalan > 0.4 ? 3 : o.kalan > 0.15 ? 2 : 1) : 0; o.durum = "bitti"; muzikDur();
     var son = D.bolum >= BOLUM_SAYISI; D.sonraki = kazandi && !son;
-    $("sonucBaslik").textContent = !kazandi ? "Portal seni Vıcık'ın gezegenine götürdü!" : son ? "Vıcık'ı beş kez yendin!" : "Bölüm " + D.bolum + " tamam!";
-    $("sonucYazi").textContent = !kazandi ? "Gezegenden kaçmayı dene ya da yeni bir oyuna başla." : son ? "Kendini kurtardın. Londra'yı kurtarmaya şimdi hazır mısın?" : "Vıcık sudan çıktı, daha hızlı geliyor! Sıradaki bölüm: " + (D.bolum + 1) + " / " + BOLUM_SAYISI;
+    $("sonucBaslik").textContent = !kazandi ? "Portal seni Zorgo'nun gezegenine götürdü!" : son ? "Zorgo'yu beş kez yendin!" : "Bölüm " + D.bolum + " tamam!";
+    $("sonucYazi").textContent = !kazandi ? "Gezegenden kaçmayı dene ya da yeni bir oyuna başla." : son ? "Kendini kurtardın. Londra'yı kurtarmaya şimdi hazır mısın?" : "Zorgo sudan çıktı, daha hızlı geliyor! Sıradaki bölüm: " + (D.bolum + 1) + " / " + BOLUM_SAYISI;
     $("kacis").style.display = kazandi ? "none" : ""; $("yeni").style.display = kazandi ? "none" : "";
     $("londraGit").style.display = kazandi && son ? "" : "none";
     $("tekrar").style.display = D.sonraki ? "" : "none"; $("tekrar").textContent = "Sıradaki bölüm ▶";
@@ -456,7 +459,7 @@
       var pf = ((poz * 0.37 + pk * 0.2) % 1), px0 = BX + YS0 * H - 26;
       kutuResim((pk + poz) % 2 ? R.lav1 : R.lav2, px0 + pf * 70, LY2 - 6 - Math.sin(pf * Math.PI) * 26 + (pk % 2) * 6, 22 + pf * 16);
     }
-    // tırtıl Vıcık: labirentte kuyruktan başa; taşlara varınca iter
+    // tırtıl Zorgo: labirentte kuyruktan başa; taşlara varınca iter
     var ts = UZ * yuru + (itiyor && poz % 3 === 0 ? 5 : 0), basR = R.bas, baci = 0, bdy = 0, topR = [R.top_mor, R.top_turuncu, R.top_mavi, R.top_sari], tp;
     if (o.durum === "kacti") { basR = R.bas_sersem; ts = UZ - TUNEL * 0.3 + Math.floor(o.bitis * POZ) / POZ * 520; }
     var kenar = BX + YS0 * H + 36, kyer = function (u) { var q = yer(u); return o.durum === "kacti" && q.x > kenar ? { x: kenar + 20, y: LY2 + (q.x - kenar), yon: 1 } : q; };
@@ -489,9 +492,9 @@
     c.fillStyle = o.itme > 0.62 ? "#ff5a4a" : o.itme > 0.35 ? "#f7b21e" : "#5fd16a"; yuvarlak(20, gy + 8, Math.max(18, 300 * (1 - o.itme)), 18, 9); c.fill();
     yazi("Kalan lav: " + kalanTas(o), 360, gy + 22, 20); yazi("Bölüm " + D.bolum + " / " + BOLUM_SAYISI, 580, gy + 22, 20, "#ffd23a");
     c.textAlign = "center";
-    if (o.durum === "oyna" && o.ipucu > 0) { yazi("Vıcık lav püskürtüyor! Kuyu dolarsa lav seni portala iter!", G / 2, YER + 34, 23, "#ffd23a"); yazi("Lavın altındaki şekerleri patlat: lav suya dökülsün!", G / 2, YER + 68, 22); }
+    if (o.durum === "oyna" && o.ipucu > 0) { yazi("Zorgo lav püskürtüyor! Kuyu dolarsa lav seni portala iter!", G / 2, YER + 34, 23, "#ffd23a"); yazi("Lavın altındaki şekerleri patlat: lav suya dökülsün!", G / 2, YER + 68, 22); }
     else if (panik && poz % 2) yazi("Tuzağa çok yaklaştın!", G / 2, YER + 40, 36, "#ffd23a");
-    if (o.durum === "kacti") yazi("Vıcık suya düştü! Kurtuldun!", G / 2, YER + 40, 36, "#ffd23a");
+    if (o.durum === "kacti") yazi("Zorgo suya düştü! Kurtuldun!", G / 2, YER + 40, 36, "#ffd23a");
     if (o.durum === "yakalandi") yazi("Eyvah! Portal seni içine çekti!", G / 2, YER + 40, 32, "#ffd23a");
     if (panik && poz % 4 < 2) { // gerilim: kenarlar kızarır
       var kz = c.createRadialGradient(G / 2, Y / 2, 320, G / 2, Y / 2, 820); kz.addColorStop(0, "rgba(255,40,30,0)"); kz.addColorStop(1, "rgba(255,40,30,.3)");

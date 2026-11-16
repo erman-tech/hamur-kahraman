@@ -37,6 +37,11 @@
   #yildizlar { font-size: 80px; letter-spacing: 12px; margin-bottom: 22px; color: #ffd23a; text-shadow: 0 6px 0 rgba(0,0,0,.4); min-height: 20px; }
   #sonuc .dugmeler { display: flex; flex-direction: column; gap: 26px; }
   #sonuc .hamur { font-size: 30px; padding: 16px 34px; }
+  /* Telefon oyunun yönünde tutulmuyorsa "çevir" işareti */
+  #dondur { position: fixed; inset: 0; z-index: 50; background: #101a3a; color: #fff; display: none; align-items: center; justify-content: center;
+    flex-direction: column; text-align: center; font-size: 26px; font-family: inherit; }
+  #dondur .tel { width: 70px; height: 120px; border: 8px solid #ffd23a; border-radius: 16px; margin-bottom: 26px; animation: don 1.6s ease-in-out infinite; }
+  @keyframes don { 0%, 20% { transform: rotate(90deg); } 60%, 100% { transform: rotate(0deg); } }
 </style>
 </head>
 <body>
@@ -60,7 +65,7 @@
     <div class="dugmeler">
       <button id="londraGit" class="hamur kirmizi">✈ Londra'ya hazırım!</button>
       <button id="tekrar" class="hamur sari">Baştan başla</button>
-      <button id="kacis" class="hamur kirmizi">Gezegenden kaçış (yakında)</button>
+      <button id="kacis" class="hamur kirmizi">🚀 Gezegenden kaçış</button>
       <button id="yeni" class="hamur sari">Yeni oyun</button>
       <button id="degistir" class="hamur mavi">Kahraman değiştir</button>
     </div>
@@ -68,6 +73,8 @@
   <button id="karistir" class="hamur mavi">🔀 Karıştır</button>
   <button id="gec" class="hamur sari">Geç ▶</button>
 </div>
+<div id="dondur"><div class="tel"></div>Bu bölüm dik oynanır.<br>Telefonu dik tut!</div>
+<script>(function () { var dik = true; function k() { var y = innerWidth > innerHeight * 1.15, d = innerHeight > innerWidth * 1.15; document.getElementById("dondur").style.display = ("ontouchstart" in window) && (dik ? y : d) ? "flex" : "none"; } addEventListener("resize", k); k(); })();</script>
 <script src="oyun.js"></script>
 </body>
 </html>

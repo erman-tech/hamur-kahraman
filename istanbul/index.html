@@ -45,6 +45,11 @@
   #dokunma { display: none; pointer-events: none; }
   #dokunma button { position: absolute; bottom: 24px; width: 110px; height: 110px; border-radius: 55px; border: 0; font-size: 50px; color: #fff;
     background: rgba(20,30,70,.55); pointer-events: auto; touch-action: none; }
+  /* Telefon oyunun yönünde tutulmuyorsa "çevir" işareti */
+  #dondur { position: fixed; inset: 0; z-index: 50; background: #101a3a; color: #fff; display: none; align-items: center; justify-content: center;
+    flex-direction: column; text-align: center; font-size: 26px; font-family: inherit; }
+  #dondur .tel { width: 70px; height: 120px; border: 8px solid #ffd23a; border-radius: 16px; margin-bottom: 26px; animation: don 1.6s ease-in-out infinite; }
+  @keyframes don { 0%, 20% { transform: rotate(0deg); } 60%, 100% { transform: rotate(90deg); } }
 </style>
 </head>
 <body>
@@ -81,10 +86,13 @@
     <button data-tus="sol" style="left:24px">◀</button>
     <button data-tus="sag" style="left:150px">▶</button>
     <button data-tus="ates" style="right:150px">✸</button>
+    <button data-tus="zaman" id="zamanD" style="right:276px;display:none">⏱</button>
     <button data-tus="yukari" style="right:24px">▲</button>
   </div>
   <button id="gec" class="hamur sari">Geç ▶</button>
 </div>
+<div id="dondur"><div class="tel"></div>Bu bölüm yatay oynanır.<br>Telefonu yan çevir!</div>
+<script>(function () { var dik = false; function k() { var y = innerWidth > innerHeight * 1.15, d = innerHeight > innerWidth * 1.15; document.getElementById("dondur").style.display = ("ontouchstart" in window) && (dik ? y : d) ? "flex" : "none"; } addEventListener("resize", k); k(); })();</script>
 <script src="oyun.js"></script>
 </body>
 </html>
