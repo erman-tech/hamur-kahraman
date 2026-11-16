@@ -249,3 +249,4 @@ Bilinenler: zorluk bir çocukla denenmedi (otomatik oyuncu iki saniyede bir haml
 - Gezegenden Kaçış: lav tek dokunuşta oyunu bitirir (bütün canlar gider); 3 can yalnız canavarlar için. Zorluk bu kuralla yeniden ölçülmedi.
 - Taraf kilidi: ilk seçim `localStorage hk_taraf`'a yazılır; sonraki girişlerde soru sorulmaz, "Diğer tarafı dene" düğmesi kalktı. Tırtıl ve Kaçış yalnız o tarafın kostümlerini gösterir.
 - Kostüm, şehrin kralı yenilince açılır (eskiden şehre giderken açılıyordu). İstanbul kostümü seçimle birlikte açık.
+- Ana ekrana Tokyo bağlantısı ve "🧪 Test: tüm bölümler" menüsü: `istanbul/index.html?test=<istanbul|londra|tokyo>&seri=<iyi|kotu>` bölümü doğrudan açar (taraf kilidine ve kostüm kaydına dokunmaz), `tirtil/index.html?bolum=1..5`, ve taraf/kostüm sıfırlama bağlantısı. Yayına çıkmadan önce menü kaldırılmalı.

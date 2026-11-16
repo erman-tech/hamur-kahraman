@@ -98,7 +98,7 @@
   $("tekrar").addEventListener("click", function () { if (D.sonraki) D.bolum = (D.bolum || 1) + 1; D.sonraki = false; oyunBaslat(); });
   $("yeni").addEventListener("click", function () { muzikDur(); location.href = "../index.html"; });
   $("degistir").addEventListener("click", secimAc);
-  var BAG = new URLSearchParams(location.search); // 1. oyundan "İstanbul'da kalacağım" ile gelindiyse seri taşınır
+  var BAG = new URLSearchParams(location.search); if (+BAG.get("bolum")) D.bolum = +BAG.get("bolum"); // test: ?bolum=1..5 // 1. oyundan "İstanbul'da kalacağım" ile gelindiyse seri taşınır
   $("londraGit").addEventListener("click", function () { muzikDur(); location.href = "../istanbul/index.html?londra=1&seri=" + (BAG.get("seri") === "kotu" ? "kotu" : "iyi"); });
   if (BAG.get("baglanti") === "1") setTimeout(function () { // film kendiliğinden başlasın; tarayıcı sesi engellerse kapak kalır
     film.src = "video/giris.mp4"; var p = film.play();

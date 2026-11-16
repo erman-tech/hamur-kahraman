@@ -23,6 +23,7 @@
     box-shadow: 0 6px 0 rgba(0,0,0,.35), inset 0 -5px 0 rgba(0,0,0,.18), inset 0 4px 0 rgba(255,255,255,.28); }
   .tek { max-width: 760px; margin: 0 auto; } .tek .yazi { text-align: center; } .tek .oyna { font-size: 30px; padding: 14px 44px; margin-bottom: 14px; }
   p.bolum { text-align: center; margin-top: 26px; font-size: 17px; opacity: .85; } p.bolum a { color: #ffd23a; }
+  .test { max-width: 760px; margin: 22px auto 0; background: rgba(0,0,0,.25); border-radius: 22px; padding: 12px 20px; font-size: 18px; } .test summary { cursor: pointer; color: #ffd23a; } .test a { color: #ffd23a; } .test p { margin: 10px 0; }
   .imza { text-align: center; margin-top: 34px; font-size: 20px; color: #ffd23a; }
 </style>
 </head>
@@ -36,7 +37,13 @@
       <p>İstanbul'u kurtar. Sonra karar senin: Londra'ya uç, ya da İstanbul'da kal ve uzaydan senin için gelen tırtılla karşılaş.</p></div>
     </a>
   </div>
-  <p class="bolum">Bölüme doğrudan git: <a href="istanbul/index.html">İstanbul</a> · <a href="tirtil/index.html">Uzaylı Tırtıl</a> · <a href="kacis/index.html">Gezegenden Kaçış</a> · <a href="istanbul/index.html?londra=1">Londra</a></p>
+  <p class="bolum">Bölüme doğrudan git: <a href="istanbul/index.html">İstanbul</a> · <a href="tirtil/index.html">Uzaylı Tırtıl</a> · <a href="kacis/index.html">Gezegenden Kaçış</a> · <a href="istanbul/index.html?londra=1">Londra</a> · <a href="istanbul/index.html?test=tokyo">Tokyo</a></p>
+  <details class="test"><summary>🧪 Test: tüm bölümler</summary>
+    <p>Kırmızı: <a href="istanbul/index.html?test=istanbul&seri=iyi">İstanbul</a> · <a href="istanbul/index.html?test=londra&seri=iyi">Londra</a> · <a href="istanbul/index.html?test=tokyo&seri=iyi">Tokyo</a></p>
+    <p>Siyah: <a href="istanbul/index.html?test=istanbul&seri=kotu">İstanbul</a> · <a href="istanbul/index.html?test=londra&seri=kotu">Londra</a> · <a href="istanbul/index.html?test=tokyo&seri=kotu">Tokyo</a></p>
+    <p>Uzaylı Tırtıl: <a href="tirtil/index.html?bolum=1">1</a> · <a href="tirtil/index.html?bolum=2">2</a> · <a href="tirtil/index.html?bolum=3">3</a> · <a href="tirtil/index.html?bolum=4">4</a> · <a href="tirtil/index.html?bolum=5">5</a> &nbsp; <a href="kacis/index.html">Gezegenden Kaçış</a></p>
+    <p><a href="#" onclick="localStorage.removeItem('hk_taraf');localStorage.removeItem('hk_kostum');this.textContent='Sıfırlandı ✔';return false">Tarafı ve kostümleri sıfırla</a></p>
+  </details>
   <div class="imza">designed by Can Ateş Ünal</div>
 </body>
 </html>

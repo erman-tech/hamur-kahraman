@@ -112,7 +112,11 @@
     kostumAc(deger === "iyi" ? "k" : "s");
     filmOynat(deger === "iyi" ? "donusum_kirmizi" : "donusum_siyah", oyunBaslat);
   }
-  $("basla").addEventListener("click", function () { filmOynat("giris", function () { var t = tarafOku(); if (t) sec(t); else secimEkrani(); }); });
+  var TEST = new URLSearchParams(location.search).get("test"); // test: ?test=<şehir>&seri=iyi|kotu → o bölüm doğrudan açılır, taraf kilidine dokunmaz
+  $("basla").addEventListener("click", function () {
+    if (SEHIRLER[TEST]) { D.secim = new URLSearchParams(location.search).get("seri") === "kotu" ? "kotu" : "iyi"; D.sehir = TEST; oyunBaslat(); return; }
+    filmOynat("giris", function () { var t = tarafOku(); if (t) sec(t); else secimEkrani(); }); });
+  if (SEHIRLER[TEST]) $("basla").textContent = "▶ TEST: " + SEHIRLER[TEST].ad;
   $("evet").addEventListener("click", function () { sec("iyi"); });
   $("hayir").addEventListener("click", function () { sec("kotu"); });
   $("tekrar").addEventListener("click", function () { oyunBaslat(); });
@@ -372,7 +376,7 @@
       if (!vurdu && kr && !kr.yenildi && o.kralGeldi && Math.abs(m.x - kr.x) < kr.g / 2 && m.y > kr.y - kr.y_) {
         vurdu = true; kr.can--; kr.vurSn = 0.3; cal("e_pop"); parca(o, m.x, m.y, D.secim === "iyi" ? "#ffffff" : "#ff3030", 8);
         if (kr.can <= 0) {
-          kr.yenildi = true; kostumAc(sehir().on[D.secim].replace("_", "")); o.bitti = "zafer"; // kostüm, şehri bitirince açılır
+          kr.yenildi = true; if (!SEHIRLER[TEST]) kostumAc(sehir().on[D.secim].replace("_", "")); o.bitti = "zafer"; // kostüm, şehri bitirince açılır
            o.bitisSayac = 3.4; o.meteorlar.length = 0;
           cal("e_zafer", 0.8); setTimeout(function () { cal(sehir().zafer || (D.secim === "iyi" ? "a_kazandin_c" : "a_kazandin_u"), 1); }, 900); mesajVer("Tebrikler! " + ad() + ", " + sehir().eki + " kurtardı!", 4);
           parca(o, kr.x, kr.y - 100, "#ffd23a", 40);
