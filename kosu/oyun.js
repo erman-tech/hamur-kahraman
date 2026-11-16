@@ -150,9 +150,15 @@
     // engeller: uzaktan yakına
     var sirali = o.engeller.slice().sort(function (a, b) { return b.z - a.z; }), kahCizildi = false;
     function kahraman() {
-      var kx = G / 2 + o.sx * SERIT, ky = TABAN - o.zy * 0.75, ad = o.zy > 5 ? "_zip" : o.kay > 0 ? "_kay" : (poz % 2 ? "_k1" : "_k2");
+      var kx = G / 2 + o.sx * SERIT, ky = TABAN - o.zy * 0.75, kos = o.zy <= 5 && !(o.kay > 0),
+        faz = Math.floor(o.yol / 150) % 4,   // adım yola bağlı (hız artınca adım da hızlanır): sol adım, uçuş, sağ adım (ayna), uçuş (ayna)
+        ad = o.zy > 5 ? "_zip" : o.kay > 0 ? "_kay" : (faz % 2 ? "_k2" : "_k1"), ayna = kos && faz >= 2;
+      if (kos && faz % 2) ky -= 14;          // uçuş karesinde gövde yükselir, ayak yerden kesilir
       c.fillStyle = "rgba(20,15,40,.35)"; c.beginPath(); c.ellipse(kx, TABAN + 6, 70 - Math.min(35, o.zy / 8), 16, 0, 0, 7); c.fill();
-      if (!(o.dokunulmaz > 0 && poz % 2)) resim(R[K + ad], kx, ky + (ad === "_kay" ? 10 : 0), ad === "_kay" ? 190 : ad === "_zip" ? 270 : 290);
+      if (!(o.dokunulmaz > 0 && poz % 2)) {
+        c.save(); c.translate(kx, 0); if (ayna) c.scale(-1, 1);
+        resim(R[K + ad], 0, ky + (ad === "_kay" ? 10 : 0), ad === "_kay" ? 190 : ad === "_zip" ? 270 : 290); c.restore();
+      }
     }
     for (i = 0; i < sirali.length; i++) {
       var e = sirali[i];

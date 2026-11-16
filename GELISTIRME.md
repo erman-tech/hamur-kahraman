@@ -280,3 +280,4 @@ Bilinenler: zorluk bir çocukla denenmedi (otomatik oyuncu iki saniyede bir haml
 - Ölçüler: blok 40, tahta 16, kat 56 (`B`, `TH`, `KAT`); can taş 2, tahta 1, jöle 1, Zorgo 3. Simit kırdığı parçanın içinden geçer. Tahta, ağırlık merkezi desteklerinin arasındaysa durur.
 - Robot (12'şer oyun, uzaylıya nişan): %3 hata 6/12, %8 hata 3/12, %20 hata 0/12; hep 5 simitle. Alttaki sütunlara atan robot 0–1/12. Yani zor; 5'ten az simitle yıkan robot olmadı. Gerçek parmakla ve çocukla denenmedi.
 - Arka plan yeni (`kaynak/arka2.png`, 21:9; oyunda 150–1430 arası kesit). Film son karesi de yenilendi.
+- Papağanı Kurtar: koşu döngüsü dört adım (sol adım, uçuş, sağ adım, uçuş); sağ adımlar eldeki iki pozun aynası, adım hızı kat edilen yola bağlı (`faz = yol/150`), uçuş karesinde gövde 14 px yükselir. Yeni poz üretilmedi (Higgsfield denemesi eski sayfayı kopyaladı).
