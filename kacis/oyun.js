@@ -80,7 +80,8 @@
   });
   $("tekrar").addEventListener("click", function () { oyunBaslat(); });
   $("yeni").addEventListener("click", function () { muzikDur(); location.href = "../index.html"; });
-  $("londraGit").addEventListener("click", function () { muzikDur(); location.href = "../istanbul/index.html?londra=1&seri=" + SERI + (SONRA ? "&don=" + SONRA : ""); });
+  $("londraGit").addEventListener("click", function () { muzikDur(); location.href = FINALDEN ? "../tirtil/index.html?baglanti=1&final=1&seri=" + SERI : "../istanbul/index.html?londra=1&seri=" + SERI + (SONRA ? "&don=" + SONRA : ""); });
+  var FINALDEN = BAG.get("final") === "1"; if (FINALDEN) $("londraGit").textContent = "▶ Tırtıl görevine dön"; // şehirler bittikten sonra portala düşüldüyse: kaçınca Londra değil, tırtıl görevi sürer
   var SONRA = BAG.get("sonra") === "tokyo" ? "tokyo" : ""; if (SONRA) $("londraGit").textContent = "✈ Tokyo'ya hazırım!"; if (SONRA) document.querySelector("#kapak h2").textContent = "Zorgo'nun UFO'su seni gezegenine ışınladı. Platformlara zıpla, yukarıdaki portala ulaş. Lav yükseliyor!"; // Londra'dan eve dönerken kaçırıldıysa: kaçınca Tokyo görevi sorulur
 
   // ---------- bölüm ----------
@@ -129,7 +130,7 @@
   function sonucGoster() {
     var o = D.oyun, kazandi = o.durum === "kazandi"; o.durum = "bitti";
     $("sonucBaslik").textContent = kazandi ? "Portaldan geçtin, eve döndün!" : (o.neden || "Lav seni yakaladı!");
-    $("sonucYazi").textContent = kazandi ? "Zorgo'nun gezegeninden kaçtın. " + o.kristal + " kristal topladın. " + (SONRA ? "Tokyo'yu" : "Londra'yı") + " kurtarmaya şimdi hazır mısın?" : "Portala " + Math.max(0, Math.round((YUKSEKLIK + o.k.y) / 100)) + " adım kalmıştı. Bir daha dene!";
+    $("sonucYazi").textContent = kazandi ? "Zorgo'nun gezegeninden kaçtın. " + o.kristal + " kristal topladın. " + (FINALDEN ? "Tırtıl görevine devam etmeye hazır mısın?" : (SONRA ? "Tokyo'yu" : "Londra'yı") + " kurtarmaya şimdi hazır mısın?") : "Portala " + Math.max(0, Math.round((YUKSEKLIK + o.k.y) / 100)) + " adım kalmıştı. Bir daha dene!";
     $("londraGit").style.display = kazandi ? "" : "none"; $("tekrar").style.display = kazandi ? "none" : "";
     ekranAc("sonuc"); cal(kazandi ? "p_kazandin" : "p_kaybettin", 1);
   }

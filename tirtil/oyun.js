@@ -105,7 +105,7 @@
     film.src = "video/giris.mp4"; var p = film.play();
     if (p && p.then) p.then(function () { filmBitince = secimAc; ekranAc("film"); }).catch(function () {});
   }, 200);
-  $("kacis").addEventListener("click", function () { muzikDur(); location.href = "../kacis/index.html?k=" + D.kahraman + "&seri=" + (BAG.get("seri") === "kotu" ? "kotu" : "iyi"); });
+  $("kacis").addEventListener("click", function () { muzikDur(); location.href = "../kacis/index.html?k=" + D.kahraman + "&seri=" + (BAG.get("seri") === "kotu" ? "kotu" : "iyi") + (BAG.get("final") === "1" ? "&final=1" : ""); }); // şehirler bittikten sonra düşüldüyse kaçış yine tırtıl görevine döner
 
   // ---------- bölüm ölçüleri ----------
   var H = 78, SUT = 8, SAT = 11;                        // şeker hücresi, tahta sütun/satır
@@ -369,12 +369,12 @@
     o.yildiz = kazandi ? (o.kalan > 0.4 ? 3 : o.kalan > 0.15 ? 2 : 1) : 0; o.durum = "bitti"; muzikDur();
     var son = D.bolum >= BOLUM_SAYISI; D.sonraki = kazandi && !son;
     $("sonucBaslik").textContent = !kazandi ? "Portal seni Zorgo'nun gezegenine götürdü!" : son ? "Zorgo'yu beş kez yendin!" : "Bölüm " + D.bolum + " tamam!";
-    $("sonucYazi").textContent = !kazandi ? "Gezegenden kaçmayı dene ya da yeni bir oyuna başla." : son ? (BAG.get("final") === "1" ? "Tırtıl istilası da bitti! Macera burada duruyor; devamı yakında." : "Kendini kurtardın. Londra'yı kurtarmaya şimdi hazır mısın?") : "Zorgo sudan çıktı, daha hızlı geliyor! Sıradaki bölüm: " + (D.bolum + 1) + " / " + BOLUM_SAYISI;
+    $("sonucYazi").textContent = !kazandi ? "Gezegenden kaçmayı dene ya da yeni bir oyuna başla." : son ? (BAG.get("final") === "1" ? "Tırtıl istilası da bitti! Yeni görevler gelecek." : "Kendini kurtardın. Londra'yı kurtarmaya şimdi hazır mısın?") : "Zorgo sudan çıktı, daha hızlı geliyor! Sıradaki bölüm: " + (D.bolum + 1) + " / " + BOLUM_SAYISI;
     $("kacis").style.display = kazandi ? "none" : ""; $("yeni").style.display = kazandi ? "none" : "";
     var finalden = BAG.get("final") === "1";      // finalden (Kuleyi Yık) gelindiyse Londra sorulmaz
-    $("londraGit").style.display = kazandi && son && !finalden ? "" : "none"; if (kazandi && son && finalden) $("yeni").style.display = "";
+    $("londraGit").style.display = kazandi && son && !finalden ? "" : "none"; if (kazandi && son && finalden) $("yeni").style.display = ""; $("yeni").textContent = kazandi && son && finalden ? "↺ Baştan başla" : "Yeni oyun";
     $("tekrar").style.display = D.sonraki ? "" : "none"; $("tekrar").textContent = "Sıradaki bölüm ▶";
-    $("degistir").style.display = kazandi ? "" : "none";
+    $("degistir").style.display = kazandi && !(son && finalden) ? "" : "none"; // bitiş ekranında yalnız "Baştan başla"
     if (!kazandi || son) D.bolum = 1;
     $("yildizlar").textContent = kazandi ? "★★★".slice(0, o.yildiz) + "☆☆☆".slice(0, 3 - o.yildiz) : "";
     ekranAc("sonuc"); cal(kazandi ? "p_kazandin" : "p_kaybettin", 1);
