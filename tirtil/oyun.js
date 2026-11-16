@@ -21,7 +21,7 @@
 
   // ---------- varlıklar ----------
   var KAHRAMANLAR = ["e1", "e2", "e3", "e4", "k1", "k2", "k3", "k4"], ACIK = [];
-  try { ACIK = JSON.parse(localStorage.getItem("hk_kostum") || "[]").filter(function (x) { return ["k", "s", "kl", "sl", "kt", "st", "kp", "sp"].indexOf(x) >= 0; });
+  try { ACIK = JSON.parse(localStorage.getItem("hk_kostum") || "[]").filter(function (x) { return ["k", "s", "kl", "sl", "kt", "st", "kp", "sp", "ka", "sa"].indexOf(x) >= 0; });
     var TARAF = localStorage.getItem("hk_taraf"); // seçilen taraf değişmez: yalnız kendi renginin kostümleri görünür
     if (TARAF === "iyi" || TARAF === "kotu") ACIK = ACIK.filter(function (x) { return (x.charAt(0) === "k") === (TARAF === "iyi"); });
   } catch (e) { ACIK = []; }

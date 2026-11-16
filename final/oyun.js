@@ -16,7 +16,7 @@
 
   var BAG = new URLSearchParams(location.search), SERI = BAG.get("seri") === "kotu" ? "kotu" : "iyi";
   try { var tf = localStorage.getItem("hk_taraf"); if (!BAG.get("seri") && (tf === "iyi" || tf === "kotu")) SERI = tf; } catch (e) {}
-  var KAH = SERI === "iyi" ? "kp_at" : "sp_at"; // Paris'ten dönen kahraman ressam kostümündedir
+  var KAH = SERI === "iyi" ? "ka_at" : "sa_at"; // Los Angeles'tan dönen kahraman film yıldızı kostümündedir
 
   var R = {};
   ["arka.jpg", "mancinik", "tas", "jole", "tahta", "tirtil", "tirtil2", "tirtil3", "zorgo", "simit", KAH].forEach(function (a) {

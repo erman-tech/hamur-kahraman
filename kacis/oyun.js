@@ -21,7 +21,7 @@
   addEventListener("resize", olcekle); olcekle();
 
   // ---------- kahraman: tırtıl oyunundan gelen (k=) ya da 1. oyunda açılan son kostüm ----------
-  var GECERLI = ["e1", "e2", "e3", "e4", "k1", "k2", "k3", "k4", "k", "s", "kl", "sl", "kt", "st", "kp", "sp"], KAHRAMAN = "e4";
+  var GECERLI = ["e1", "e2", "e3", "e4", "k1", "k2", "k3", "k4", "k", "s", "kl", "sl", "kt", "st", "kp", "sp", "ka", "sa"], KAHRAMAN = "e4";
   try { var acik = JSON.parse(localStorage.getItem("hk_kostum") || "[]"), taraf = localStorage.getItem("hk_taraf");
     if (taraf === "iyi" || taraf === "kotu") acik = acik.filter(function (x) { return (x.charAt(0) === "k") === (taraf === "iyi"); }); if (acik.length && GECERLI.indexOf(acik[acik.length - 1]) >= 0) KAHRAMAN = acik[acik.length - 1]; } catch (e) {}
   if (GECERLI.indexOf(BAG.get("k")) >= 0) KAHRAMAN = BAG.get("k");
