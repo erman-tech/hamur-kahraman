@@ -259,3 +259,8 @@ Bilinenler: zorluk bir çocukla denenmedi (otomatik oyuncu iki saniyede bir haml
 - Test bağlantısı artık önce o şehrin geçiş filmini oynatır. Düğme yazısı şehre göre ("Paris'e hazırım").
 - Ölçülmedi: Paris'in zorluğu; sesler dinlenmedi.
 - Tokyo'ya gidiş filmi papağan kaçırma senaryosuyla yeniden kuruldu (neon pul, dronlar, Pufi iz buluyor, roket Big Ben'den). Tokyo bölümünde papağan Neon Ejder yenilene kadar çizilmez (`papaganKayip`), yenilince ejderin yanından kahramana uçar. Tokyo'nun üç sesi yenilendi (p_tokyo artık anlatıcı sesi). Ayrıntılı senaryo: `hamur_portal/SENARYO.md` (yayına gitmez).
+
+## 16 Kasım 2026 (gece) — Papağanı Kurtar koşu oyunu, zorluk
+- Yeni oyun `kosu/` (kaynak `hamur_kahraman_4/`): üç şeritli çatı koşusu, dik. Sahte derinlik: zemin dokusu satır satır daraltılarak çizilir (`UFUK`, `TABAN`, `ZK`). Engeller: bariyer (zıpla), kapı (kay), blok (şerit değiştir). `SURE` 46 sn; çarpış −%5 yakınlık; 10 onigiri bir can. Robotla ölçüldü: dikkatli 6/6, orta 6/6, dalgın 5/6 kazandı; hiç oynamayan 10–20 sn'de kaybetti.
+- Akış: Londra → "Tokyo'ya hazırım" → Tokyo filmi (papağan kaçırılır, jet) → `kosu/` → kazanınca `istanbul/index.html?devam=tokyo` (Tokyo filmsiz başlar). Tokyo'da papağan yeniden görünür; üç ses buna göre yenilendi.
+- Şehir bölümleri zorlaştı: yürüyerek geçilmeyen hamur bariyerler (`o.duvarlar`; alçak olan zıplanır, yüksek olan atışı da keser, üstünden uçulur), şehir ilerledikçe sıklaşır. Atış gücü: beş atış, 0,8 sn'de bir dolar (sürekli ateş edilemez). Bu zorluk çocukla denenmedi.
