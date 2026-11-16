@@ -144,7 +144,7 @@
       k: { x: 200, y: ZEMIN, vx: 0, vy: 0, yon: 1, yerde: true, yakit: 1, atSn: 0, bekleme: 0, can: 3, dokunulmaz: 0 },
       p: { x: 120, y: 480 },
       platformlar: [], simitler: [], kotuler: [], sandiklar: [], mermiler: [], meteorlar: [], parcalar: [], esyalar: [],
-      simit: 0, yakalanan: 0, meteorSn: 5, kral: null, kralGeldi: false, dalgalar: [], golgeler: []
+      simit: 0, yakalanan: 0, meteorSn: 5, kral: null, kralGeldi: false, dalgalar: [], yildizlar: [], duman: null
     };
     [[900, 500], [1150, 420], [1900, 480], [2150, 400], [2400, 480], [3300, 470], [3600, 390], [4500, 500], [4750, 420], [5000, 340],
       [5900, 470], [6200, 400], [6900, 480], [7200, 420]].forEach(function (a) {
@@ -262,15 +262,22 @@
     // --- kostüm gücü: zamanı durdur (Londra kostümü). Kötüler, baş kötü ve meteorlar donar; kahraman hareket eder ---
     if (o.durBekle > 0) o.durBekle -= dt;
     if (zamanYeni && sehir().guc === "zaman" && !(o.durBekle > 0) && !o.bitti) { o.durSn = 3.5; o.durBekle = sehir().gucBekle; mesajVer("Zaman durdu!", 1.5); cal("e_simit", 0.8); }
-    if (zamanYeni && sehir().guc === "ninja" && !(o.durBekle > 0) && !o.bitti) { // Tokyo kostümü: şimşek atılışı + gölge ninjalar ekrandaki kötüleri toplar
-      o.durBekle = sehir().gucBekle; k.atilis = 0.35; k.dokunulmaz = Math.max(k.dokunulmaz, 1.3); o.golgeler = o.golgeler || [];
-      var say = 0;
-      o.kotuler.forEach(function (q) { if (!q.yakalandi && Math.abs(q.x - k.x) < 720) { o.golgeler.push({ x: k.x, y: k.y - 60, hx: q.x, hy: q.y - 40, sn: 0.45 }); kotuYakala(o, q); say++; } });
-      var kq = o.kral; if (kq && o.kralGeldi && !kq.yenildi && Math.abs(kq.x - k.x) < 800 && kq.can > 2) { kq.can -= 2; kq.vurSn = 0.4; o.golgeler.push({ x: k.x, y: k.y - 60, hx: kq.x, hy: kq.y - 120, sn: 0.45 }); }
-      mesajVer(say ? "Ninja saldırısı! " + say + " kötü yakalandı!" : "Şimşek atılışı!", 1.6); cal("e_elektrik", 0.7);
+    if (zamanYeni && sehir().guc === "ninja" && !(o.durBekle > 0) && !o.bitti) { // Tokyo kostümü: sis bombası → sisin içinden her yöne ninja yıldızları
+      o.durBekle = sehir().gucBekle; k.dokunulmaz = Math.max(k.dokunulmaz, 1.6); o.duman = { sn: 1.25 }; o.ninjaSay = 0;
+      var ni;
+      for (ni = 0; ni < 12; ni++) o.yildizlar.push({ x: k.x, y: k.y - 70, hx: k.x + Math.cos(ni * Math.PI / 6) * 640, hy: k.y - 70 + Math.sin(ni * Math.PI / 6) * 420, t: 0, sure: 0.5, bekle: 0.32 + ni * 0.01 });
+      o.kotuler.forEach(function (q) { if (!q.yakalandi && Math.abs(q.x - k.x) < 720) o.yildizlar.push({ x: k.x, y: k.y - 70, hx: q.x, hy: q.y - 40, t: 0, sure: 0.4, bekle: 0.36, hedef: q }); });
+      var kq = o.kral; if (kq && o.kralGeldi && !kq.yenildi && Math.abs(kq.x - k.x) < 800) o.yildizlar.push({ x: k.x, y: k.y - 70, hx: kq.x, hy: kq.y - 120, t: 0, sure: 0.4, bekle: 0.4, kral: true });
+      mesajVer("Sis bombası!", 1.2); cal("e_pop", 0.9);
     }
-    if (k.atilis > 0) { k.atilis -= dt; k.vx = k.yon * 1150; }
-    if (o.golgeler) for (i = o.golgeler.length - 1; i >= 0; i--) { o.golgeler[i].sn -= dt; if (o.golgeler[i].sn <= 0) o.golgeler.splice(i, 1); }
+    if (o.duman) { o.duman.sn -= dt; if (o.duman.sn <= 0) o.duman = null; }
+    for (i = o.yildizlar.length - 1; i >= 0; i--) { // ninja yıldızları: hedefe varınca kötüyü yakalar
+      m = o.yildizlar[i]; if (m.bekle > 0) { m.bekle -= dt; if (m.bekle <= 0) cal("e_ag", 0.25); continue; }
+      m.t += dt; if (m.t < m.sure) continue;
+      if (m.hedef && !m.hedef.yakalandi) { kotuYakala(o, m.hedef); o.ninjaSay++; mesajVer("Ninja yıldızları! " + o.ninjaSay + " kötü yakalandı!", 1.6); }
+      if (m.kral && o.kral && !o.kral.yenildi && o.kral.can > 2) { o.kral.can -= 2; o.kral.vurSn = 0.4; cal("e_pop", 0.8); parca(o, o.kral.x, o.kral.y - 120, "#ffd23a", 10); }
+      o.yildizlar.splice(i, 1);
+    }
     zamanYeni = false;
     var dtGercek = dt; if (o.durSn > 0) { o.durSn -= dt; dt = 0; }
     // --- kötüler ---
@@ -445,14 +452,27 @@
       m = o.dalgalar[i]; c.strokeStyle = kare(i) % 2 ? "#fff36a" : "#59e6ff"; c.lineWidth = 7; c.lineJoin = "round"; c.beginPath(); c.moveTo(m.x - 26, ZEMIN);
       c.lineTo(m.x - 12, ZEMIN - 44); c.lineTo(m.x, ZEMIN - 14); c.lineTo(m.x + 12, ZEMIN - 52); c.lineTo(m.x + 26, ZEMIN); c.stroke();
     }
-    for (i = 0; i < o.golgeler.length; i++) { // gölge ninjalar: kahramandan kötüye doğru atılan silik kopyalar
-      m = o.golgeler[i]; var gt = 1 - m.sn / 0.45; ciz(R[on + "uc"], m.x + (m.hx - m.x) * gt, m.y + (m.hy - m.y) * gt + 60, 0.5, m.hx < m.x, 0.45);
-    }
     // kahraman
     c.fillStyle = 'rgba(40,30,30,.22)'; c.beginPath(); c.ellipse(k.x, ZEMIN + 2, 38 - Math.min(20, (ZEMIN - k.y) / 20), 8, 0, 0, 7); c.fill();
     var poz = k.atSn > 0 ? "at" : !k.yerde ? "uc" : Math.abs(k.vx) > 25 ? (R[on + "kos4"] ? "kos" + (1 + Math.floor(k.adim / 46) % 4) : Math.floor(k.adim / 62) % 2 ? "kos1" : "kos2") : "dur";
-    if (!(k.dokunulmaz > 0 && kare() % 2 && Math.floor(o.t * 16) % 2))
+    if (!(k.dokunulmaz > 0 && kare() % 2 && Math.floor(o.t * 16) % 2) && !(o.duman && o.duman.sn > 0.4))
       ciz(R[on + poz], k.x + (poz === "dur" ? titre(1) * 0.6 : 0), k.y + (poz === "uc" ? -20 : 0), 0.55, k.yon < 0);
+    if (o.duman) { // sis bombası: hamur topaklarından büyüyen duman (poz poz)
+      var dq = Math.floor((1.25 - o.duman.sn) * 12) / 12, dr = Math.min(1, dq / 0.3), da = o.duman.sn < 0.4 ? o.duman.sn / 0.4 : 1, dj;
+      c.save(); c.globalAlpha = da;
+      for (dj = 0; dj < 11; dj++) {
+        var dax = Math.cos(dj * 2.4) * (30 + 95 * dr) * (dj % 3 ? 1 : 0.5), day = Math.sin(dj * 1.7) * (20 + 60 * dr) - 70, drr = (34 + (dj % 4) * 9) * (0.5 + 0.6 * dr);
+        c.fillStyle = dj % 2 ? "#eeeaf6" : "#d6d0e6"; c.strokeStyle = "#a9a2c2"; c.lineWidth = 4; c.beginPath(); c.arc(k.x + dax, k.y + day, drr, 0, 7); c.fill(); c.stroke();
+      }
+      c.restore();
+    }
+    for (i = 0; i < o.yildizlar.length; i++) { // ninja yıldızı: dört köşeli, dönerek uçar
+      m = o.yildizlar[i]; if (m.bekle > 0) continue;
+      var yt = Math.min(1, m.t / m.sure), yx = m.x + (m.hx - m.x) * yt, yy2 = m.y + (m.hy - m.y) * yt, ya = Math.floor(o.t * 12) * 0.9 + i, yk;
+      c.save(); c.translate(yx, yy2); c.rotate(ya); c.fillStyle = "#cfd6e6"; c.strokeStyle = "#39415a"; c.lineWidth = 3; c.beginPath();
+      for (yk = 0; yk < 8; yk++) { var yrr = yk % 2 ? 7 : 20; c.lineTo(Math.cos(yk * Math.PI / 4) * yrr, Math.sin(yk * Math.PI / 4) * yrr); }
+      c.closePath(); c.fill(); c.stroke(); c.fillStyle = "#39415a"; c.beginPath(); c.arc(0, 0, 3.5, 0, 7); c.fill(); c.restore();
+    }
     // papağan
     ciz(R[(D.secim === "iyi" ? "pb" : "ps") + (kare() % 2 + 1)], o.p.x, o.p.y, 0.62, k.yon < 0);
 
