@@ -228,3 +228,4 @@ Bilinenler: zorluk bir çocukla denenmedi (otomatik oyuncu iki saniyede bir haml
 - Film `kaynak/londra/film_l.py` + `kur_l.sh` ile hareketsiz karelerden kurulur (yavaş yaklaşma, 24 kare/sn). Siyah seride jet de siyah.
 - İki oyunda kahraman %10 büyütüldü.
 - 2. oyun: kaybedince portal filmi (`video/portal.mp4`) oynar, sonra "Baştan başla" ve "Gezegenden kaçış (yakında)" seçenekleri gelir.
+- Hikâye: her şehre düşen meteordan çıkan uzaylı o şehrin bir şeyine dönüşür. Londra'da sise karışıp Sis Kontu oldu (papağan filmde söyler).
