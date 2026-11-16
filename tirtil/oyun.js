@@ -72,7 +72,7 @@
     ["kapak", "secim", "sonuc"].forEach(function (e) { $(e).classList.toggle("acik", e === ad); });
     film.style.display = ad === "film" ? "block" : "none";
     $("gec").style.display = ad === "film" ? "block" : "none";
-    $("karistir").style.display = ad === "oyun" ? "block" : "none";
+    $("karistir").style.display = "none"; // düğme yok: hamle biterse tahta kendiliğinden yenilenir
   }
   var filmBitince = null;
   function filmOynat(ad, bitince) {
@@ -160,13 +160,13 @@
     tahtaKur(g);
     for (r = 0; r < TSAT; r++) { tas.push([]); for (s2 = 0; s2 < TS; s2++) tas[r].push(r < TY && s2 >= KUYU0 && s2 < KUYU1 ? 1 + ((r * 7 + s2 * 3) % 2) : 0); }
     D.oyun = { t: 0, g: g, tas: tas, yedek: YEDEK_TAS, durum: "oyna", kum: 0, adim: 0, kirinti: [], yazi: [], dokulen: 0, ipucu: 7, inilti: 4,
-      secili: null, bekle: 0, zincir: 0, kay: g.map(function (x) { return x.map(function () { return 0; }); }), soz: {}, bitis: 0, itme: 0, tik: 1, surt: 0, yildiz: 0, sallan: null, karistir: 0, tasSes: 0, hamle: 0, kalan: 0 };
+      secili: null, bekle: 0, zincir: 0, kay: g.map(function (x) { return x.map(function () { return 0; }); }), soz: {}, bitis: 0, itme: 0, tik: 1, surt: 0, yildiz: 0, sallan: null, karistir: 0, damla: [], tasSes: 0, hamle: 0, kalan: 0 };
     ekranAc("oyun"); muzikBasla(); cal("p_nasil", 1);
   }
   function dolu(o, r, s2) { // çakıl hücresi kapalı mı (duvar, şeker ya da taş)
     if (s2 < 0 || s2 >= TS) return true;
     if (r < TY) return !(s2 >= KUYU0 && s2 < KUYU1) || o.tas[r][s2] > 0;
-    if (s2 < KUYU0 || s2 >= KUYU1) return true; // lav yalnız kuyunun altındaki sütunlardan iner
+    if (r >= TY) return true; // lav tahtanın içine dolmaz; patlayan şekerlerin açtığı yoldan damlayarak iner (lavDok)
     return o.g[Math.floor((r - TY) / B)][Math.floor(s2 / B)] > 0 || o.tas[r][s2] > 0;
   }
   function kalanTas(o) { var n = o.yedek; for (var r = 0; r < TY; r++) for (var s2 = KUYU0; s2 < KUYU1; s2++) if (o.tas[r][s2]) n++; return n; }
@@ -191,10 +191,22 @@
     }
     return out;
   }
+  var LAV_KUYU = 5, LAV_YAN = 1; // patlayan her şeker için akan lav: kuyunun altındaki sütunlarda çok, yanlarda az
+  function lavDok(o, n, x) { // yığından n topak eksilir, x hizasından suya damlar
+    for (var i = 0; i < n; i++) {
+      var v = 0;
+      if (o.yedek > 0) { o.yedek--; v = 1 + (i % 2); }
+      else for (var r = 0; r < TY && !v; r++) for (var s2 = KUYU0; s2 < KUYU1 && !v; s2++) if (o.tas[r][s2]) { v = o.tas[r][s2]; o.tas[r][s2] = 0; }
+      if (!v) return;
+      o.damla.push({ x: x + (Math.random() - 0.5) * 40, y: YER - 10 - i * 26, vy: 380 + Math.random() * 120, v: v });
+    }
+  }
   function patlat(o, m, yr, ys, zincir) { // eşleşen şekerleri patlatır; sonra şekerler düşer (bekle)
     var g = o.g;
     m.forEach(function (h) {
       var p = hucreYeri(h[0], h[1]), renk = SRENK[g[h[0]][h[1]] - 1]; g[h[0]][h[1]] = 0;
+      var kuyuda = h[1] >= YS0 && h[1] <= YS1;
+      lavDok(o, kuyuda ? LAV_KUYU : LAV_YAN, kuyuda ? p.x : BX + (h[1] < YS0 ? YS0 : YS1) * H + H / 2);
       for (var q = 0; q < 5; q++) o.kirinti.push({ x: p.x, y: p.y, vx: (Math.random() - 0.5) * 320, vy: -60 - Math.random() * 260, t: 0.6, renk: renk, b: 4 + Math.random() * 6 });
     });
     cal("e_pop", 0.7);
@@ -204,7 +216,6 @@
   function yercekimi(o) { // lav kuyusunun dışındaki sütunlarda şekerler aşağı düşer, üstten yenileri gelir; kuyunun altındaki boşluklar lava kalır
     var g = o.g, r, s2;
     for (s2 = 0; s2 < SUT; s2++) {
-      if (s2 >= YS0 && s2 <= YS1) continue;
       var yaz = SAT - 1;
       for (r = SAT - 1; r >= 0; r--) if (g[r][s2] > 0) { var v = g[r][s2]; g[r][s2] = 0; g[yaz][s2] = v; o.kay[yaz][s2] = (r - yaz) * H; yaz--; }
       for (var k = yaz; k >= 0; k--) { g[k][s2] = 1 + Math.floor(Math.random() * SEKER.length); o.kay[k][s2] = -(yaz + 1) * H; }
@@ -255,6 +266,13 @@
     if (o.sallan) { o.sallan.t -= dt; if (o.sallan.t <= 0) o.sallan = null; }
     o.kirinti = o.kirinti.filter(function (p) { p.t -= dt; p.x += p.vx * dt; p.y += p.vy * dt; p.vy += 900 * dt; return p.t > 0; });
     o.yazi = o.yazi.filter(function (p) { p.t -= dt; p.y -= 36 * dt; return p.t > 0; });
+    o.damla = o.damla.filter(function (q) {
+      q.y += q.vy * dt;
+      if (q.y < BY + SAT * H) return true;
+      o.dokulen++; if (o.dokulen % 3 === 0) o.kirinti.push({ x: q.x, y: BY + SAT * H + 6, vx: (Math.random() - 0.5) * 90, vy: -90 - Math.random() * 70, t: 0.45, renk: "#eef6ff", b: 6 });
+      if (o.t - o.tasSes > 0.6) { o.tasSes = o.t; cal("e_tas", 0.4); }
+      return false;
+    });
     o.kum += dt;
     while (o.kum >= 0.075) { o.kum -= 0.075; if (kumAdimi(o) > 3 && o.t - o.tasSes > 0.9) { o.tasSes = o.t; cal("e_tas", 0.4); } }
     if (o.durum === "oyna") {
@@ -291,7 +309,7 @@
     o.karistir = 3; o.secili = null;
     for (var d = 0; d < 40; d++) { tahtaKur(o.g); if (hamleler(o).length) break; }
     cal("e_pop", 0.5);
-    o.yazi.push({ x: 640, y: YER + 150, m: kendiliginden === true ? "Hamle kalmadı, şekerler karıştı!" : "Şekerler karıştı!", t: 1.4, renk: "#fff" });
+    o.yazi.push({ x: 640, y: YER + 150, m: "Yeni şekerler geldi!", t: 1.4, renk: "#fff" });
   }
   $("karistir").addEventListener("click", function () { karistir(false); });
 
@@ -346,6 +364,7 @@
       kutuResim(v === 1 ? R.lav1 : R.lav2, BX + s2 * T + T / 2 + (h - 3) * 0.9 + (itiyor && r < TY && poz % 2 ? 3 : 0), YER + (r - TY) * T + T / 2 + ((h * 3) % 5 - 2) * 0.9, 39 + (h % 3) * 3);
     }
 
+    o.damla.forEach(function (q) { if (q.y > YER - 30) kutuResim(q.v === 1 ? R.lav1 : R.lav2, q.x, Math.round(q.y / 18) * 18, 34); }); // suya damlayan lav
     // itilen taş cephesi: kuyudan kahramana kadar taşar, kahramanın önündeki boş alan daralır
     if (o.durum === "oyna") {
       var cx0 = BX + (YS1 + 1) * H, cx1 = HX0 + (HX1 - HX0) * o.itme - 52, n = 0;
@@ -393,7 +412,7 @@
     c.fillStyle = o.itme > 0.62 ? "#ff5a4a" : o.itme > 0.35 ? "#f7b21e" : "#5fd16a"; yuvarlak(24, 38, Math.max(18, 220 * (1 - o.itme)), 18, 9); c.fill();
     yazi("Kalan lav: " + kalanTas(o), 24, 80, 18);
     c.textAlign = "center";
-    if (o.durum === "oyna" && o.ipucu > 0) { yazi("Vıcık lavı itiyor, lav kapıyı, kapı da seni tuzağa!", 640, YER + 34, 32, "#ffd23a"); yazi("Şekeri komşusuna kaydır: üç aynı şeker yan yana gelince patlar!", 640, YER + 68, 24); }
+    if (o.durum === "oyna" && o.ipucu > 0) { yazi("Vıcık lavı itiyor, lav kapıyı, kapı da seni tuzağa!", 640, YER + 34, 32, "#ffd23a"); yazi("Lavın altındaki şekerleri patlat: lav suya aksın!", 640, YER + 68, 24); }
     else if (panik && poz % 2) yazi("Tuzağa çok yaklaştın!", 640, YER + 36, 38, "#ffd23a");
     if (o.durum === "kacti") yazi("Lav bitti! Kurtuldun!", 640, YER + 36, 38, "#ffd23a");
     if (o.durum === "yakalandi") yazi("Eyvah! Uzay gemisi seni kaçırıyor!", 640, YER + 36, 38, "#ffd23a");
@@ -457,7 +476,7 @@
       hamleler(o).forEach(function (hm) {
         var komsu = false, derin = 0;
         hm.m.forEach(function (q) { derin = Math.max(derin, q[0]); if (q[0] === 0 && q[1] >= YS0 && q[1] <= YS1) komsu = true; if (acik[(q[0] - 1) + "," + q[1]] || acik[q[0] + "," + (q[1] - 1)] || acik[q[0] + "," + (q[1] + 1)]) komsu = true; });
-        var puan = (komsu ? 100 : 0) + derin * 3 + hm.m.length - Math.abs(hm.m[0][1] - (YS0 + YS1) / 2);
+        var puan = hm.m.filter(function (q) { return q[1] >= YS0 && q[1] <= YS1; }).length * 10 + hm.m.length + Math.random();
         if (!en || puan > en.puan) en = { hm: hm, puan: puan };
       });
       if (!en) { o.karistir = 0; karistir(true); return 0; }
