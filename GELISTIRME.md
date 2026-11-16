@@ -209,3 +209,4 @@ Bilinenler: zorluk bir çocukla denenmedi (otomatik oyuncu iki saniyede bir haml
 - Taş akışı yavaşladı ve yana da yayılıyor (`kumAdimi`, adım 0,075 sn). İtme süresi `ITME = 80`.
 - Açılış filmi sallantısız: yalnız yavaş yaklaşma ve uzaklaşma (`kaynak/film4.py`, saniyede 24 kare).
 - Portalda yalnız iki oyun var; Aslı Beliz sürümü kendi adresinde duruyor, portalda bağlantısı yok.
+- Kahramanın odası alçaltıldı (`ODA`), taşlar tavana kadar dolar. Uzay gemisi yerde bekler; kaybedilince kahramanı alıp uçar.

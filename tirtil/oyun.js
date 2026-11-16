@@ -1,7 +1,7 @@
 /* Hamur Kahraman 2: Uzaylı Tırtıl — tek bölüm. Tek dosya, kütüphane yok.
    Akış: kapak → açılış filmi → kahraman seçimi → oyun → sonuç.
    Oyun: uzaylı tırtıl Vıcık labirentten gelip çakıl taşı yığınını iter; taşlar da kahramanı sağdaki tuzağa
-   (uzay gemisinin ışığına) doğru sürükler. Yerin altındaki şeker tahtasında bir şeker komşusuyla yer değiştirir (kaydırarak); en az üç aynı şeker
+   (yerde bekleyen uzay gemisine) doğru sürükler. Yerin altındaki şeker tahtasında bir şeker komşusuyla yer değiştirir (kaydırarak); en az üç aynı şeker
    yan yana ya da alt alta gelince patlarlar; açılan boşluğa taşlar akar, tahtanın altına kadar yol açılırsa suya dökülür. Taş azaldıkça itme
    zayıflar; taş kalmayınca kahraman kurtulur. Kahraman tuzağa varırsa oyun kaybedilir. */
 (function () {
@@ -103,7 +103,7 @@
   var YURU = 12, ITME = 80;                             // tırtılın yığına varma süresi; dolu yığınla tuzağa itme süresi (sn)
   var TOPLAM = (YS1 - YS0 + 1) * B * YIGIN * B + YEDEK_TAS;
   // Labirent: tırtıl üst koridorda sola yürür, dönüp alt koridorda kahramana gelir.
-  var LY1 = 56, LY2 = 172, LX0 = 470, LXD = 110, LR = (LY2 - LY1) / 2, KOR = 62, TUNEL = 230; // TUNEL: tünelde kuyudan önce yığılı taşların boyu
+  var LY1 = 56, LY2 = 172, LX0 = 470, LXD = 110, LR = (LY2 - LY1) / 2, KOR = 52, TUNEL = 230, ODA = 126;   // ODA: kahramanın dar odasının yüksekliği // TUNEL: tünelde kuyudan önce yığılı taşların boyu
   var LP1 = LX0 - LXD, LP2 = LP1 + Math.PI * LR, UZ = LP2 + (BX + YS0 * H - 40 - LXD);
   function yer(s) { // labirentte s uzaklığındaki nokta; yon: +1 sağa, -1 sola bakar
     if (s <= LP1) return { x: LX0 - s, y: LY1, yon: -1 };
@@ -122,10 +122,10 @@
     }
     function oda(x0, y0, x1, y1, renk, pay) { y.fillStyle = renk; y.fillRect(x0 - pay, y0 - pay, x1 - x0 + 2 * pay, y1 - y0 + pay); }
     var cerceve = "#b98a34", ic = "#27457f", ic2 = "#2e5192", kx0 = BX + YS0 * H, kx1 = BX + (YS1 + 1) * H;
-    koridor(KOR + 14, cerceve); oda(kx0, 0, kx1, YER, cerceve, 7); oda(kx1, 44, 1256, YER, cerceve, 7);
-    koridor(KOR, ic); oda(kx0, 0, kx1, YER + 8, ic, 0); oda(kx1, 44, 1256, YER + 8, ic, 0);
-    koridor(KOR - 18, ic2);
-    y.fillStyle = "#0d1730"; y.beginPath(); y.ellipse(LX0 + 40, LY1, 16, 27, 0, 0, 7); y.fill(); // tırtılın çıktığı tünel
+    koridor(KOR + 14, cerceve); oda(kx0, 0, kx1, YER, cerceve, 7); oda(kx1, YER - ODA, 1256, YER, cerceve, 7);
+    koridor(KOR, ic); oda(kx0, 0, kx1, YER + 8, ic, 0); oda(kx1, YER - ODA, 1256, YER + 8, ic, 0);
+    koridor(KOR - 14, ic2);
+    y.fillStyle = "#0d1730"; y.beginPath(); y.ellipse(LX0 + 40, LY1, 14, 23, 0, 0, 7); y.fill(); // tırtılın çıktığı tünel
   })();
 
   // ---------- oyun ----------
@@ -255,7 +255,7 @@
     } else {
       o.bitis += dt;
       if (o.durum === "kacti" && o.bitis > 3.2) sonucGoster(true);
-      if (o.durum === "yakalandi" && o.bitis > 3) sonucGoster(false);
+      if (o.durum === "yakalandi" && o.bitis > 3.2) sonucGoster(false);
     }
   }
   function sonucGoster(kazandi) {
@@ -306,9 +306,9 @@
     c.fillStyle = "rgba(255,255,255,.25)"; for (i = 0; i < 14; i++) c.fillRect(((i * 97 + poz * 6) % G), BY + SAT * H + 14 + (i % 2) * 6, 40, 3);
     c.fillStyle = "#b98a34"; c.fillRect(0, YER - 4, BX + YS0 * H, 9); c.fillRect(BX + (YS1 + 1) * H, YER - 4, G, 9); // zemin: kuyunun altı açık
     // tuzak: uzay gemisi ve ışığı
-    var ux = HX1 + 26, uy = 112 + (poz % 4 < 2 ? 0 : 4);
-    c.fillStyle = poz % 2 ? "rgba(190,255,170,.34)" : "rgba(190,255,170,.26)"; c.beginPath(); c.moveTo(ux - 26, uy - 10); c.lineTo(ux + 26, uy - 10); c.lineTo(ux + 62, YER); c.lineTo(ux - 62, YER); c.closePath(); c.fill();
-    resim(R.ufo, ux + titre(1, poz), uy, 72);
+    // tuzak: uzay gemisi yerde bekler; kahramanı yakalarsa alıp kaçar (aşağıda, kahramandan sonra çizilir)
+    var ux = HX1 + 34, uy = YER + 2, kac = o.durum === "yakalandi" ? Math.floor(Math.max(0, Math.min(1, (o.bitis - 0.9) / 1.9)) * 14) / 14 : 0;
+    ux += kac * kac * 240; uy -= kac * kac * 520;
 
     // şekerler
     for (r = 0; r < SAT; r++) for (s2 = 0; s2 < SUT; s2++) {
@@ -323,40 +323,41 @@
     for (r = 0; r < TSAT; r++) for (s2 = 0; s2 < TS; s2++) {
       var v = o.tas[r][s2]; if (!v) continue;
       var h = (r * 37 + s2 * 91) % 7;
-      kutuResim(v === 1 ? R.tas1 : R.tas2, BX + s2 * T + T / 2 + (h - 3) * 0.9 + (itiyor && r < TY && poz % 2 ? 3 : 0), YER + (r - TY) * T + T / 2 + ((h * 3) % 5 - 2) * 0.9, 33 + (h % 3) * 2);
+      kutuResim(v === 1 ? R.tas1 : R.tas2, BX + s2 * T + T / 2 + (h - 3) * 0.9 + (itiyor && r < TY && poz % 2 ? 3 : 0), YER + (r - TY) * T + T / 2 + ((h * 3) % 5 - 2) * 0.9, 39 + (h % 3) * 3);
     }
 
     // itilen taş cephesi: kuyudan kahramana kadar taşar, kahramanın önündeki boş alan daralır
-    if (o.durum === "oyna" && o.itme > 0.01) {
-      var cx0 = BX + (YS1 + 1) * H, cx1 = HX0 + (HX1 - HX0) * o.itme - 24, n = 0;
-      for (var cx = cx0; cx < cx1; cx += 17, n++) for (var kat = 0; kat < 3 + (n % 2); kat++)
-        kutuResim((n + kat) % 2 ? R.tas1 : R.tas2, cx + ((n * 7 + kat * 3) % 5) + (poz % 2 ? 3 : 0), YER - 14 - kat * 19 + ((n * 3 + kat) % 4), 33 + ((n + kat) % 3) * 2);
+    if (o.durum === "oyna") {
+      var cx0 = BX + (YS1 + 1) * H, cx1 = HX0 + (HX1 - HX0) * o.itme - 30, n = 0;
+      for (var cx = cx0; cx < cx1; cx += 19, n++) for (var kat = 0; kat < 6; kat++) // oda tavana kadar taşla dolar
+        kutuResim((n + kat) % 2 ? R.tas1 : R.tas2, cx + ((n * 7 + kat * 3) % 5) + (poz % 2 ? 3 : 0), YER - 16 - kat * 20 + ((n * 3 + kat) % 4), 39 + ((n + kat) % 3) * 3);
     }
     // tünelde yığılı taşlar: tırtıl bunlara dayanır, ittikçe sıkışıp kuyuya dolar
     if (o.durum === "oyna") {
       var tx0 = yer(Math.max(0, (UZ - TUNEL) * yuru + TUNEL * 0.8 * o.itme)).x + 30, tx1 = BX + YS0 * H, tn = 0;
       if (yuru < 1) tx0 = Math.max(tx0, tx1 - TUNEL + 30);
       for (var tx = tx1 - 10; tx > tx0; tx -= 16, tn++) for (var tk = 0; tk < 3; tk++)
-        kutuResim((tn + tk) % 2 ? R.tas1 : R.tas2, tx + ((tn * 5 + tk * 3) % 5) + (itiyor && poz % 2 ? 3 : 0), LY2 + 22 - tk * 17 + ((tn * 3 + tk) % 4), 31 + ((tn + tk) % 3) * 2);
+        kutuResim((tn + tk) % 2 ? R.tas1 : R.tas2, tx + ((tn * 5 + tk * 3) % 5) + (itiyor && poz % 2 ? 3 : 0), LY2 + 14 - tk * 15 + ((tn * 3 + tk) % 4), 33 + ((tn + tk) % 3) * 3);
     }
     // tırtıl Vıcık: labirentte kuyruktan başa; taşlara varınca iter
     var ts = (UZ - TUNEL) * yuru + TUNEL * 0.8 * (o.durum === "oyna" ? o.itme : 0) + (itiyor && poz % 2 ? 7 : 0), basR = R.bas, baci = 0, bdy = 0, topR = [R.top_mor, R.top_turuncu, R.top_mavi, R.top_sari], tp;
     if (o.durum === "kacti") { basR = R.bas_sersem; var uq = Math.floor(Math.min(1, o.bitis / 2) * 14) / 14; baci = uq * 9; bdy = -uq * uq * 420; ts = UZ - uq * 160; }
     for (i = 13; i >= 0; i--) {
-      if (ts - 40 - i * 29 < 0) continue;
-      tp = yer(ts - 40 - i * 29);
-      resim(topR[i % 4], tp.x + titre(i, poz) * 1.5, tp.y + 30 - ((poz + i) % 2 ? 3 : 0), 36, tp.yon < 0);
+      if (ts - 35 - i * 25 < 0) continue;
+      tp = yer(ts - 35 - i * 25);
+      resim(topR[i % 4], tp.x + titre(i, poz) * 1.5, tp.y + 25 - ((poz + i) % 2 ? 3 : 0), 31, tp.yon < 0);
     }
     tp = yer(Math.max(0, ts));
-    resim(basR, tp.x + titre(7, poz) * (panik ? 3 : 1), tp.y + 31 - (poz % 2 ? 3 : 0) + bdy, 58, tp.yon < 0 && o.durum !== "kacti", baci);
+    resim(basR, tp.x + titre(7, poz) * (panik ? 3 : 1), tp.y + 27 - (poz % 2 ? 3 : 0) + bdy, 50, tp.yon < 0 && o.durum !== "kacti", baci);
 
     // kahraman (taşlara karşı iter, sağa sürüklenir) ve papağan
     var hx = HX0 + (HX1 - HX0) * o.itme, hy = YER + 2, hboy = 104, hr = R[kd + "_at"], hcevir = true;
     if (itiyor) hx += (poz % 3 === 0 ? -3 : 0);
     if (o.durum === "kacti") { hr = R[kd + "_dur"]; hcevir = false; hy -= (poz % 4 < 2 ? 14 : 0); }
-    if (o.durum === "yakalandi") { hr = R[kd + "_dur"]; hx = HX1 + 26; var yq = Math.floor(Math.min(1, o.bitis / 2.2) * 12) / 12; hy -= yq * 80; hboy = 104 - yq * 56; }
+    if (o.durum === "yakalandi") { hr = R[kd + "_dur"]; var yq = Math.floor(Math.min(1, o.bitis / 0.9) * 8) / 8; hx = HX1 + (ux - HX1) * yq; hy = uy - yq * 34; hboy = 104 - yq * 70; }
     resim(hr, hx, hy, hboy, hcevir);
-    resim(poz % 2 ? R.pb1 : R.pb2, Math.min(hx + 20, HX1 - 70), 98 + (poz % 4 < 2 ? 0 : -6), 46, true);
+    resim(R.ufo, ux + titre(1, poz) * (kac ? 3 : 1), uy - (o.durum === "oyna" && poz % 4 < 2 ? 3 : 0), 84);
+    resim(poz % 2 ? R.pb1 : R.pb2, Math.min(hx + 56, HX1 - 30), YER - 62 + (poz % 4 < 2 ? 0 : -6), 40, true);
 
     // kırıntılar, yazılar
     o.kirinti.forEach(function (q) { c.fillStyle = q.renk; c.beginPath(); c.arc(q.x, q.y, q.b * Math.min(1, q.t * 2), 0, 7); c.fill(); });
@@ -373,7 +374,7 @@
     if (o.durum === "oyna" && o.ipucu > 0) { yazi("Vıcık taşları itiyor, taşlar da seni tuzağa!", 640, YER + 34, 32, "#ffd23a"); yazi("Şekeri komşusuna kaydır: üç aynı şeker yan yana gelince patlar!", 640, YER + 68, 24); }
     else if (panik && poz % 2) yazi("Tuzağa çok yaklaştın!", 640, YER + 36, 38, "#ffd23a");
     if (o.durum === "kacti") yazi("Taşlar bitti! Kurtuldun!", 640, YER + 36, 38, "#ffd23a");
-    if (o.durum === "yakalandi") yazi("Eyvah! Uzay gemisinin ışığı!", 640, YER + 36, 38, "#ffd23a");
+    if (o.durum === "yakalandi") yazi("Eyvah! Uzay gemisi seni kaçırıyor!", 640, YER + 36, 38, "#ffd23a");
     if (panik && poz % 4 < 2) { // gerilim: kenarlar kızarır
       var kz = c.createRadialGradient(640, 360, 300, 640, 360, 760); kz.addColorStop(0, "rgba(255,40,30,0)"); kz.addColorStop(1, "rgba(255,40,30,.3)");
       c.fillStyle = kz; c.fillRect(0, 0, G, Y);
