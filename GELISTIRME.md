@@ -243,3 +243,9 @@ Bilinenler: zorluk bir çocukla denenmedi (otomatik oyuncu iki saniyede bir haml
 - İstanbul görselleri yenilendi (Londra düzeni): `varlik/arka.jpg` derinlikli sokak ve sakin renkler; `k_*` / `s_*` pozları yüzü görünen yeni kahraman (kırmızı: sarı yıldız + pelerin; siyah: kırmızı yıldız). Eskiler `kaynak/eski_istanbul/`. Dönüşüm filmleri ve seçim ekranı görseli hâlâ eski kostümü gösterir.
 - Kural: oyundaki her görsel oyun hamurundan görünmeli. Üç şehrin arka planı gerçek oyun hamuru setine çevrildi (`kaynak/hamur_arka/`); yeni arka plan üretirken malzeme örneği olarak İstanbul hamur görseli verilir, düzen yazıyla tarif edilir (düzen görseli verilirse model maket görünümünü korur). Platformlar kalın, canlı renkli hamur dilimleri (turkuaz, kırmızı, sarı) ve altlarında gölge var.
 - Tokyo gücü: sis bombası (hamur topaklarından duman, kahraman gizlenir) → 12 ninja yıldızı her yöne + ekrandaki her kötüye ve baş kötüye birer yıldız; yıldız varınca kötü yakalanır (`o.yildizlar`, `o.duman`). Atılış kaldırıldı.
+
+## 16 Kasım 2026 — hamur efektler, lav kuralı, taraf kilidi
+- Efektler artık oyun hamuru görseli: sis bombası ve Sis Kontu'nun sisi (`sis1-3.png`), ninja yıldızı (`shuriken.png`), yer şimşeği (`simsek.png`); Gezegenden Kaçış'ta lav (`kacis/varlik/lav.png`). `kivilcim.png` kesildi, henüz kullanılmıyor.
+- Gezegenden Kaçış: lav tek dokunuşta oyunu bitirir (bütün canlar gider); 3 can yalnız canavarlar için. Zorluk bu kuralla yeniden ölçülmedi.
+- Taraf kilidi: ilk seçim `localStorage hk_taraf`'a yazılır; sonraki girişlerde soru sorulmaz, "Diğer tarafı dene" düğmesi kalktı. Tırtıl ve Kaçış yalnız o tarafın kostümlerini gösterir.
+- Kostüm, şehrin kralı yenilince açılır (eskiden şehre giderken açılıyordu). İstanbul kostümü seçimle birlikte açık.

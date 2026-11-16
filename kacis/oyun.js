@@ -22,12 +22,13 @@
 
   // ---------- kahraman: tırtıl oyunundan gelen (k=) ya da 1. oyunda açılan son kostüm ----------
   var GECERLI = ["e1", "e2", "e3", "e4", "k1", "k2", "k3", "k4", "k", "s", "kl", "sl", "kt", "st"], KAHRAMAN = "e4";
-  try { var acik = JSON.parse(localStorage.getItem("hk_kostum") || "[]"); if (acik.length && GECERLI.indexOf(acik[acik.length - 1]) >= 0) KAHRAMAN = acik[acik.length - 1]; } catch (e) {}
+  try { var acik = JSON.parse(localStorage.getItem("hk_kostum") || "[]"), taraf = localStorage.getItem("hk_taraf");
+    if (taraf === "iyi" || taraf === "kotu") acik = acik.filter(function (x) { return (x.charAt(0) === "k") === (taraf === "iyi"); }); if (acik.length && GECERLI.indexOf(acik[acik.length - 1]) >= 0) KAHRAMAN = acik[acik.length - 1]; } catch (e) {}
   if (GECERLI.indexOf(BAG.get("k")) >= 0) KAHRAMAN = BAG.get("k");
 
   // ---------- varlıklar ----------
   var R = {};
-  ["p_mor", "p_turuncu", "p_pembe", "u_goz", "u_kanat", "kristal", "portal", KAHRAMAN + "_dur", KAHRAMAN + "_uc"].forEach(function (a) {
+  ["kalp", "lav", "p_mor", "p_turuncu", "p_pembe", "u_goz", "u_kanat", "kristal", "portal", KAHRAMAN + "_dur", KAHRAMAN + "_uc"].forEach(function (a) {
     var im = new Image(); im.src = "varlik/" + a + ".png"; R[a] = im;
   });
   R.arka = new Image(); R.arka.src = "varlik/arka.jpg";
@@ -88,7 +89,7 @@
   function rasgele(o) { o.tohum = (o.tohum * 9301 + 49297) % 233280; return o.tohum / 233280; }
 
   function oyunBaslat() {
-    var o = { t: 0, tohum: 7 + Math.floor(Math.random() * 1000), durum: "oyna", bitis: 0, kam: -Y + 260, lav: 420, can: 4, kristal: 0, ezilen: 0,
+    var o = { t: 0, tohum: 7 + Math.floor(Math.random() * 1000), durum: "oyna", bitis: 0, kam: -Y + 260, lav: 420, can: 3, kristal: 0, ezilen: 0,
       k: { x: G / 2, y: 0, vx: 0, vy: -ZIPLA, yon: 1, dokunulmaz: 0 }, hedefX: null, sol: false, sag: false,
       platformlar: [], uzaylilar: [], kristaller: [], parcalar: [], soz: {}, mesaj: "", mesajSn: 0 };
     // başlangıç zemini: geniş, sağlam
@@ -195,7 +196,7 @@
     // kristaller
     for (i = o.kristaller.length - 1; i >= 0; i--) {
       m = o.kristaller[i];
-      if (Math.abs(m.x - k.x) < 60 && m.y < k.y + 20 && m.y > k.y - 140) { o.kristaller.splice(i, 1); o.kristal++; if (o.kristal % 6 === 0 && o.can < 5) { o.can++; mesajVer("+1 can!", 1.2); } cal("e_kalp", 0.4); parca(o, m.x, m.y, "#ffd23a", 5); }
+      if (Math.abs(m.x - k.x) < 60 && m.y < k.y + 20 && m.y > k.y - 140) { o.kristaller.splice(i, 1); o.kristal++; if (o.kristal % 6 === 0 && o.can < 3) { o.can++; mesajVer("+1 can!", 1.2); } cal("e_kalp", 0.4); parca(o, m.x, m.y, "#ffd23a", 5); }
     }
     // kamera: yalnız yukarı
     var hedefKam = k.y - Y * 0.55; if (hedefKam < o.kam) o.kam += (hedefKam - o.kam) * Math.min(1, dt * 6);
@@ -208,11 +209,7 @@
     if (lavUzak < 330 && o.t > 6 && !o.soz.yakin) { o.soz.yakin = true; cal("p_yakin", 1); mesajVer("Lav çok yakın!", 1.6); }
     if (lavUzak > 700) o.soz.yakin = false;
     if (ilerleme > 0.8 && !o.soz.yari) { o.soz.yari = true; cal("p_yari", 1); mesajVer("Portal göründü!", 2); }
-    if (k.y > o.lav + 10) { // lava değen bir can kaybeder ve yukarı fırlar; son canda yakalanır
-      parca(o, k.x, o.lav, "#ff8a2a", 14);
-      if (o.can <= 1) { o.can = 0; bitir(o, false, "Lav seni yakaladı!"); }
-      else { o.can--; k.y = o.lav; k.vy = -FIRLA * 1.15; k.dokunulmaz = 2; cal("e_ah", 0.8); cal("e_firla", 0.5); mesajVer("Ay! Lav yaktı, zıpla!", 1.4); }
-    }
+    if (k.y > o.lav + 10) { parca(o, k.x, o.lav, "#ff8a2a", 14); o.can = 0; bitir(o, false, "Lav seni yakaladı!"); } // lav tek dokunuşta bitirir; canlar yalnız canavarlar için
     // portal
     if (k.y < -YUKSEKLIK + 60 && Math.abs(k.x - G / 2) < 150) bitir(o, true);
   }
@@ -264,19 +261,16 @@
     // lav: hamur kıvamında dalgalı üst kenar
     var ly = o.lav, alt = o.kam + Y + 40;
     if (ly < alt) {
-      var kat = [["#ffb02e", 0], ["#ff6a1a", 26], ["#d83a12", 60]];
-      for (var j = 0; j < kat.length; j++) {
-        c.fillStyle = kat[j][0]; c.beginPath(); c.moveTo(0, alt);
-        for (var x = 0; x <= G; x += 40) c.lineTo(x, ly + kat[j][1] + Math.sin(x / 70 + poz * 0.5 + j * 2) * 12);
-        c.lineTo(G, alt); c.closePath(); c.fill();
-      }
-      c.fillStyle = "#ffe07a"; for (i = 0; i < 6; i++) { c.beginPath(); c.arc((i * 137 + poz * 9) % G, ly + 40 + (i * 53) % 90, 7 + (i + poz) % 3 * 2, 0, 7); c.fill(); }
+      // hamur lav şeridi: poz poz sağa sola kayar, altı düz hamur rengiyle dolar
+      var lk = Math.round(Math.sin(poz * 0.45) * 5) * 60, lyy = ly - 34 + (poz % 2 ? 3 : -3);
+      c.drawImage(R.lav, -360 + lk, lyy, 1440, 320);
+      if (lyy + 300 < alt) { c.fillStyle = "#e2501c"; c.fillRect(0, lyy + 300, G, alt - lyy - 300); }
     }
     c.restore();
     // gösterge
     c.textAlign = "left";
-    for (i = 0; i < Math.max(4, o.can); i++) { c.fillStyle = i < o.can ? "#ff4a4a" : "rgba(255,255,255,.25)"; c.beginPath(); c.arc(40 + i * 46, 46, 16, 0, 7); c.fill(); }
-    yazi("✦ " + o.kristal, 40 + Math.max(4, o.can) * 46, 58, 32, "#ffd23a");
+    for (i = 0; i < 3; i++) resim(R.kalp, 44 + i * 52, 70, 46, false, i < o.can ? 1 : 0.25);
+    yazi("✦ " + o.kristal, 190, 58, 32, "#ffd23a");
     // yükseklik çubuğu (sağda): kahraman ve lav
     var cy0 = 120, cb = 700, cx = G - 34, oran = function (yy) { return Math.max(0, Math.min(1, -yy / YUKSEKLIK)); };
     c.fillStyle = "rgba(20,25,60,.6)"; c.fillRect(cx - 8, cy0, 16, cb);
