@@ -183,13 +183,15 @@ Depoya girmemesi gerekenler: Ateş'in gerçek fotoğrafı ve kişisel dosyalar. 
 
 Hikâye: uzaylı tırtıl Vıcık bu sefer kahramanın peşinde. Papağan "önce kendini, sonra dünyayı kurtar" der. Oyuncu sekiz kahramandan birini seçer (dört erkek, dört kız kıyafeti).
 
-Oyun (tek bölüm):
+Oyun (tek bölüm), Royal Match'in "yılanı durdur" reklamı örnek alındı:
 
-- Üstte labirent: Vıcık iki koridordan geçip kahramana yürür. Varış süresi `SURE` (85 sn).
-- Kahramanın çıkışı çakıl taşı kuyusuyla kapalı. Kuyuda 108 taş var, üstten `YEDEK_TAS` (190) taş daha gelir.
+- Üstte labirent: Vıcık iki koridordan geçip taş yığınına varır (`YURU`, 14 sn) ve yığını itmeye başlar.
+- Taşlar kahramanı sağdaki tuzağa (uzay gemisinin ışığı) doğru sürükler. Dolu yığınla tuzağa varış `ITME` (58 sn); taş azaldıkça itme zayıflar.
+- Yığın bir kuyuda durur: 108 çakıl, üstten `YEDEK_TAS` (190) çakıl daha gelir.
 - Altta 16×6 şeker tahtası (`SEKER` listesi: jelibonlar ve şekerler). Yan yana duran en az iki aynı şekere dokununca patlarlar. Şekerler düşmez, yeniden dolmaz.
 - Taşlar ince bir ızgarada (her şeker hücresi 3×3 çakıl) kum gibi akar: aşağı, olmazsa çapraza (`kumAdimi`). Tahtanın alt satırına varan taş suya dökülür.
-- Kuyuda ve yedekte taş kalmayınca kahraman kapıdan kaçar. Vıcık önce varırsa kahramanı gıdıklar (kaybetme).
+- Amaç: kahraman tuzağa varmadan bütün taşları dökmek. Taş kalmayınca Vıcık sersemleyip uçar. Kahraman tuzağa varırsa oyun kaybedilir.
+- Gerilim: taş sürtünme sesi, tuzağa yaklaştıkça sıklaşan tik tak, sonda kalp atışı, hızlanan müzik, kızaran kenarlar.
 - Dokunacak grup kalmazsa "Karıştır" kalan şekerleri yeniden dizer.
 - Hareket saniyede 12 pozla çizilir (`POZ`).
 
@@ -197,4 +199,4 @@ Deneme kancası: `__oyun.baslat('e4')`, `__oyun.dokun(satir, sutun)`, `__oyun.ot
 
 Açılış filmi gerçek video değil: hareketsiz hamur karelerinin yaklaşma ve titremeyle kurulmuş hali (kredi az harcansın diye). Ham kareler ve kurma betikleri Erman'da.
 
-Bilinenler: zorluk bir çocukla denenmedi (otomatik oyuncu iki saniyede bir hamleyle 12 oyunun 7'sini kazandı); sesler dinlenmedi; tablette denenmedi.
+Bilinenler: zorluk bir çocukla denenmedi (otomatik oyuncu iki saniyede bir hamleyle 10 oyunun 7'sini kazandı); sesler dinlenmedi; tablette denenmedi.
