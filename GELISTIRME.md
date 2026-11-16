@@ -288,3 +288,4 @@ Bilinenler: zorluk bir çocukla denenmedi (otomatik oyuncu iki saniyede bir haml
 - Geçiş filmi `la_kirmizi/siyah.mp4` (28 sn): Eyfel'in altındaki kanalizasyon karargâhı, jet okyanusu aşamaz, Ateş'in aklına uzaylıların portalı gelir, Pufi aynısını yapar, yeni kostüm, portaldan Hollywood.
 - Akış: Paris → Los Angeles → harita ekranında "İstanbul'a dönüyorum" → `final/` (istila). Finalde kahraman LA kostümünde.
 - Ölçülmedi: LA zorluğu, baştan sona oynanış; sesler dinlenmedi. Koşu pozları kos1 ve kos2 birbirine çok benziyor.
+- Tokyo'ya gidiş filmi stop motion sürümüyle değişti (`tokyo_kirmizi/siyah.mp4`; kaynak `oyunlar/hamur_filmler_stopmotion/`, eskisi `kaynak/eski_filmler/`). Öteki filmler hazır oldukça aynı yolla değişecek.
