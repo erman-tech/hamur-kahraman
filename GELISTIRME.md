@@ -200,3 +200,12 @@ Deneme kancası: `__oyun.baslat('e4')`, `__oyun.dokun(satir, sutun)`, `__oyun.ot
 Açılış filmi gerçek video değil: hareketsiz hamur karelerinin yaklaşma ve titremeyle kurulmuş hali (kredi az harcansın diye). Ham kareler ve kurma betikleri Erman'da.
 
 Bilinenler: zorluk bir çocukla denenmedi (otomatik oyuncu iki saniyede bir hamleyle 10 oyunun 7'sini kazandı); sesler dinlenmedi; tablette denenmedi.
+
+
+### 16 Kasım güncellemesi (2. oyun)
+
+- Oynanış artık şeker kaydırmalı: bir şeker komşusuyla yer değiştirir, en az üç aynı şeker yan yana ya da alt alta gelince patlar (`takas`, `eslesmeler`, `hamleler`). Hamle kalmazsa tahta kendiliğinden karışır.
+- Tırtıl tünelin deliğinden çıkar, tünelde yığılı taşlara dayanır ve iterek ilerler (`TUNEL`). Tünel daraltıldı (`KOR`), taşlar irileştirildi.
+- Taş akışı yavaşladı ve yana da yayılıyor (`kumAdimi`, adım 0,075 sn). İtme süresi `ITME = 80`.
+- Açılış filmi sallantısız: yalnız yavaş yaklaşma ve uzaklaşma (`kaynak/film4.py`, saniyede 24 kare).
+- Portalda yalnız iki oyun var; Aslı Beliz sürümü kendi adresinde duruyor, portalda bağlantısı yok.
