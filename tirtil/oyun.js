@@ -318,9 +318,10 @@
     c.globalAlpha = 1;
 
     // gösterge
-    c.textAlign = "left"; yazi("Kalan taş: " + kalanTas(o), 24, 44, 28);
+    c.textAlign = "left"; var ksn = Math.max(0, Math.ceil(SURE - o.t));
+    yazi("Vıcık'ın gelmesine: " + ksn + " sn", 24, 40, 26, ksn <= 20 ? "#ffd23a" : "#fff"); yazi("Kapının önünde " + kalanTas(o) + " taş", 24, 70, 20);
     c.textAlign = "center";
-    if (o.durum === "oyna" && o.ipucu > 0) yazi("Aynı şekerlere dokun, taşlara suya kadar yol aç!", 600, 48, 28);
+    if (o.durum === "oyna" && o.ipucu > 0) { yazi("Amaç: Vıcık gelmeden kapıdan kaç!", 700, 330, 34, "#ffd23a"); yazi("Aynı şekerlere dokun: kapının önündeki taşlar suya dökülsün.", 700, 366, 24); }
     else if (panik && poz % 2) yazi("Vıcık çok yaklaştı!", 600, 52, 40, "#ffd23a");
     if (o.durum === "kacti") yazi("Yol açıldı! Koş!", 600, 52, 40, "#ffd23a");
     if (o.durum === "yakalandi") yazi("Gıdı gıdı gıdı!", 600, 52, 44, "#ffd23a");
