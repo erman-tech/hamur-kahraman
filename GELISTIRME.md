@@ -188,7 +188,7 @@ Oyun (tek bölüm), Royal Match'in "yılanı durdur" reklamı örnek alındı:
 - Üstte labirent: Vıcık iki koridordan geçip taş yığınına varır (`YURU`, 14 sn) ve yığını itmeye başlar.
 - Taşlar kahramanı sağdaki tuzağa (uzay gemisinin ışığı) doğru sürükler. Dolu yığınla tuzağa varış `ITME` (58 sn); taş azaldıkça itme zayıflar.
 - Yığın bir kuyuda durur: 108 çakıl, üstten `YEDEK_TAS` (190) çakıl daha gelir.
-- Altta 16×6 şeker tahtası (`SEKER` listesi: jelibonlar ve şekerler). Yan yana duran en az iki aynı şekere dokununca patlarlar. Şekerler düşmez, yeniden dolmaz.
+- Altta 16×7 şeker tahtası (`SEKER` listesi: jelibonlar ve şekerler). Yan yana duran en az iki aynı şekere dokununca patlarlar. Şekerler düşmez, yeniden dolmaz.
 - Taşlar ince bir ızgarada (her şeker hücresi 3×3 çakıl) kum gibi akar: aşağı, olmazsa çapraza (`kumAdimi`). Tahtanın alt satırına varan taş suya dökülür.
 - Amaç: kahraman tuzağa varmadan bütün taşları dökmek. Taş kalmayınca Vıcık sersemleyip uçar. Kahraman tuzağa varırsa oyun kaybedilir.
 - Gerilim: taş sürtünme sesi, tuzağa yaklaştıkça sıklaşan tik tak, sonda kalp atışı, hızlanan müzik, kızaran kenarlar.
