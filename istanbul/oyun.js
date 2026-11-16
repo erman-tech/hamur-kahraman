@@ -146,6 +146,7 @@
     muzikDur(); location.href = "../tirtil/index.html?baglanti=1&seri=" + (D.secim === "iyi" ? "iyi" : "kotu"); });
   // İstanbul'dan sonra: gizli üs, yeni kostüm, hamur jet ve Londra
   $("londra").addEventListener("click", function () { // sıradaki şehre: geçiş filmi (yeni kostüm) → bölüm
+    if (!siradaki()) { muzikDur(); location.href = "../final/index.html?seri=" + (D.secim === "iyi" ? "iyi" : "kotu"); return; } // dört şehir bitti: final (Kuleyi Yık)
     var h = siradaki() || "londra", sh = SEHIRLER[h]; muzikDur();
     filmOynat(sh.gecis[D.secim], function () {
       if (h === "tokyo") { location.href = "../kosu/index.html?seri=" + (D.secim === "iyi" ? "iyi" : "kotu"); return; } // önce papağanı kurtar (koşu), sonra Tokyo bölümü
@@ -630,10 +631,10 @@
       return '<div class="kart' + (t ? " tamam" : "") + '">' + q[1] + "<small>" + (t ? "✔ Kurtarıldı" : sira ? "✈ Sıradaki görev" : "🔒 Yakında") + "</small></div>";
     }).join("");
     $("zaferBaslik").textContent = ad() + ", " + sehir().eki + " kurtardı!";
-    $("londra").style.display = sr ? "" : "none"; $("kal").style.display = sr === "londra" || sr === "tokyo" ? "" : "none";
-    if (sr) $("londra").textContent = "✈ " + yonAd(sr) + " hazırım!";
+    $("londra").style.display = ""; $("kal").style.display = sr === "londra" || sr === "tokyo" ? "" : "none";
+    $("londra").textContent = sr ? "✈ " + yonAd(sr) + " hazırım!" : "🏠 İstanbul'a dönüyorum!";
     $("kal").textContent = sr === "tokyo" ? "🏠 Eve dönmek istiyorum" : "İstanbul'da kalacağım";
-    $("karar").textContent = sr ? SEHIRLER[sr].eki + " kurtarmaya hazır mısın?" : "Dört şehir kurtuldu! Los Angeles yakında.";
+    $("karar").textContent = sr ? SEHIRLER[sr].eki + " kurtarmaya hazır mısın?" : "Dört şehir kurtuldu! Ama İstanbul'dan kötü haber var…";
     $("tekrar").style.display = "";
     D.sonYildiz = yildiz; ekranAc("harita");
   }

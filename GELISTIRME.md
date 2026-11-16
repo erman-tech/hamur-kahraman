@@ -264,3 +264,11 @@ Bilinenler: zorluk bir çocukla denenmedi (otomatik oyuncu iki saniyede bir haml
 - Yeni oyun `kosu/` (kaynak `hamur_kahraman_4/`): üç şeritli çatı koşusu, dik. Sahte derinlik: zemin dokusu satır satır daraltılarak çizilir (`UFUK`, `TABAN`, `ZK`). Engeller: bariyer (zıpla), kapı (kay), blok (şerit değiştir). `SURE` 46 sn; çarpış −%5 yakınlık; 10 onigiri bir can. Robotla ölçüldü: dikkatli 6/6, orta 6/6, dalgın 5/6 kazandı; hiç oynamayan 10–20 sn'de kaybetti.
 - Akış: Londra → "Tokyo'ya hazırım" → Tokyo filmi (papağan kaçırılır, jet) → `kosu/` → kazanınca `istanbul/index.html?devam=tokyo` (Tokyo filmsiz başlar). Tokyo'da papağan yeniden görünür; üç ses buna göre yenilendi.
 - Şehir bölümleri zorlaştı: yürüyerek geçilmeyen hamur bariyerler (`o.duvarlar`; alçak olan zıplanır, yüksek olan atışı da keser, üstünden uçulur), şehir ilerledikçe sıklaşır. Atış gücü: beş atış, 0,8 sn'de bir dolar (sürekli ateş edilemez). Bu zorluk çocukla denenmedi.
+
+## 16 Kasım 2026 (gece 2) — Final: Kuleyi Yık
+- Yeni oyun `final/` (kaynak `hamur_kahraman_5/`), yatay 1280×720. Galata'daki mancınıkla Haliç'in karşısındaki uzaylı kulesi yıkılır. Üç kat: 1. kat (6 atış), 2. kat (7), Zorgo'nun kulesi (9). Bütün uzaylılar düşünce kat biter; atış biterse o kat yeniden denenir.
+- Fizik bilerek basit (dönme yok): bloklar düşer, kayar, üst üste oturur; ağırlık merkezi desteğin dışında kalan parça kayıp düşer. Can: taş 3, tahta 2, jöle 1, tırtıl 1, Zorgo 3. Bir kat yükseklikten düşen uzaylı ölür. Sabitler `oyun.js` başında (`BALKON`, `YER`, `KIYI`, `ATIS`, `GUC`).
+- Mermiler: hamur top, simit (seker), ninja yıldızı (uçarken dokununca üçe bölünür), boya topu (çarpınca patlar, 150 px). Çay fincanı (zamanı yavaşlatma) yapılmadı.
+- Giriş filmi `final/video/giris.mp4` (22,6 sn; `?film=0` atlar). Test: `final/index.html?film=0&kat=1..3`.
+- Akış: Paris kurtulunca harita ekranında "🏠 İstanbul'a dönüyorum!" → `final/`. Los Angeles hâlâ yok; yapılırsa final onun arkasına alınır (`hamur_kahraman/oyun.js`, `#londra` tıklaması).
+- Robotla ölçüldü (12'şer oyun): rastgele atan 0/12; uzaylıya nişan alan (%8 hata) 11–12/12, (%15 hata) 10–12/12, (%25 hata) 4–7/12. Gerçek parmakla ve çocukla denenmedi; sesler dinlenmedi.

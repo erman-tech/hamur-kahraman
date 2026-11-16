@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Hamur Kahraman: Kuleyi Yık</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #101a3a; overflow: hidden; touch-action: none;
+    font-family: "Arial Rounded MT Bold", "Chalkboard SE", "Trebuchet MS", sans-serif; user-select: none; -webkit-user-select: none; }
+  #sahne { position: absolute; left: 0; top: 0; width: 1280px; height: 720px; transform-origin: 0 0; overflow: hidden; background: #3a2f6a; }
+  #sahne > * { position: absolute; left: 0; top: 0; width: 1280px; height: 720px; }
+  canvas { display: block; }
+  .ekran { display: none; align-items: center; justify-content: center; flex-direction: column; text-align: center; color: #fff; }
+  .ekran.acik { display: flex; }
+  .hamur { border: 0; cursor: pointer; font: inherit; font-size: 40px; color: #fff; padding: 18px 50px; border-radius: 40px;
+    box-shadow: 0 10px 0 rgba(0,0,0,.35), inset 0 -8px 0 rgba(0,0,0,.18), inset 0 6px 0 rgba(255,255,255,.28); transition: transform .08s; }
+  .hamur:active { transform: translateY(6px); }
+  .kirmizi { background: #e23b2e; } .sari { background: #f2b61e; color: #3a2400; } .mavi { background: #2f7fd6; }
+  #kapak { background: rgba(30,16,70,.6); }
+  #kapak h1 { font-size: 76px; margin: 0 0 8px; color: #ffd23a; text-shadow: 0 6px 0 rgba(0,0,0,.45); }
+  #kapak h2 { font-size: 28px; margin: 0 160px 30px; font-weight: normal; text-shadow: 0 3px 0 rgba(0,0,0,.5); line-height: 1.35; }
+  #kapak p { font-size: 22px; margin: 18px 0 0; text-shadow: 0 3px 0 rgba(0,0,0,.6); }
+  #kapak .geri { position: absolute; left: 24px; top: 20px; width: auto; height: auto; font-size: 22px; color: #fff; text-decoration: none;
+    background: rgba(20,30,70,.6); padding: 10px 20px; border-radius: 22px; }
+  #kapak .imza { position: absolute; left: 0; top: auto; bottom: 26px; width: 1280px; height: auto; font-size: 22px; color: #ffd23a; text-shadow: 0 3px 0 rgba(0,0,0,.6); }
+  #sonuc { background: rgba(16,26,58,.8); }
+  #sonuc h1 { font-size: 60px; margin: 0 30px 12px; text-shadow: 0 6px 0 rgba(0,0,0,.4); }
+  #sonuc h2 { font-size: 28px; margin: 0 120px 30px; font-weight: normal; }
+  #sonuc .dugmeler { display: flex; gap: 26px; }
+  #sonuc .hamur { font-size: 30px; padding: 16px 34px; text-decoration: none; }
+  #film { position: fixed; inset: 0; width: 100vw; height: 100vh; object-fit: contain; background: #101a3a; z-index: 40; display: none; }
+  #gec { position: fixed; right: 20px; bottom: 18px; z-index: 41; font-size: 22px; padding: 10px 24px; display: none; }
+  #dondur { position: fixed; inset: 0; z-index: 50; background: #101a3a; color: #fff; display: none; align-items: center; justify-content: center;
+    flex-direction: column; text-align: center; font-size: 26px; }
+  #dondur .tel { width: 70px; height: 120px; border: 8px solid #ffd23a; border-radius: 16px; margin-bottom: 26px; animation: don 1.6s ease-in-out infinite; }
+  @keyframes don { 0%, 20% { transform: rotate(0deg); } 60%, 100% { transform: rotate(90deg); } }
+</style>
+</head>
+<body>
+<div id="sahne">
+  <canvas id="tuval" width="1280" height="720"></canvas>
+  <div id="kapak" class="ekran acik">
+    <a class="geri" href="../index.html">◀ Oyunlar</a>
+    <h1>Kuleyi Yık</h1>
+    <h2>Zorgo İstanbul'u istila etti ve Tarihi Yarımada'ya uzaylı kulesi dikti. Galata'daki mancınıkla kuleyi yık, bütün uzaylıları düşür!</h2>
+    <button id="basla" class="hamur kirmizi">▶ BAŞLA</button>
+    <p>Parmağını geri çek, nişan al, bırak. Sesi açmayı unutma!</p>
+    <div class="imza">designed by Can Ateş Ünal</div>
+  </div>
+  <div id="sonuc" class="ekran">
+    <h1 id="sonucBaslik"></h1>
+    <h2 id="sonucYazi"></h2>
+    <div class="dugmeler">
+      <button id="tekrar" class="hamur sari">Tekrar dene</button>
+      <button id="bastan" class="hamur kirmizi">Baştan oyna</button>
+      <a id="oyunlar" class="hamur mavi" href="../index.html">◀ Oyunlar</a>
+    </div>
+  </div>
+</div>
+<video id="film" playsinline preload="auto"></video>
+<button id="gec" class="hamur sari">Geç ▶</button>
+<div id="dondur"><div class="tel"></div>Bu bölüm yan oynanır.<br>Telefonu yan çevir!</div>
+<script src="oyun.js"></script>
+</body>
+</html>
