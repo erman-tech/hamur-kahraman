@@ -210,3 +210,4 @@ Bilinenler: zorluk bir çocukla denenmedi (otomatik oyuncu iki saniyede bir haml
 - Açılış filmi sallantısız: yalnız yavaş yaklaşma ve uzaklaşma (`kaynak/film4.py`, saniyede 24 kare).
 - Portalda yalnız iki oyun var; Aslı Beliz sürümü kendi adresinde duruyor, portalda bağlantısı yok.
 - Kahramanın odası alçaltıldı (`ODA`), taşlar tavana kadar dolar. Uzay gemisi yerde bekler; kaybedilince kahramanı alıp uçar.
+- Taşların yerini hamur lav aldı (`varlik/lav1.png`, `lav2.png`; taş görsellerinden renklendirildi, kodda adı hâlâ `tas`). Lav ile kahraman arasında kapı var: lav kapıyı, kapı kahramanı iter.
