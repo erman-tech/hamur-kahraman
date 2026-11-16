@@ -281,3 +281,10 @@ Bilinenler: zorluk bir çocukla denenmedi (otomatik oyuncu iki saniyede bir haml
 - Robot (12'şer oyun, uzaylıya nişan): %3 hata 6/12, %8 hata 3/12, %20 hata 0/12; hep 5 simitle. Alttaki sütunlara atan robot 0–1/12. Yani zor; 5'ten az simitle yıkan robot olmadı. Gerçek parmakla ve çocukla denenmedi.
 - Arka plan yeni (`kaynak/arka2.png`, 21:9; oyunda 150–1430 arası kesit). Film son karesi de yenilendi.
 - Papağanı Kurtar: koşu döngüsü dört adım (sol adım, uçuş, sağ adım, uçuş); sağ adımlar eldeki iki pozun aynası, adım hızı kat edilen yola bağlı (`faz = yol/150`), uçuş karesinde gövde 14 px yükselir. Yeni poz üretilmedi (Higgsfield denemesi eski sayfayı kopyaladı).
+
+## 16 Kasım 2026 (gece 4) — Los Angeles bölümü
+- 5. şehir `SEHIRLER.losangeles` (Hollywood): film makarası toplanır; kötüler yürüyen kameralar, kanatlı klaketler, yuvarlanan film kutusu; kral Yönetmen ("Motor!" deyince iki film kutusu yuvarlanır). Kostümler `ka_*` / `sa_*` (film yıldızı).
+- Güç `dublor`: kahramanın kopyası 5 sn sahnede kalır; kötüler ona koşar ve değince yakalanır, bu sırada kahraman hasar almaz (`incit` içinde), kralın attıkları dublörü hedefler.
+- Geçiş filmi `la_kirmizi/siyah.mp4` (28 sn): Eyfel'in altındaki kanalizasyon karargâhı, jet okyanusu aşamaz, Ateş'in aklına uzaylıların portalı gelir, Pufi aynısını yapar, yeni kostüm, portaldan Hollywood.
+- Akış: Paris → Los Angeles → harita ekranında "İstanbul'a dönüyorum" → `final/` (istila). Finalde kahraman LA kostümünde.
+- Ölçülmedi: LA zorluğu, baştan sona oynanış; sesler dinlenmedi. Koşu pozları kos1 ve kos2 birbirine çok benziyor.
