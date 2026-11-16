@@ -180,12 +180,13 @@
     if (kazandi) {
       var yeni = rekorYaz(o.atilan), y = yildiz(o.atilan);
       $("sonucBaslik").textContent = "Kuleyi " + o.atilan + " simitle yıktın!";
-      $("sonucYazi").textContent = "★".repeat(y) + "☆".repeat(3 - y) + "   Zorgo yenildi, İstanbul kurtuldu. " + (yeni ? "Yeni rekor!" : "Rekorun: " + rekorOku() + " simit.") + (o.atilan > 1 ? " Daha az simitle dener misin?" : "");
+      $("sonucYazi").textContent = "★".repeat(y) + "☆".repeat(3 - y) + "   Zorgo yenildi, İstanbul kurtuldu. " + (yeni ? "Yeni rekor!" : "Rekorun: " + rekorOku() + " simit.") + " Ama dur! Zorgo'nun dev tırtılı Ateş için geliyor…";
       try { localStorage.setItem("hk_final", "1"); } catch (e) {}
     } else {
       $("sonucBaslik").textContent = "Simitler bitti!";
       $("sonucYazi").textContent = "Kulede hâlâ " + uzayliSay(o) + " uzaylı var (" + o.toplam + " taneydi). Alttaki sütunları dene!";
     }
+    $("devam").style.display = kazandi ? "" : "none";   // kule yıkılınca hikâye Uzaylı Tırtıl oyunuyla sürer
     cal(kazandi ? "a_fkazan" : "a_fkayip", 1); if (kazandi) cal("e_zafer", 0.6); rekorGoster();
     setTimeout(function () { if (D.oyun === o && o.durum === "bitti") ekranAc("sonuc"); }, kazandi ? 1400 : 700);
   }
@@ -275,6 +276,7 @@
   }
   $("basla").addEventListener("click", function () { ekranAc("oyun"); filmOynat(function () { baslat(); }); });
   $("tekrar").addEventListener("click", function () { baslat(); });
+  $("devam").addEventListener("click", function () { muzik(false); location.href = "../tirtil/index.html?baglanti=1&final=1&seri=" + SERI; });
 
   window.__oyun = { D: D, baslat: baslat, ATIS: ATIS, GUC: GUC, uzayliMi: uzayliMi, at: function (dx, dy) { var o = D.oyun; if (o.durum !== "nisan") return false; firlat(o, dx * GUC, dy * GUC); return true; },
     ilerlet: function (sn) { for (var t = 0; t < sn; t += 1 / 120) guncelle(1 / 120); ciz(); var o = D.oyun; return { durum: o.durum, uzayli: uzayliSay(o), simit: o.simit, atilan: o.atilan }; } };
