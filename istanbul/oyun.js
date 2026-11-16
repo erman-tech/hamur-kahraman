@@ -16,13 +16,13 @@
   addEventListener("resize", olcekle); olcekle();
 
   // ---------- varlıklar ----------
-  var R = {}, resimAdlari = ["sis1", "sis2", "sis3", "shuriken", "simsek", "arka.jpg", "arka_l.jpg", "kl_dur", "kl_kos1", "kl_kos2", "kl_kos3", "kl_kos4", "l_yur1", "l_yur2", "l_uc1", "l_uc2", "l_yuv", "arka_t.jpg", "kt_dur", "kt_kos1", "kt_kos2", "kt_uc", "kt_at", "st_dur", "st_kos1", "st_kos2", "st_uc", "st_at", "t_platform", "onigiri", "t_yuv", "t_yur1", "t_yur2", "t_uc1", "t_uc2", "ejder", "kl_uc", "kl_at", "sl_dur", "sl_kos1", "sl_kos2", "sl_uc", "sl_at", "kont", "cay", "otobus", "k_dur", "k_kos1", "k_kos2", "k_uc", "k_at", "s_dur", "s_kos1", "s_kos2", "s_uc", "s_at",
+  var R = {}, resimAdlari = ["arka_p.jpg", "arka_p_gri.jpg", "kp_dur", "kp_kos1", "kp_kos2", "kp_uc", "kp_at", "sp_dur", "sp_kos1", "sp_kos2", "sp_uc", "sp_at", "p_yur1", "p_yur2", "p_uc1", "p_uc2", "p_yuv", "boya", "p_platform", "dalga", "p_top", "ressam", "sis1", "sis2", "sis3", "shuriken", "simsek", "arka.jpg", "arka_l.jpg", "kl_dur", "kl_kos1", "kl_kos2", "kl_kos3", "kl_kos4", "l_yur1", "l_yur2", "l_uc1", "l_uc2", "l_yuv", "arka_t.jpg", "kt_dur", "kt_kos1", "kt_kos2", "kt_uc", "kt_at", "st_dur", "st_kos1", "st_kos2", "st_uc", "st_at", "t_platform", "onigiri", "t_yuv", "t_yur1", "t_yur2", "t_uc1", "t_uc2", "ejder", "kl_uc", "kl_at", "sl_dur", "sl_kos1", "sl_kos2", "sl_uc", "sl_at", "kont", "cay", "otobus", "k_dur", "k_kos1", "k_kos2", "k_uc", "k_at", "s_dur", "s_kos1", "s_kos2", "s_uc", "s_at",
     "pb1", "pb2", "ps1", "ps2", "yur1", "yur2", "uc1", "uc2", "kral", "platform", "simit", "meteor", "kalp", "sandik", "yildiz"];
   resimAdlari.forEach(function (a) {
     var im = new Image(); im.src = "varlik/" + (a.indexOf(".") > 0 ? a : a + ".png"); R[a.replace(".jpg", "")] = im;
   });
   // Sesler: Web Audio (tablette de çalsın diye); olmazsa düz <audio>.
-  var sesAdlari = ["e_ag", "e_elektrik", "e_pop", "e_simit", "e_ah", "e_zafer", "e_meteor", "p_soru", "p_basla", "p_kral", "p_tekrar", "p_gorev", "a_kazandin_c", "a_kazandin_u", "p_londra", "p_kont", "a_londra", "p_tokyo", "p_ejder", "a_tokyo", "muzik"];
+  var sesAdlari = ["e_ag", "e_elektrik", "e_pop", "e_simit", "e_ah", "e_zafer", "e_meteor", "p_soru", "p_basla", "p_kral", "p_tekrar", "p_gorev", "a_kazandin_c", "a_kazandin_u", "p_londra", "p_kont", "a_londra", "p_tokyo", "p_ejder", "a_tokyo", "p_paris", "p_ressam", "a_paris", "muzik"];
   var AC = window.AudioContext || window.webkitAudioContext, ac = null, tampon = {}, yedek = {}, muzikDugum = null;
   sesAdlari.forEach(function (a) { var s = new Audio(); s.preload = "auto"; s.src = "ses/" + a + ".mp3"; yedek[a] = s; });
   yedek.muzik.loop = true; yedek.muzik.volume = 0.22;
@@ -68,9 +68,14 @@
       bolum: { uz: 14000, simit: 32, kotu: 18, kralAra: 1.4, meteorAra: 2.2, yurAra: 430, yurHiz: 105, ucAra: 700, ucHiz: 150, kralCan: 12, yuvar: 7, dal: 5 } }, // guc: bu şehrin kostümüne özel güç
     tokyo: { ad: "Tokyo", eki: "Tokyo'yu", arka: "arka_t", on: { iyi: "kt_", kotu: "st_" }, topla: "onigiri", toplaAd: "Onigiri", platform: "t_platform", kral: "ejder", kralAd: "Neon Ejder", kralEki: "Neon Ejder'i", pBasla: "p_tokyo", pKral: "p_ejder", zafer: "a_tokyo", kralOlcek: 0.85,
       kotu: { yur: ["t_yur1", "t_yur2"], uc: ["t_uc1", "t_uc2"], yuv: "t_yuv", yurOlcek: 0.95, ucOlcek: 0.9 }, guc: "ninja", gucBekle: 12, toplaOlcek: 0.75, gecis: { iyi: "tokyo_kirmizi", kotu: "tokyo_siyah" },
-      bolum: { uz: 17000, simit: 40, kotu: 24, kralAra: 1.25, meteorAra: 2.0, yurAra: 390, yurHiz: 120, ucAra: 620, ucHiz: 165, kralCan: 16, yuvar: 6, dal: 4 } }
+      bolum: { uz: 17000, simit: 40, kotu: 24, kralAra: 1.25, meteorAra: 2.0, yurAra: 390, yurHiz: 120, ucAra: 620, ucHiz: 165, kralCan: 16, yuvar: 6, dal: 4 } },
+    // Paris: şehir gri başlar, ilerledikçe renklenir (arkaGri üstüne renkli arka plan poz poz açılır). Güç: renk dalgası.
+    paris: { ad: "Paris", eki: "Paris'i", yon: "Paris'e", arka: "arka_p", arkaGri: "arka_p_gri", on: { iyi: "kp_", kotu: "sp_" }, topla: "boya", toplaAd: "Boya tüpü", platform: "p_platform", kral: "ressam", kralAd: "Gölge Ressam", kralEki: "Gölge Ressam'ı", pBasla: "p_paris", pKral: "p_ressam", zafer: "a_paris", kralOlcek: 0.9, mermi: "p_top",
+      kotu: { yur: ["p_yur1", "p_yur2"], uc: ["p_uc1", "p_uc2"], yuv: "p_yuv", yurOlcek: 0.95, ucOlcek: 0.9 }, guc: "renk", gucBekle: 12, toplaOlcek: 0.75, gecis: { iyi: "paris_kirmizi", kotu: "paris_siyah" },
+      bolum: { uz: 19000, simit: 46, kotu: 28, kralAra: 1.15, meteorAra: 1.9, yurAra: 370, yurHiz: 128, ucAra: 590, ucHiz: 172, kralCan: 18, yuvar: 6, dal: 4 } }
   };
-  var SIRA = ["istanbul", "londra", "tokyo"];
+  var SIRA = ["istanbul", "londra", "tokyo", "paris"];
+  function yonAd(s) { return SEHIRLER[s].yon || SEHIRLER[s].ad + "'ya"; }
   function siradaki() { for (var i = 0; i < SIRA.length; i++) if (!D.kurtarilan[SIRA[i]]) return SIRA[i]; return null; }
   function sehir() { return SEHIRLER[D.sehir]; }
   function kostumAc(on) { try { var l = JSON.parse(localStorage.getItem("hk_kostum") || "[]"); if (l.indexOf(on) < 0) l.push(on); localStorage.setItem("hk_kostum", JSON.stringify(l)); } catch (e) {} }
@@ -114,14 +119,24 @@
   }
   var TEST = new URLSearchParams(location.search).get("test"); // test: ?test=<şehir>&seri=iyi|kotu → o bölüm doğrudan açılır, taraf kilidine dokunmaz
   $("basla").addEventListener("click", function () {
-    if (SEHIRLER[TEST]) { D.secim = new URLSearchParams(location.search).get("seri") === "kotu" ? "kotu" : "iyi"; D.sehir = TEST; oyunBaslat(); return; }
+    if (SEHIRLER[TEST]) { // test: önce o şehrin geçiş filmi, sonra bölüm
+      D.secim = new URLSearchParams(location.search).get("seri") === "kotu" ? "kotu" : "iyi";
+      var tg = SEHIRLER[TEST].gecis, tb = function () { D.sehir = TEST; oyunBaslat(); };
+      if (tg) filmOynat(tg[D.secim], tb); else tb(); return;
+    }
     filmOynat("giris", function () { var t = tarafOku(); if (t) sec(t); else secimEkrani(); }); });
   if (SEHIRLER[TEST]) $("basla").textContent = "▶ TEST: " + SEHIRLER[TEST].ad;
   $("evet").addEventListener("click", function () { sec("iyi"); });
   $("hayir").addEventListener("click", function () { sec("kotu"); });
   $("tekrar").addEventListener("click", function () { oyunBaslat(); });
   // Karar: İstanbul'da kalırsa uzaylı tırtıl Ateş için gelir (2. oyun); orada kazanınca yine Londra sorulur.
-  $("kal").addEventListener("click", function () { muzikDur(); location.href = "../tirtil/index.html?baglanti=1&seri=" + (D.secim === "iyi" ? "iyi" : "kotu"); });
+  $("kal").addEventListener("click", function () {
+    if (siradaki() === "tokyo") { // Londra'dan sonra eve dönmek isterse: Zorgo'nun UFO'su jeti yakalar, kötüler gezegenine ışınlar → Gezegenden Kaçış; kaçarsa Tokyo görevi yine sorulur
+      muzikDur(); var kst = SEHIRLER.londra.on[D.secim].replace("_", "");
+      filmOynat(D.secim === "iyi" ? "ufo_kirmizi" : "ufo_siyah", function () { location.href = "../kacis/index.html?sonra=tokyo&k=" + kst + "&seri=" + (D.secim === "iyi" ? "iyi" : "kotu"); });
+      return;
+    }
+    muzikDur(); location.href = "../tirtil/index.html?baglanti=1&seri=" + (D.secim === "iyi" ? "iyi" : "kotu"); });
   // İstanbul'dan sonra: gizli üs, yeni kostüm, hamur jet ve Londra
   $("londra").addEventListener("click", function () { // sıradaki şehre: geçiş filmi (yeni kostüm) → bölüm
     var h = siradaki() || "londra", sh = SEHIRLER[h]; muzikDur();
@@ -186,7 +201,7 @@
   }
 
   function oyunBaslat() {
-    $("zamanD").style.display = sehir().guc ? "" : "none"; $("zamanD").textContent = sehir().guc === "ninja" ? "⚡" : "⏱";
+    $("zamanD").style.display = sehir().guc ? "" : "none"; $("zamanD").textContent = sehir().guc === "renk" ? "🎨" : sehir().guc === "ninja" ? "⚡" : "⏱";
     D.oyun = bolumKur(); ekranAc("oyun");
     muzikBasla();
     cal(sehir().pBasla, 1);
@@ -277,6 +292,18 @@
       var kq = o.kral; if (kq && o.kralGeldi && !kq.yenildi && Math.abs(kq.x - k.x) < 800) o.yildizlar.push({ x: k.x, y: k.y - 70, hx: kq.x, hy: kq.y - 120, t: 0, sure: 0.4, bekle: 0.4, kral: true });
       mesajVer("Sis bombası!", 1.2); cal("e_pop", 0.9);
     }
+    if (zamanYeni && sehir().guc === "renk" && !(o.durBekle > 0) && !o.bitti) { // Paris kostümü: iki yana yayılan boya dalgası
+      o.durBekle = sehir().gucBekle; k.dokunulmaz = Math.max(k.dokunulmaz, 1.2); o.boyaDalga = { x: k.x, sn: 0, kral: false }; o.ninjaSay = 0; o.renk = Math.min(1, (o.renk || 0) + 0.15);
+      mesajVer("Renk dalgası!", 1.2); cal("e_pop", 0.9);
+    }
+    if (o.boyaDalga) {
+      var bd = o.boyaDalga, bu; bd.sn += dt; bu = bd.sn * 950;
+      o.kotuler.forEach(function (q) { if (!q.yakalandi && Math.abs(q.x - bd.x) < Math.min(bu, 760)) { kotuYakala(o, q); o.ninjaSay++; mesajVer("Renk dalgası! " + o.ninjaSay + " kötü boyandı!", 1.6); } });
+      var kb = o.kral; if (!bd.kral && kb && o.kralGeldi && !kb.yenildi && Math.abs(kb.x - bd.x) < Math.min(bu, 800)) { bd.kral = true; if (kb.can > 2) { kb.can -= 2; kb.vurSn = 0.4; cal("e_pop", 0.8); parca(o, kb.x, kb.y - 120, "#ffd23a", 10); } }
+      if (bd.sn > 0.85) o.boyaDalga = null;
+    }
+    if (sehir().arkaGri) o.renk = Math.max(o.renk || 0, Math.min(1, k.x / (UZUNLUK - 1100)) * 0.85, o.kral && o.kral.yenildi ? 1 : 0); // şehir ilerledikçe renklenir
+    if (o.leke > 0) o.leke -= dt;
     if (o.duman) { o.duman.sn -= dt; if (o.duman.sn <= 0) o.duman = null; }
     for (i = o.yildizlar.length - 1; i >= 0; i--) { // ninja yıldızları: hedefe varınca kötüyü yakalar
       m = o.yildizlar[i]; if (m.bekle > 0) { m.bekle -= dt; if (m.bekle <= 0) cal("e_ag", 0.25); continue; }
@@ -326,6 +353,14 @@
           kr.sis -= dt; kr.yaylim -= dt;
           if (kr.yaylim <= 0) { kr.yaylim = 0.45; o.meteorlar.push({ x: k.x - 260 + Math.random() * 520, y: -60, vx: 0, vy: 420, yer: 0 }); cal("e_meteor", 0.25); }
         } else { kr.ozelSn -= dt; if (kr.ozelSn <= 0) { kr.ozelSn = 9 + Math.random() * 3; kr.sis = 3.2; kr.yaylim = 0.6; mesajVer("Sis saldırısı! Sis Kontu görünmez oldu!", 2.2); } }
+      }
+      if (D.sehir === "paris") { // Gölge Ressam: üç boya topunu birden fırlatır, ekranı gri lekeler kaplar
+        kr.ozelSn -= dt;
+        if (kr.ozelSn <= 0) {
+          kr.ozelSn = 6 + Math.random() * 2; o.leke = 2.6;
+          for (var pj = -1; pj <= 1; pj++) o.meteorlar.push({ x: kr.x, y: kr.y - 200, vx: (k.x - kr.x) / 1.2 + pj * 170, vy: -560 - Math.abs(pj) * 40, yer: 1500, kral: true });
+          mesajVer("Boya yağmuru! Ekran lekelendi!", 1.8); cal("e_meteor", 0.4);
+        }
       }
       if (D.sehir === "tokyo") { // Neon Ejder: yerden şimşek dalgası yollar (zıplanır), arada ışınlanır
         kr.ozelSn -= dt;
@@ -421,7 +456,9 @@
       for (i = ilk; i <= ilk + Math.ceil(G / ag) + 1; i++) {
         c.save(); c.translate(i * ag - kam, 0);
         if (i % 2) { c.translate(ag, 0); c.scale(-1, 1); }
-        c.drawImage(a, 0, 0, ag + 1, Y); c.restore();
+        var gri = sehir().arkaGri && R[sehir().arkaGri];
+        if (gri && gri.complete && gri.naturalWidth) { c.drawImage(gri, 0, 0, ag + 1, Y); c.globalAlpha = Math.round((o.renk || 0) * 10) / 10; }
+        c.drawImage(a, 0, 0, ag + 1, Y); c.globalAlpha = 1; c.restore();
       }
     } else { c.fillStyle = "#f3c9c0"; c.fillRect(0, 0, G, Y); }
     c.save(); c.translate(-kam, 0);
@@ -453,7 +490,7 @@
     for (i = 0; i < o.meteorlar.length; i++) {
       m = o.meteorlar[i];
       if (!m.kral) { c.fillStyle = "rgba(60,30,20,.25)"; c.beginPath(); c.ellipse(m.x + (ZEMIN - m.y) * m.vx / m.vy, ZEMIN - 4, 34, 9, 0, 0, 7); c.fill(); }
-      ciz(R.meteor, m.x, m.y + 30, 0.75, kare(i) % 2);
+      ciz(R[sehir().mermi || "meteor"], m.x, m.y + 30, 0.75, kare(i) % 2);
     }
 
     for (i = 0; i < o.dalgalar.length; i++) { // yer şimşeği: zikzak
@@ -472,6 +509,13 @@
         var dax = Math.cos(dj * 2.4) * 150 * dr * (dj ? 1 : 0), day = Math.sin(dj * 1.7) * 70 * dr - 80 + (kare(dj) % 2 ? 4 : -4);
         c.save(); c.translate(k.x + dax, k.y + day); c.scale((dj + kare()) % 2 ? 1 : -1, 1); c.drawImage(sim, -sg / 2, -sy / 2, sg, sy); c.restore();
       }
+      c.restore();
+    }
+    if (o.boyaDalga) { // renk dalgası: hamur boya dalgası iki yana poz poz ilerler
+      var bq = Math.floor(o.boyaDalga.sn * 12) / 12, bx = bq * 950, ba = o.boyaDalga.sn > 0.65 ? Math.max(0, (0.85 - o.boyaDalga.sn) / 0.2) : 1, by = 150 + 70 * Math.min(1, bq / 0.3), bg2 = by * R.dalga.width / R.dalga.height;
+      c.save(); c.globalAlpha = ba;
+      c.save(); c.translate(o.boyaDalga.x + bx, ZEMIN + 6); c.scale(-1, 1); c.drawImage(R.dalga, -bg2 / 2, -by, bg2, by); c.restore();
+      c.drawImage(R.dalga, o.boyaDalga.x - bx - bg2 / 2, ZEMIN + 6 - by, bg2, by);
       c.restore();
     }
     for (i = 0; i < o.yildizlar.length; i++) { // ninja yıldızı: dört köşeli, dönerek uçar
@@ -502,10 +546,10 @@
     c.fillStyle = D.secim === "iyi" ? "#ff5a4a" : "#ff3030"; yuvarlak(25, 95, Math.max(0, 184 * k.yakit), 16, 8); c.fill();
     yazi("uçuş gücü", 222, 110, 18, "#fff");
     if (sehir().guc) { // kostüm gücü göstergesi: dolunca düğme (Z tuşu) ile kullanılır
-      var ninja = sehir().guc === "ninja", zh = o.durSn > 0 ? o.durSn / 3.5 : 1 - Math.max(0, o.durBekle || 0) / sehir().gucBekle;
+      var ninja = sehir().guc !== "zaman", renkG = sehir().guc === "renk", zh = o.durSn > 0 ? o.durSn / 3.5 : 1 - Math.max(0, o.durBekle || 0) / sehir().gucBekle;
       c.fillStyle = "rgba(20,25,60,.55)"; yuvarlak(22, 122, 190, 22, 11); c.fill();
       c.fillStyle = o.durSn > 0 ? "#7fe9ff" : zh >= 1 ? (ninja ? "#ffd23a" : "#39d0e8") : "#5b7f99"; yuvarlak(25, 125, Math.max(0, 184 * zh), 16, 8); c.fill();
-      yazi(o.durSn > 0 ? "zaman durdu!" : zh >= 1 ? (ninja ? "⚡ ninja saldırısı (Z)" : "⏱ zamanı durdur (Z)") : (ninja ? "ninja gücü doluyor" : "zaman gücü doluyor"), 222, 140, 18, "#fff");
+      yazi(o.durSn > 0 ? "zaman durdu!" : zh >= 1 ? (renkG ? "🎨 renk dalgası (Z)" : ninja ? "⚡ ninja saldırısı (Z)" : "⏱ zamanı durdur (Z)") : (renkG ? "renk gücü doluyor" : ninja ? "ninja gücü doluyor" : "zaman gücü doluyor"), 222, 140, 18, "#fff");
       if (o.durSn > 0) { c.fillStyle = "rgba(120,220,255,.16)"; c.fillRect(0, 0, G, Y); }
     }
     yazi(ad(), 232, 62, 34, D.secim === "iyi" ? "#ff6a5a" : "#d8d8e0");
@@ -522,6 +566,11 @@
         var sbm = R["sis" + (sb % 3 + 1)], sbg = 430 + (sb % 4) * 70, sby = sbg * sbm.height / sbm.width;
         c.drawImage(sbm, (sb * 173 + kare() * 16) % (G + 600) - 400, 40 + (sb * 97) % 520, sbg, sby);
       }
+      c.restore();
+    }
+    if (o.leke > 0) { // Gölge Ressam'ın boya lekeleri: hamur lekeler ekranda poz poz titrer
+      c.save(); c.globalAlpha = Math.min(1, o.leke / 0.4) * 0.92;
+      for (var lk = 0; lk < 4; lk++) { var lg = 150 + (lk % 3) * 50, ly2 = lg * R.p_top.height / R.p_top.width; c.drawImage(R.p_top, 140 + lk * 290 + (kare(lk) % 2 ? 6 : -6), 150 + (lk * 137) % 260, lg, ly2); }
       c.restore();
     }
     if (o.mesajSn > 0) yazi(o.mesaj, G / 2, 200, 34, "#fff", "center");
@@ -544,14 +593,15 @@
     for (var si = 0; si <= SIRA.indexOf(D.sehir); si++) D.kurtarilan[SIRA[si]] = true; // önceki şehirler de kurtulmuş sayılır
     $("sonuc").textContent = "Görevler: " + "★".repeat(yildiz) + "☆".repeat(3 - yildiz) + "   " + sehir().toplaAd + " " + o.simit + "   Yakalanan kötü " + o.yakalanan;
     var sr = siradaki();
-    $("kartlar").innerHTML = [["istanbul", "İstanbul"], ["londra", "Londra"], ["tokyo", "Tokyo"], ["", "Paris"], ["", "Los Angeles"]].map(function (q) {
+    $("kartlar").innerHTML = [["istanbul", "İstanbul"], ["londra", "Londra"], ["tokyo", "Tokyo"], ["paris", "Paris"], ["", "Los Angeles"]].map(function (q) {
       var t = D.kurtarilan[q[0]], sira = q[0] && q[0] === sr;
       return '<div class="kart' + (t ? " tamam" : "") + '">' + q[1] + "<small>" + (t ? "✔ Kurtarıldı" : sira ? "✈ Sıradaki görev" : "🔒 Yakında") + "</small></div>";
     }).join("");
     $("zaferBaslik").textContent = ad() + ", " + sehir().eki + " kurtardı!";
-    $("londra").style.display = sr ? "" : "none"; $("kal").style.display = sr === "londra" ? "" : "none";
-    if (sr) $("londra").textContent = "✈ " + SEHIRLER[sr].ad + "'ya hazırım!";
-    $("karar").textContent = sr ? SEHIRLER[sr].eki + " kurtarmaya hazır mısın?" : "Üç şehir kurtuldu! Paris ve Los Angeles yakında.";
+    $("londra").style.display = sr ? "" : "none"; $("kal").style.display = sr === "londra" || sr === "tokyo" ? "" : "none";
+    if (sr) $("londra").textContent = "✈ " + yonAd(sr) + " hazırım!";
+    $("kal").textContent = sr === "tokyo" ? "🏠 Eve dönmek istiyorum" : "İstanbul'da kalacağım";
+    $("karar").textContent = sr ? SEHIRLER[sr].eki + " kurtarmaya hazır mısın?" : "Dört şehir kurtuldu! Los Angeles yakında.";
     $("tekrar").style.display = "";
     D.sonYildiz = yildiz; ekranAc("harita");
   }
@@ -560,10 +610,14 @@
   (function () {
     var q = new URLSearchParams(location.search);
     if (q.get("londra") !== "1") return;
-    D.secim = q.get("seri") === "kotu" ? "kotu" : "iyi"; D.kurtarilan.istanbul = true;
+    D.secim = q.get("seri") === "kotu" ? "kotu" : "iyi";
+    var don = SIRA.indexOf(q.get("don")) > 0 ? q.get("don") : "londra", di; // don: sıradaki şehir (varsayılan Londra); öncekiler kurtulmuş sayılır
+    for (di = 0; di < SIRA.indexOf(don); di++) D.kurtarilan[SIRA[di]] = true;
+    D.sehir = SIRA[SIRA.indexOf(don) - 1];
     $("harita").style.backgroundImage = "linear-gradient(rgba(16,26,58,.55),rgba(16,26,58,.55)),url(varlik/dunya.jpg)";
-    $("zaferBaslik").textContent = "Zorgo'dan kurtuldun!"; $("sonuc").textContent = ""; $("karar").textContent = "Londra seni bekliyor. Hazır mısın?";
-    $("kartlar").innerHTML = '<div class="kart tamam">İstanbul<small>✔ Kurtarıldı</small></div><div class="kart">Londra<small>✈ Sıradaki görev</small></div>';
+    $("zaferBaslik").textContent = "Zorgo'dan kurtuldun!"; $("sonuc").textContent = ""; $("karar").textContent = SEHIRLER[don].ad + " seni bekliyor. Hazır mısın?";
+    $("londra").textContent = "✈ " + yonAd(don) + " hazırım!";
+    $("kartlar").innerHTML = SIRA.slice(0, SIRA.indexOf(don) + 1).map(function (sn2) { return '<div class="kart' + (sn2 === don ? "" : " tamam") + '">' + SEHIRLER[sn2].ad + "<small>" + (sn2 === don ? "✈ Sıradaki görev" : "✔ Kurtarıldı") + "</small></div>"; }).join("");
     $("kal").style.display = "none"; $("tekrar").style.display = "none"; $("diger").style.display = "none";
     ekranAc("harita");
   })();

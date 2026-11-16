@@ -21,7 +21,7 @@
   addEventListener("resize", olcekle); olcekle();
 
   // ---------- kahraman: tırtıl oyunundan gelen (k=) ya da 1. oyunda açılan son kostüm ----------
-  var GECERLI = ["e1", "e2", "e3", "e4", "k1", "k2", "k3", "k4", "k", "s", "kl", "sl", "kt", "st"], KAHRAMAN = "e4";
+  var GECERLI = ["e1", "e2", "e3", "e4", "k1", "k2", "k3", "k4", "k", "s", "kl", "sl", "kt", "st", "kp", "sp"], KAHRAMAN = "e4";
   try { var acik = JSON.parse(localStorage.getItem("hk_kostum") || "[]"), taraf = localStorage.getItem("hk_taraf");
     if (taraf === "iyi" || taraf === "kotu") acik = acik.filter(function (x) { return (x.charAt(0) === "k") === (taraf === "iyi"); }); if (acik.length && GECERLI.indexOf(acik[acik.length - 1]) >= 0) KAHRAMAN = acik[acik.length - 1]; } catch (e) {}
   if (GECERLI.indexOf(BAG.get("k")) >= 0) KAHRAMAN = BAG.get("k");
@@ -79,7 +79,8 @@
   });
   $("tekrar").addEventListener("click", function () { oyunBaslat(); });
   $("yeni").addEventListener("click", function () { muzikDur(); location.href = "../index.html"; });
-  $("londraGit").addEventListener("click", function () { muzikDur(); location.href = "../istanbul/index.html?londra=1&seri=" + SERI; });
+  $("londraGit").addEventListener("click", function () { muzikDur(); location.href = "../istanbul/index.html?londra=1&seri=" + SERI + (SONRA ? "&don=" + SONRA : ""); });
+  var SONRA = BAG.get("sonra") === "tokyo" ? "tokyo" : ""; if (SONRA) $("londraGit").textContent = "✈ Tokyo'ya hazırım!"; // Londra'dan eve dönerken kaçırıldıysa: kaçınca Tokyo görevi sorulur
 
   // ---------- bölüm ----------
   // Dünya koordinatı: y yukarı doğru AZALIR (ekranla aynı yön). Başlangıç zemini y = 0, portal y = -YUKSEKLIK.
@@ -127,7 +128,7 @@
   function sonucGoster() {
     var o = D.oyun, kazandi = o.durum === "kazandi"; o.durum = "bitti";
     $("sonucBaslik").textContent = kazandi ? "Portaldan geçtin, eve döndün!" : (o.neden || "Lav seni yakaladı!");
-    $("sonucYazi").textContent = kazandi ? "Zorgo'nun gezegeninden kaçtın. " + o.kristal + " kristal topladın. Londra'yı kurtarmaya şimdi hazır mısın?" : "Portala " + Math.max(0, Math.round((YUKSEKLIK + o.k.y) / 100)) + " adım kalmıştı. Bir daha dene!";
+    $("sonucYazi").textContent = kazandi ? "Zorgo'nun gezegeninden kaçtın. " + o.kristal + " kristal topladın. " + (SONRA ? "Tokyo'yu" : "Londra'yı") + " kurtarmaya şimdi hazır mısın?" : "Portala " + Math.max(0, Math.round((YUKSEKLIK + o.k.y) / 100)) + " adım kalmıştı. Bir daha dene!";
     $("londraGit").style.display = kazandi ? "" : "none"; $("tekrar").style.display = kazandi ? "none" : "";
     ekranAc("sonuc"); cal(kazandi ? "p_kazandin" : "p_kaybettin", 1);
   }

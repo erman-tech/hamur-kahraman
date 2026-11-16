@@ -251,3 +251,10 @@ Bilinenler: zorluk bir çocukla denenmedi (otomatik oyuncu iki saniyede bir haml
 - Kostüm, şehrin kralı yenilince açılır (eskiden şehre giderken açılıyordu). İstanbul kostümü seçimle birlikte açık.
 - Ana ekrana Tokyo bağlantısı ve "🧪 Test: tüm bölümler" menüsü: `istanbul/index.html?test=<istanbul|londra|tokyo>&seri=<iyi|kotu>` bölümü doğrudan açar (taraf kilidine ve kostüm kaydına dokunmaz), `tirtil/index.html?bolum=1..5`, ve taraf/kostüm sıfırlama bağlantısı. Yayına çıkmadan önce menü kaldırılmalı.
 - Geçiş filmleri: Tokyo'ya gidiş artık Londra merkezinden (Big Ben'in içi) başlıyor, jet Big Ben'den kalkıyor, Tokyo merkezine (pagoda) varıyor; ilk ve son kare oyunun hamur arka planları. Üç merkezde baş kedi Pufi (beyaz Scottish Fold). Londra'ya gidiş filmi de Pufi'li kareyle yeniden kuruldu.
+
+## 16 Kasım 2026 (akşam) — Paris bölümü, eve dönüş seçimi
+- Paris (4. şehir): `SEHIRLER.paris`. Şehir gri başlar (`arka_p_gri.jpg`), ilerledikçe renkli arka plan (`arka_p.jpg`) onda bir adımlarla açılır (`o.renk`). Toplanan boya tüpü; kötüler gri boya topakları, kanatlı fırçalar, yuvarlanan boya kutusu; kral Gölge Ressam (üç boya topu + ekranı lekeleyen boya yağmuru). Kostüm gücü `renk`: iki yana yayılan hamur boya dalgası, 760 px içindeki kötüleri yakalar, krala 2 can vurur. Kostümler `kp_*` / `sp_*`.
+- Geçiş filmi `paris_kirmizi/siyah.mp4`: ejderin büyüsü bozulur, ressam kostümü, ejderin sırtında Paris'e uçuş, Paris merkezi (pastane, bereli Pufi).
+- Londra bitince iki seçenek: "Tokyo'ya hazırım" ya da "Eve dönmek istiyorum". Eve dönerse `ufo_kirmizi/siyah.mp4` oynar (Zorgo'nun UFO'su jeti ışınlar) ve Gezegenden Kaçış açılır (`kacis/index.html?sonra=tokyo`). Kaçınca "Tokyo'ya hazırım" → `istanbul/index.html?londra=1&don=tokyo`.
+- Test bağlantısı artık önce o şehrin geçiş filmini oynatır. Düğme yazısı şehre göre ("Paris'e hazırım").
+- Ölçülmedi: Paris'in zorluğu; sesler dinlenmedi.
