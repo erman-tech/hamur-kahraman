@@ -6,6 +6,19 @@ Oyun hamurundan, stop motion görünümlü, soldan sağa giden bir platform oyun
 - Depo: https://github.com/erman-tech/hamur-kahraman
 - Durum (15 Kasım 2026): açılış filmleri, seçim ekranı ve tek bölüm (İstanbul) hazır. Diğer dört şehir yok.
 
+## 0. Depo düzeni (16 Kasım 2026'dan beri)
+
+Depo artık bir oyun portalı. Kökteki `index.html` oyunları listeler.
+
+| Yol | Ne |
+|---|---|
+| `index.html` | Portal: oyun kartları |
+| `istanbul/` | 1. oyun (bu belgenin 1–11. bölümleri onu anlatır; `kaynak/` da bu klasörde) |
+| `tirtil/` | 2. oyun: Uzaylı Tırtıl (aşağıda 12. bölüm) |
+| `sunucu.py`, `baslat.command` | Portalı yerelde açar (port 5095) |
+
+Yeni oyun eklemek: yeni bir klasör aç, içine `index.html` koy, portaldaki `.oyunlar` listesine bir kart ekle.
+
 ## 1. Hikâye ve değişmeyecek kararlar
 
 Bunlar Erman ve Ateş'in kararları; yeni iş bunlara uymalı.
@@ -165,3 +178,23 @@ Depoya girmemesi gerekenler: Ateş'in gerçek fotoğrafı ve kişisel dosyalar. 
 3. Haritada şehir seçimi ve ilerleme kaydı.
 4. Her şehre özgü toplanacak şey ve kötü (Londra'da çay fincanı, Adana'da kebap şişi gibi; Ateş karar verir).
 5. Zorluk: kötü sayısı, meteor sıklığı, kralın canı.
+
+## 12. İkinci oyun: Uzaylı Tırtıl (`tirtil/`)
+
+Hikâye: uzaylı tırtıl Vıcık bu sefer kahramanın peşinde. Papağan "önce kendini, sonra dünyayı kurtar" der. Oyuncu sekiz kahramandan birini seçer (dört erkek, dört kız kıyafeti).
+
+Oyun (tek bölüm):
+
+- Üstte labirent: Vıcık iki koridordan geçip kahramana yürür. Varış süresi `SURE` (85 sn).
+- Kahramanın çıkışı çakıl taşı kuyusuyla kapalı. Kuyuda 108 taş var, üstten `YEDEK_TAS` (190) taş daha gelir.
+- Altta 16×6 şeker tahtası (`SEKER` listesi: jelibonlar ve şekerler). Yan yana duran en az iki aynı şekere dokununca patlarlar. Şekerler düşmez, yeniden dolmaz.
+- Taşlar ince bir ızgarada (her şeker hücresi 3×3 çakıl) kum gibi akar: aşağı, olmazsa çapraza (`kumAdimi`). Tahtanın alt satırına varan taş suya dökülür.
+- Kuyuda ve yedekte taş kalmayınca kahraman kapıdan kaçar. Vıcık önce varırsa kahramanı gıdıklar (kaybetme).
+- Dokunacak grup kalmazsa "Karıştır" kalan şekerleri yeniden dizer.
+- Hareket saniyede 12 pozla çizilir (`POZ`).
+
+Deneme kancası: `__oyun.baslat('e4')`, `__oyun.dokun(satir, sutun)`, `__oyun.otomatik()` (akıllıca bir hamle yapar), `__oyun.ilerlet(saniye)`, `__oyun.durum()`.
+
+Açılış filmi gerçek video değil: hareketsiz hamur karelerinin yaklaşma ve titremeyle kurulmuş hali (kredi az harcansın diye). Ham kareler ve kurma betikleri Erman'da.
+
+Bilinenler: zorluk bir çocukla denenmedi (otomatik oyuncu iki saniyede bir hamleyle 12 oyunun 7'sini kazandı); sesler dinlenmedi; tablette denenmedi.

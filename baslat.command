@@ -1,5 +1,5 @@
 #!/bin/sh
-# Hamur Kahraman: yerel sunucuyu başlatır ve oyunu tarayıcıda açar. Kapatmak için bu pencereyi kapat.
+# Hamur Kahraman oyunları: yerel sunucuyu başlatır ve oyunu tarayıcıda açar. Kapatmak için bu pencereyi kapat.
 D="$(cd "$(dirname "$0")" 2>/dev/null && pwd)"
 PORT=5095
 ( sleep 1; open "http://localhost:$PORT/index.html" ) &

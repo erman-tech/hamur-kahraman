@@ -1,13 +1,12 @@
-# Hamur Kahraman
+# Hamur Kahraman Oyunları
 
-Oyun hamurundan, stop motion bir platform oyunu. Tasarım: Can Ateş Ünal.
+Oyun hamurundan, stop motion oyunlar. Tasarım: Can Ateş Ünal.
 
 Oyna: https://erman-tech.github.io/hamur-kahraman/
 
-- Yürü: ← →  (tablette ekrandaki ◀ ▶)
-- Zıpla ve uç: ↑ ya da Boşluk  (▲)
-- Ağ / elektrik at: X  (✸)
+| Oyun | Klasör | Nasıl oynanır |
+|---|---|---|
+| 1 · İstanbul | `istanbul/` | Soldan sağa platform. ← → yürü, ↑ ya da Boşluk zıpla ve uç, X ağ ya da elektrik at. Tablette ekrandaki düğmeler. |
+| 2 · Uzaylı Tırtıl | `tirtil/` | Yan yana duran aynı şekerlere dokun; taşlar açılan boşluğa akar. Taşlara suya kadar yol aç, Vıcık gelmeden kaç. |
 
-Dünyaya meteorlarla düşen kötüleri durdur. İlk bölüm İstanbul; Londra, Adana, Paris ve Los Angeles yolda.
-
-Bilgisayarda yerel açmak için `baslat.command` dosyasına çift tıkla.
+Bilgisayarda yerel açmak için `baslat.command` dosyasına çift tıkla. Geliştirme notları: `GELISTIRME.md`.

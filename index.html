@@ -2,83 +2,45 @@
 <html lang="tr">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>Hamur Kahraman</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hamur Kahraman Oyunları</title>
 <style>
-  html, body { margin: 0; height: 100%; background: #101a3a; overflow: hidden; touch-action: none;
-    font-family: "Arial Rounded MT Bold", "Chalkboard SE", "Trebuchet MS", sans-serif; user-select: none; -webkit-user-select: none; }
-  #sahne { position: absolute; left: 0; top: 0; width: 1280px; height: 720px; transform-origin: 0 0; overflow: hidden; background: #16224d; }
-  #sahne > * { position: absolute; left: 0; top: 0; width: 1280px; height: 720px; }
-  canvas, video { display: block; }
-  video { object-fit: cover; background: #16224d; }
-  .ekran { display: none; align-items: center; justify-content: center; flex-direction: column; text-align: center; color: #fff; }
-  .ekran.acik { display: flex; }
-  .hamur { border: 0; cursor: pointer; font: inherit; font-size: 44px; color: #fff; padding: 22px 54px; border-radius: 40px;
-    box-shadow: 0 10px 0 rgba(0,0,0,.35), inset 0 -8px 0 rgba(0,0,0,.18), inset 0 6px 0 rgba(255,255,255,.28); transition: transform .08s; }
-  .hamur:active { transform: translateY(6px); }
-  .kirmizi { background: #e23b2e; } .siyah { background: #23252b; } .sari { background: #f2b61e; color: #3a2400; } .mavi { background: #2f7fd6; }
-  #kapak { background: #16224d url(varlik/kapak.jpg) center/cover no-repeat; justify-content: flex-end; align-items: flex-end; }
-  #kapak .kutu { margin: 0 150px 70px 0; text-align: center; }
-  #kapak p { font-size: 24px; opacity: .95; margin: 22px 0 0; text-shadow: 0 3px 0 rgba(0,0,0,.4); }
-  #kapak .imza { position: absolute; left: 400px; top: auto; bottom: 24px; width: auto; height: auto; font-size: 26px; color: #ffd23a; text-shadow: 0 3px 0 rgba(0,0,0,.5); }
-  #gec { left: auto; top: auto; right: 28px; bottom: 26px; width: auto; height: auto; font-size: 24px; padding: 12px 26px; display: none; }
-  #sehirler { top: auto; bottom: 34px; height: auto; display: none; justify-content: center; gap: 14px; pointer-events: none; }
-  #sehirler span { background: #f2b61e; color: #3a2400; font-size: 30px; padding: 10px 22px; border-radius: 26px; opacity: 0; transform: scale(.3) rotate(-8deg);
-    transition: all .35s cubic-bezier(.3,1.8,.5,1); box-shadow: 0 6px 0 rgba(0,0,0,.35), inset 0 -5px 0 rgba(0,0,0,.15); }
-  #sehirler span.gor { opacity: 1; transform: none; }
-  #secim { background: center/cover no-repeat; justify-content: flex-end; }
-  #secim .soru { background: rgba(255,255,255,.94); color: #1c1c1c; font-size: 46px; padding: 20px 44px; border-radius: 44px; margin-bottom: 26px;
-    box-shadow: 0 8px 0 rgba(0,0,0,.3); }
-  #secim .dugmeler { display: flex; gap: 60px; margin-bottom: 46px; }
-  #secim .hamur small { display: block; font-size: 22px; opacity: .9; margin-top: 4px; }
-  #harita { background: center/cover no-repeat; justify-content: flex-start; }
-  #harita h1 { font-size: 60px; margin: 34px 0 6px; text-shadow: 0 6px 0 rgba(0,0,0,.4); }
-  #harita h2 { font-size: 30px; margin: 0 0 16px; font-weight: normal; }
-  #kartlar { display: flex; gap: 16px; margin-top: 250px; }
-  .kart { width: 210px; padding: 16px 8px; border-radius: 30px; background: #3b4a7a; font-size: 28px; box-shadow: 0 8px 0 rgba(0,0,0,.35), inset 0 5px 0 rgba(255,255,255,.2); }
-  .kart small { display: block; font-size: 20px; margin-top: 6px; opacity: .9; }
-  .kart.tamam { background: #2e9b4a; }
-  #harita .dugmeler { display: flex; gap: 30px; margin-top: 30px; }
-  #harita .hamur { font-size: 30px; padding: 16px 34px; }
-  #dokunma { display: none; pointer-events: none; }
-  #dokunma button { position: absolute; bottom: 24px; width: 110px; height: 110px; border-radius: 55px; border: 0; font-size: 50px; color: #fff;
-    background: rgba(20,30,70,.55); pointer-events: auto; touch-action: none; }
+  html, body { margin: 0; min-height: 100%; background: #16224d; color: #fff;
+    font-family: "Arial Rounded MT Bold", "Chalkboard SE", "Trebuchet MS", sans-serif; }
+  body { background: radial-gradient(circle at 20% 10%, #24357a, #16224d 60%); padding: 28px 20px 40px; box-sizing: border-box; }
+  h1 { text-align: center; font-size: clamp(34px, 6vw, 64px); margin: 6px 0 4px; text-shadow: 0 6px 0 rgba(0,0,0,.35); }
+  h1 span { color: #ff5a4a; } h1 b { color: #ffd23a; font-weight: inherit; }
+  p.alt { text-align: center; font-size: clamp(16px, 2.2vw, 22px); margin: 0 0 26px; opacity: .9; }
+  .oyunlar { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 26px; max-width: 1180px; margin: 0 auto; }
+  a.oyun { display: block; text-decoration: none; color: #fff; background: #2b3a78; border-radius: 34px; overflow: hidden;
+    box-shadow: 0 12px 0 rgba(0,0,0,.35), inset 0 6px 0 rgba(255,255,255,.18); transition: transform .1s; }
+  a.oyun:active { transform: translateY(6px); }
+  a.oyun img { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover; }
+  a.oyun .yazi { padding: 16px 20px 20px; }
+  a.oyun h2 { margin: 0 0 6px; font-size: 26px; }
+  a.oyun p { margin: 0 0 14px; font-size: 17px; line-height: 1.35; opacity: .92; }
+  a.oyun .oyna { display: inline-block; background: #e23b2e; padding: 10px 26px; border-radius: 24px; font-size: 22px;
+    box-shadow: 0 6px 0 rgba(0,0,0,.35), inset 0 -5px 0 rgba(0,0,0,.18), inset 0 4px 0 rgba(255,255,255,.28); }
+  .imza { text-align: center; margin-top: 34px; font-size: 20px; color: #ffd23a; }
 </style>
 </head>
 <body>
-<div id="sahne">
-  <canvas id="tuval" width="1280" height="720"></canvas>
-  <video id="film" playsinline preload="auto" style="display:none"></video>
-  <div id="sehirler"><span>İstanbul</span><span>Londra</span><span>Adana</span><span>Paris</span><span>Los Angeles</span></div>
-  <div id="kapak" class="ekran acik">
-    <div class="kutu"><button id="basla" class="hamur kirmizi">▶ BAŞLA</button>
-    <p>Sesi açmayı unutma!</p></div>
-    <div class="imza">designed by Can Ateş Ünal</div>
+  <h1><span>HAMUR</span> KAHRAMAN <b>Oyunları</b></h1>
+  <p class="alt">Oyun hamurundan, stop motion oyunlar. Bir oyun seç!</p>
+  <div class="oyunlar">
+    <a class="oyun" href="istanbul/index.html">
+      <img src="istanbul/varlik/kapak.jpg" alt="Hamur Kahraman">
+      <div class="yazi"><h2>1 · İstanbul</h2><p>Meteorla gelen kötüleri İstanbul sokaklarında durdur. Koş, zıpla, uç!</p><span class="oyna">▶ Oyna</span></div>
+    </a>
+    <a class="oyun" href="tirtil/index.html">
+      <img src="tirtil/varlik/kapak.jpg" alt="Hamur Kahraman 2: Uzaylı Tırtıl">
+      <div class="yazi"><h2>2 · Uzaylı Tırtıl</h2><p>Vıcık geliyor! Şekerleri patlat, taşları dök, kahramanına yol aç. 8 kahramandan birini seç.</p><span class="oyna">▶ Oyna</span></div>
+    </a>
+    <a class="oyun" href="https://erman-tech.github.io/hamur-kahraman-asli-beliz/">
+      <img src="asli_kapak.jpg" alt="Hamur Kahraman: Aslı Beliz">
+      <div class="yazi"><h2>Aslı Beliz'in oyunu</h2><p>İstanbul macerası, bu sefer kahraman Aslı Beliz.</p><span class="oyna">▶ Oyna</span></div>
+    </a>
   </div>
-  <div id="secim" class="ekran">
-    <div class="soru">Dünyayı kurtarmaya cesaretin var mı?</div>
-    <div class="dugmeler">
-      <button id="evet" class="hamur kirmizi">EVET<small>Kırmızı kahraman: Cesur</small></button>
-      <button id="hayir" class="hamur siyah">HAYIR<small>Siyah kahraman: Ürkek</small></button>
-    </div>
-  </div>
-  <div id="harita" class="ekran">
-    <h1 id="zaferBaslik">İstanbul kurtuldu!</h1>
-    <h2 id="sonuc"></h2>
-    <div id="kartlar"></div>
-    <div class="dugmeler">
-      <button id="tekrar" class="hamur sari">Tekrar oyna</button>
-      <button id="diger" class="hamur mavi">Diğer tarafı dene</button>
-    </div>
-  </div>
-  <div id="dokunma">
-    <button data-tus="sol" style="left:24px">◀</button>
-    <button data-tus="sag" style="left:150px">▶</button>
-    <button data-tus="ates" style="right:150px">✸</button>
-    <button data-tus="yukari" style="right:24px">▲</button>
-  </div>
-  <button id="gec" class="hamur sari">Geç ▶</button>
-</div>
-<script src="oyun.js"></script>
+  <div class="imza">designed by Can Ateş Ünal</div>
 </body>
 </html>
