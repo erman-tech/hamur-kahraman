@@ -18,7 +18,8 @@
 
   var R = {};
   ["arka.jpg", "zemin.jpg", "bariyer", "kapi", "blok", "dron", "papagan_ag", "onigiri", "kalp", K + "_k1", K + "_k2", K + "_zip", K + "_kay"].forEach(function (a) {
-    var im = new Image(); im.src = "varlik/" + (a.indexOf(".") > 0 ? a : a + ".png"); R[a.replace(".jpg", "")] = im;
+    var im = new Image(); im.dene = 0; im.onerror = function () { var b = this; if (b.dene++ < 4) setTimeout(function () { b.src = b.src.split("?")[0] + "?d=" + b.dene; }, 600 * b.dene); }; // yavaş ağda yüklenemeyen görsel yeniden denenir
+    im.src = "varlik/" + (a.indexOf(".") > 0 ? a : a + ".png"); R[a.replace(".jpg", "")] = im;
   });
   var S = {};
   ["muzik", "e_pop", "e_simit", "e_ah", "e_zafer", "a_kosu1", "a_kosu2", "p_kosu3", "a_kosu4"].forEach(function (a) { var s = new Audio("ses/" + a + ".mp3"); s.preload = "auto"; S[a] = s; });

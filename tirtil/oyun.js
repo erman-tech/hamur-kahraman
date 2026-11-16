@@ -29,7 +29,8 @@
   var SEKER = ["j_ayi", "j_kola", "s_lolipop", "j_yumurta", "s_yildiz"];   // beş çeşit: eşleşme bulmak kolay olsun (s_mor sonraki bölümlere)           // jelibonlar ve şekerler
   var SRENK = ["#e23b2e", "#8a5a2b", "#2f8fe0", "#fff3c4", "#f7d514", "#8d4fc4"];
   var R = {};
-  function resimYukle(a) { var im = new Image(); im.src = "varlik/" + a + ".png"; R[a] = im; }
+  function resimYukle(a) { var im = new Image(); im.dene = 0; im.onerror = function () { var b = this; if (b.dene++ < 4) setTimeout(function () { b.src = b.src.split("?")[0] + "?d=" + b.dene; }, 600 * b.dene); }; // yavaş ağda yüklenemeyen görsel yeniden denenir
+    im.src = "varlik/" + a + ".png"; R[a] = im; }
   ["bas", "bas_sersem", "top_mor", "top_turuncu", "top_mavi", "top_sari", "ufo", "lav1", "lav2", "kapi", "pb1", "pb2"].concat(SEKER).forEach(resimYukle);
   KAHRAMANLAR.forEach(function (k) { ["dur", "kos1", "kos2", "at"].forEach(function (p) { resimYukle(k + "_" + p); }); });
 

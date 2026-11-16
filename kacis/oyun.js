@@ -29,7 +29,8 @@
   // ---------- varlıklar ----------
   var R = {};
   ["kalp", "lav", "p_mor", "p_turuncu", "p_pembe", "u_goz", "u_kanat", "kristal", "portal", KAHRAMAN + "_dur", KAHRAMAN + "_uc"].forEach(function (a) {
-    var im = new Image(); im.src = "varlik/" + a + ".png"; R[a] = im;
+    var im = new Image(); im.dene = 0; im.onerror = function () { var b = this; if (b.dene++ < 4) setTimeout(function () { b.src = b.src.split("?")[0] + "?d=" + b.dene; }, 600 * b.dene); }; // yavaş ağda yüklenemeyen görsel yeniden denenir
+    im.src = "varlik/" + a + ".png"; R[a] = im;
   });
   R.arka = new Image(); R.arka.src = "varlik/arka.jpg";
 
@@ -80,7 +81,7 @@
   $("tekrar").addEventListener("click", function () { oyunBaslat(); });
   $("yeni").addEventListener("click", function () { muzikDur(); location.href = "../index.html"; });
   $("londraGit").addEventListener("click", function () { muzikDur(); location.href = "../istanbul/index.html?londra=1&seri=" + SERI + (SONRA ? "&don=" + SONRA : ""); });
-  var SONRA = BAG.get("sonra") === "tokyo" ? "tokyo" : ""; if (SONRA) $("londraGit").textContent = "✈ Tokyo'ya hazırım!"; // Londra'dan eve dönerken kaçırıldıysa: kaçınca Tokyo görevi sorulur
+  var SONRA = BAG.get("sonra") === "tokyo" ? "tokyo" : ""; if (SONRA) $("londraGit").textContent = "✈ Tokyo'ya hazırım!"; if (SONRA) document.querySelector("#kapak h2").textContent = "Zorgo'nun UFO'su seni gezegenine ışınladı. Platformlara zıpla, yukarıdaki portala ulaş. Lav yükseliyor!"; // Londra'dan eve dönerken kaçırıldıysa: kaçınca Tokyo görevi sorulur
 
   // ---------- bölüm ----------
   // Dünya koordinatı: y yukarı doğru AZALIR (ekranla aynı yön). Başlangıç zemini y = 0, portal y = -YUKSEKLIK.

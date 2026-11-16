@@ -20,7 +20,8 @@
 
   var R = {};
   ["arka.jpg", "mancinik", "tas", "jole", "tahta", "tirtil", "tirtil2", "tirtil3", "zorgo", "simit", KAH].forEach(function (a) {
-    var im = new Image(); im.src = "varlik/" + (a.indexOf(".") > 0 ? a : a + ".png"); R[a.replace(".jpg", "")] = im;
+    var im = new Image(); im.dene = 0; im.onerror = function () { var b = this; if (b.dene++ < 4) setTimeout(function () { b.src = b.src.split("?")[0] + "?d=" + b.dene; }, 600 * b.dene); }; // yavaş ağda yüklenemeyen görsel yeniden denenir
+    im.src = "varlik/" + (a.indexOf(".") > 0 ? a : a + ".png"); R[a.replace(".jpg", "")] = im;
   });
   var S = {};
   ["muzik", "e_pop", "e_ah", "e_zafer", "e_simit", "a_fbasla", "a_fkazan", "a_fkayip"].forEach(function (a) { var s = new Audio("ses/" + a + ".mp3"); s.preload = "auto"; S[a] = s; });
