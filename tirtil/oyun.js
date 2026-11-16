@@ -101,7 +101,7 @@
   var KUYU0 = YS0 * B, KUYU1 = (YS1 + 1) * B;           // kuyunun çakıl sütunları [KUYU0, KUYU1)
   var YEDEK_TAS = 170;                                  // kuyunun üstünden gelmeye devam eden taş sayısı
   var HX0 = BX + (YS1 + 1) * H + 40, HX1 = 612;       // kahramanın başladığı yer ve tuzak (uzay gemisinin ışığı)
-  var YURU = 8, ITME = 110, GERI = 0.025, IPUCU_SN = 6; // GERI: lavın altında patlayan her şeker kapıyı bu kadar geri iter                             // tırtılın yığına varma süresi; dolu yığınla tuzağa itme süresi (sn)
+  var YURU = 8, ITME = 100, GERI = 0.025, IPUCU_SN = 6, ERIME = 15; // ERIME: lav altındaki şekeri bu kadar saniyede kendisi eritir (çıkmaz olmasın) // GERI: lavın altında patlayan her şeker kapıyı bu kadar geri iter                             // tırtılın yığına varma süresi; dolu yığınla tuzağa itme süresi (sn)
   var TOPLAM = (YS1 - YS0 + 1) * B * YIGIN * B + YEDEK_TAS;
   // Labirent: tırtıl üst koridorda sola yürür, dönüp alt koridorda kahramana gelir.
   var LY1 = 84, LY2 = 296, LX0 = 600, LXD = 120, LR = (LY2 - LY1) / 2, KOR = 52, TUNEL = 70, ODA = 126;   // ODA: kahramanın dar odasının yüksekliği // TUNEL: tünelde kuyudan önce yığılı taşların boyu
@@ -160,7 +160,7 @@
     tahtaKur(g);
     for (r = 0; r < TSAT; r++) { tas.push([]); for (s2 = 0; s2 < TS; s2++) tas[r].push(r < TY && s2 >= KUYU0 && s2 < KUYU1 ? 1 + ((r * 7 + s2 * 3) % 2) : 0); }
     D.oyun = { t: 0, g: g, tas: tas, yedek: YEDEK_TAS, durum: "oyna", kum: 0, adim: 0, kirinti: [], yazi: [], dokulen: 0, ipucu: 7, inilti: 4,
-      secili: null, bekle: 0, zincir: 0, kay: g.map(function (x) { return x.map(function () { return 0; }); }), soz: {}, bitis: 0, itme: 0, tik: 1, surt: 0, yildiz: 0, sallan: null, karistir: 0, damla: [], bos: 0, oner: null, tasSes: 0, hamle: 0, kalan: 0 };
+      secili: null, bekle: 0, zincir: 0, kay: g.map(function (x) { return x.map(function () { return 0; }); }), soz: {}, bitis: 0, itme: 0, tik: 1, surt: 0, yildiz: 0, sallan: null, karistir: 0, damla: [], bos: 0, oner: null, erime: {}, tasSes: 0, hamle: 0, kalan: 0 };
     ekranAc("oyun"); muzikBasla(); cal("p_nasil", 1);
   }
   function dolu(o, r, s2) { // çakıl hücresi kapalı mı (duvar, şeker ya da taş)
@@ -282,6 +282,19 @@
     o.t += dt;
     if (o.ipucu > 0) o.ipucu -= dt;
     if (o.karistir > 0) o.karistir -= dt;
+    if (o.durum === "oyna" && !o.bekle) for (var es = YS0; es <= YS1; es++) { // lav, altındaki ilk şekeri yavaşça eritir
+      var er = 0; while (er < SAT && !(o.g[er][es] > 0)) er++;
+      var e = o.erime[es] || (o.erime[es] = { r: -1, t: 0 });
+      if (er >= SAT || !(er === 0 ? kalanTas(o) > 0 : tasVar(o, er - 1, es))) { e.t = 0; e.r = -1; continue; }
+      if (e.r !== er) { e.r = er; e.t = 0; }
+      e.t += dt;
+      if (e.t >= ERIME) {
+        var ep = hucreYeri(er, es); o.g[er][es] = 0; e.t = 0; e.r = -1; cal("e_pop", 0.4);
+        o.yazi.push({ x: ep.x, y: ep.y, m: "Lav eritti!", t: 0.9, renk: "#ff9a3a" });
+        for (var eq = 0; eq < 6; eq++) o.kirinti.push({ x: ep.x, y: ep.y, vx: (Math.random() - 0.5) * 260, vy: -80 - Math.random() * 200, t: 0.6, renk: "#ff7a1a", b: 5 + Math.random() * 5 });
+        if (!hamleler(o).length) { o.karistir = 0; karistir(true); }
+      }
+    }
     if (o.durum === "oyna" && !o.bekle) { o.bos += dt; if (o.bos > IPUCU_SN && !o.oner) o.oner = enIyiHamle(o); }
     if (o.bekle > 0) { o.bekle -= dt; if (o.bekle <= 0) { o.bekle = 0; yercekimi(o); } }
     for (var kr = 0; kr < SAT; kr++) for (var ks = 0; ks < SUT; ks++) if (o.kay[kr][ks] < 0) o.kay[kr][ks] = Math.min(0, o.kay[kr][ks] + 900 * dt);
@@ -375,7 +388,9 @@
       var t = o.g[r][s2]; p = hucreYeri(r, s2);
       if (!t) { c.fillStyle = "rgba(0,0,0,.24)"; yuvarlak(p.x - 37, p.y - 37, 74, 74, 12); c.fill(); continue; }
       c.fillStyle = "rgba(255,240,215,.16)"; yuvarlak(p.x - 36, p.y - 36, 72, 72, 14); c.fill();
-      var sal = o.sallan && o.sallan.h.some(function (q) { return q[0] === r && q[1] === s2; }) ? (poz % 2 ? 5 : -5) : 0;
+      var eri = o.erime[s2] && o.erime[s2].r === r ? o.erime[s2].t / ERIME : 0;
+      if (eri > 0.15) { c.fillStyle = "rgba(255,90,20," + (0.15 + 0.5 * eri) + ")"; yuvarlak(p.x - 36, p.y - 36, 72, 72, 14); c.fill(); }
+      var sal = o.sallan && o.sallan.h.some(function (q) { return q[0] === r && q[1] === s2; }) ? (poz % 2 ? 5 : -5) : (eri > 0.6 ? (poz % 2 ? 2 : -2) : 0);
       if (o.oner && poz % 4 < 2 && ((o.oner.r1 === r && o.oner.s1 === s2) || (o.oner.r2 === r && o.oner.s2 === s2))) { c.strokeStyle = "#ffd23a"; c.lineWidth = 6; yuvarlak(p.x - 36, p.y - 36, 72, 72, 14); c.stroke(); }
       if (o.secili && o.secili.r === r && o.secili.s === s2) { c.strokeStyle = "#fff"; c.lineWidth = 5; yuvarlak(p.x - 36, p.y - 36, 72, 72, 14); c.stroke(); }
       if (p.y + o.kay[r][s2] > BY - 10) kutuResim(R[SEKER[t - 1]], p.x + sal, p.y + Math.round(o.kay[r][s2] / 26) * 26, 64);
