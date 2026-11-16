@@ -96,7 +96,7 @@
   // ---------- filmler ----------
   var SEHIR_SN = [4.3, 5.4, 6.3, 7.3, 8.3], filmBitince = null;
   function filmOynat(ad, bitince) {
-    film.dataset.ad = ad; film.src = "video/" + ad + ".mp4"; filmBitince = bitince;
+    film.dataset.ad = ad; var fu = "video/" + ad + ".mp4"; if (film.getAttribute("src") !== fu) film.src = fu; else { try { film.currentTime = 0; } catch (e) {} } filmBitince = bitince; // önceden yüklenen film baştan indirilmez
     Array.prototype.forEach.call($("sehirler").children, function (s) { s.classList.remove("gor"); });
     ekranAc("film");
     var p = film.play(); if (p && p.catch) p.catch(function () {});
@@ -104,6 +104,8 @@
   function filmBitti() { var f = filmBitince; filmBitince = null; film.pause(); if (f) f(); }
   film.addEventListener("ended", filmBitti);
   $("gec").addEventListener("click", filmBitti);
+  // İlk film sayfa açılırken indirilmeye başlar; BAŞLA'ya basınca beklemesin (test ve devam bağlantılarında gerekmez)
+  (function () { var q = new URLSearchParams(location.search); if (!q.get("test") && !q.get("devam") && !q.get("londra")) { film.src = "video/giris.mp4"; film.load(); } })();
   film.addEventListener("timeupdate", function () {
     if (film.dataset.ad !== "giris") return;
     var t = film.currentTime, ss = $("sehirler").children;
