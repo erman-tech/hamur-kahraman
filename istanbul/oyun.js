@@ -104,6 +104,8 @@
   $("evet").addEventListener("click", function () { sec("iyi"); });
   $("hayir").addEventListener("click", function () { sec("kotu"); });
   $("tekrar").addEventListener("click", function () { oyunBaslat(); });
+  // Karar: İstanbul'da kalırsa uzaylı tırtıl Ateş için gelir (2. oyun); orada kazanınca yine Londra sorulur.
+  $("kal").addEventListener("click", function () { muzikDur(); location.href = "../tirtil/index.html?baglanti=1&seri=" + (D.secim === "iyi" ? "iyi" : "kotu"); });
   // İstanbul'dan sonra: gizli üs, yeni kostüm, hamur jet ve Londra
   $("londra").addEventListener("click", function () { muzikDur(); filmOynat(D.secim === "iyi" ? "us_kirmizi" : "us_siyah", function () { D.sehir = "londra"; oyunBaslat(); }); });
   $("diger").addEventListener("click", function () { muzikDur(); secimEkrani(); });
@@ -459,9 +461,24 @@
       return '<div class="kart' + (t ? " tamam" : "") + '">' + q[1] + "<small>" + (t ? "✔ Kurtarıldı" : sira ? "✈ Sıradaki görev" : "🔒 Yakında") + "</small></div>";
     }).join("");
     $("zaferBaslik").textContent = ad() + ", " + sehir().eki + " kurtardı!";
-    $("londra").style.display = D.kurtarilan.londra ? "none" : "";
+    var sor = !D.kurtarilan.londra;
+    $("londra").style.display = sor ? "" : "none"; $("kal").style.display = sor ? "" : "none";
+    $("karar").textContent = sor ? "Londra'yı kurtarmaya hazır mısın?" : "";
+    $("tekrar").style.display = ""; $("diger").style.display = "";
     D.sonYildiz = yildiz; ekranAc("harita");
   }
+
+  // 2. oyundan dönüş: "Londra'ya hazırım" denmişse karar ekranı Londra düğmesiyle açılır (film için bir dokunuş gerekir)
+  (function () {
+    var q = new URLSearchParams(location.search);
+    if (q.get("londra") !== "1") return;
+    D.secim = q.get("seri") === "kotu" ? "kotu" : "iyi"; D.kurtarilan.istanbul = true;
+    $("harita").style.backgroundImage = "linear-gradient(rgba(16,26,58,.55),rgba(16,26,58,.55)),url(varlik/dunya.jpg)";
+    $("zaferBaslik").textContent = "Vıcık'tan kurtuldun!"; $("sonuc").textContent = ""; $("karar").textContent = "Londra seni bekliyor. Hazır mısın?";
+    $("kartlar").innerHTML = '<div class="kart tamam">İstanbul<small>✔ Kurtarıldı</small></div><div class="kart">Londra<small>✈ Sıradaki görev</small></div>';
+    $("kal").style.display = "none"; $("tekrar").style.display = "none"; $("diger").style.display = "none";
+    ekranAc("harita");
+  })();
 
   // ---------- döngü ----------
   var son = 0;

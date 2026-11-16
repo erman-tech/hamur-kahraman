@@ -91,6 +91,12 @@
   $("basla").addEventListener("click", function () { filmOynat("giris", secimAc); });
   $("tekrar").addEventListener("click", function () { oyunBaslat(); });
   $("degistir").addEventListener("click", secimAc);
+  var BAG = new URLSearchParams(location.search); // 1. oyundan "İstanbul'da kalacağım" ile gelindiyse seri taşınır
+  $("londraGit").addEventListener("click", function () { muzikDur(); location.href = "../istanbul/index.html?londra=1&seri=" + (BAG.get("seri") === "kotu" ? "kotu" : "iyi"); });
+  if (BAG.get("baglanti") === "1") setTimeout(function () { // film kendiliğinden başlasın; tarayıcı sesi engellerse kapak kalır
+    film.src = "video/giris.mp4"; var p = film.play();
+    if (p && p.then) p.then(function () { filmBitince = secimAc; ekranAc("film"); }).catch(function () {});
+  }, 200);
   $("kacis").addEventListener("click", function () { $("sonucYazi").textContent = "Uzaylı gezegeninden kaçış oyunu hazırlanıyor. Çok yakında!"; });
 
   // ---------- bölüm ölçüleri ----------
@@ -352,8 +358,8 @@
     var o = D.oyun; if (o.durum === "bitti") return;
     o.yildiz = kazandi ? (o.kalan > 0.4 ? 3 : o.kalan > 0.15 ? 2 : 1) : 0; o.durum = "bitti"; muzikDur();
     $("sonucBaslik").textContent = kazandi ? "Kurtuldun!" : "Portal seni Vıcık'ın gezegenine götürdü!";
-    $("kacis").style.display = kazandi ? "none" : "";
-    $("sonucYazi").textContent = kazandi ? "Önce kendini kurtardın. Şimdi sıra dünyayı kurtarmakta! (Devamı yakında)" : "Baştan başlayabilir ya da uzaylı gezegeninden kaçmayı deneyebilirsin.";
+    $("kacis").style.display = kazandi ? "none" : ""; $("londraGit").style.display = kazandi ? "" : "none";
+    $("sonucYazi").textContent = kazandi ? "Önce kendini kurtardın. Londra'yı kurtarmaya şimdi hazır mısın?" : "Baştan başlayabilir ya da uzaylı gezegeninden kaçmayı deneyebilirsin.";
     $("yildizlar").textContent = kazandi ? "★★★".slice(0, o.yildiz) + "☆☆☆".slice(0, 3 - o.yildiz) : "";
     ekranAc("sonuc"); cal(kazandi ? "p_kazandin" : "p_kaybettin", 1);
   }
