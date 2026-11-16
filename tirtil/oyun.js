@@ -91,6 +91,7 @@
   $("basla").addEventListener("click", function () { filmOynat("giris", secimAc); });
   $("tekrar").addEventListener("click", function () { oyunBaslat(); });
   $("degistir").addEventListener("click", secimAc);
+  $("kacis").addEventListener("click", function () { $("sonucYazi").textContent = "Uzaylı gezegeninden kaçış oyunu hazırlanıyor. Çok yakında!"; });
 
   // ---------- bölüm ölçüleri ----------
   var H = 78, SUT = 8, SAT = 11;                        // şeker hücresi, tahta sütun/satır
@@ -344,14 +345,15 @@
     } else {
       o.bitis += dt;
       if (o.durum === "kacti" && o.bitis > 3.2) sonucGoster(true);
-      if (o.durum === "yakalandi" && o.bitis > 3.2) sonucGoster(false);
+      if (o.durum === "yakalandi" && o.bitis > 2.2 && !o.filmde) { o.filmde = true; muzikDur(); filmOynat("portal", function () { sonucGoster(false); }); } // portaldan geçiş filmi, sonra seçenekler
     }
   }
   function sonucGoster(kazandi) {
     var o = D.oyun; if (o.durum === "bitti") return;
     o.yildiz = kazandi ? (o.kalan > 0.4 ? 3 : o.kalan > 0.15 ? 2 : 1) : 0; o.durum = "bitti"; muzikDur();
-    $("sonucBaslik").textContent = kazandi ? "Kurtuldun!" : "Vıcık seni tuzağa itti!";
-    $("sonucYazi").textContent = kazandi ? "Önce kendini kurtardın. Şimdi sıra dünyayı kurtarmakta! (Devamı yakında)" : "Üzülme, bir daha dene. Şekerleri kaydır, üçlü yap, lava suya kadar yol aç!";
+    $("sonucBaslik").textContent = kazandi ? "Kurtuldun!" : "Portal seni Vıcık'ın gezegenine götürdü!";
+    $("kacis").style.display = kazandi ? "none" : "";
+    $("sonucYazi").textContent = kazandi ? "Önce kendini kurtardın. Şimdi sıra dünyayı kurtarmakta! (Devamı yakında)" : "Baştan başlayabilir ya da uzaylı gezegeninden kaçmayı deneyebilirsin.";
     $("yildizlar").textContent = kazandi ? "★★★".slice(0, o.yildiz) + "☆☆☆".slice(0, 3 - o.yildiz) : "";
     ekranAc("sonuc"); cal(kazandi ? "p_kazandin" : "p_kaybettin", 1);
   }
@@ -453,10 +455,10 @@
     if (tp.y <= BY + SAT * H) resim(basR, tp.x + titre(7, poz) * (panik ? 3 : 1), tp.y + 27 - (poz % 2 ? 3 : 0) + bdy, 50, tp.yon < 0 && o.durum !== "kacti", baci);
 
     // kahraman (taşlara karşı iter, sağa sürüklenir) ve papağan
-    var hx = HX0 + (HX1 - HX0) * o.itme, hy = YER + 2, hboy = 104, hr = R[kd + "_at"], hcevir = true;
+    var hx = HX0 + (HX1 - HX0) * o.itme, hy = YER + 2, hboy = 114, hr = R[kd + "_at"], hcevir = true;
     if (itiyor) hx += (poz % 3 === 0 ? -3 : 0);
     if (o.durum === "kacti") { hr = R[kd + "_dur"]; hcevir = false; hy -= (poz % 4 < 2 ? 14 : 0); }
-    if (o.durum === "yakalandi") { hr = R[kd + "_dur"]; var yq = Math.floor(Math.min(1, o.bitis / 0.9) * 8) / 8; hx = HX1 + (ux - HX1) * yq; hy = uy - 20 - yq * 30; hboy = 104 * (1 - yq * 0.95); }
+    if (o.durum === "yakalandi") { hr = R[kd + "_dur"]; var yq = Math.floor(Math.min(1, o.bitis / 0.9) * 8) / 8; hx = HX1 + (ux - HX1) * yq; hy = uy - 20 - yq * 30; hboy = 114 * (1 - yq * 0.95); }
     resim(hr, hx, hy, hboy, hcevir);
     resim(poz % 2 ? R.pb1 : R.pb2, Math.min(hx + 56, HX1 - 30), YER - 62 + (poz % 4 < 2 ? 0 : -6), 40, true);
 

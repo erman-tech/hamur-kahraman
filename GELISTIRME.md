@@ -219,3 +219,12 @@ Bilinenler: zorluk bir çocukla denenmedi (otomatik oyuncu iki saniyede bir haml
 - Lav, altındaki ilk şekeri `ERIME` (15 sn) içinde kendisi eritir; eriyen şeker kızarır ve titrer. Böylece dipte tek şeker kalıp oyunun kilitlenmesi olmaz. `ITME = 100`.
 - Üst sahne baştan: yer altı (toprak, taş), tırtıl sağ üst delikten çıkıp üç kez kıvrılan koridordan gelir (`YOL` noktaları, `LY` satırları), kuyruğu deliğe kadar uzar. Gösterge alta, suyun üstüne alındı. Süre üçte bire indi: `ITME = 33`, `ERIME = 22`, `GERI = 0.02`; hiç oynamayan artık kaybeder.
 - Tırtıl artık lavı ağzından püskürtür (`PUSKURT` topak/sn, toplam `YEDEK_TAS`): kuyu boş başlar, dolar; ağzına kadar doluyken lav taşıp kapıyı iter (`o.dolu`), aşağı yol açıldıkça lav akar ve itme durur. Tuzak uzay gemisi değil portal (tuvalde çizilir). `ITME = 40`.
+
+### 16 Kasım: 1. oyuna Londra bölümü
+
+- Akış: İstanbul kazanılınca harita ekranında "✈ Londra'ya uç" düğmesi → geçiş filmi (`video/us_kirmizi.mp4` / `us_siyah.mp4`: Galata Kulesi'nin altındaki gizli üs, kedi ekibi, kostüm giyme, yeni kostüm "Sis Yaran", rampadan kalkan hamur jet, Londra) → Londra bölümü.
+- Şehirler tek tabloda: `SEHIRLER` (arka plan, kostüm öneki, toplanacak şey, platform, baş kötü, sesler). Yeni şehir = tabloya bir satır + görseller. Kostüm önekleri: İstanbul `k_` / `s_`, Londra `kl_` / `sl_` (kırmızı seri / siyah seri).
+- Londra daha zor: bölüm 14.000 piksel (İstanbul 9.000), platform ve kötüler döngüyle dizilir, görevler 32 çay fincanı ve 18 kötü, Sis Kontu 12 can ve daha sık atar (`bolumKur` içindeki `londra` dalı).
+- Film `kaynak/londra/film_l.py` + `kur_l.sh` ile hareketsiz karelerden kurulur (yavaş yaklaşma, 24 kare/sn). Siyah seride jet de siyah.
+- İki oyunda kahraman %10 büyütüldü.
+- 2. oyun: kaybedince portal filmi (`video/portal.mp4`) oynar, sonra "Baştan başla" ve "Gezegenden kaçış (yakında)" seçenekleri gelir.
