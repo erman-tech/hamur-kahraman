@@ -272,3 +272,11 @@ Bilinenler: zorluk bir çocukla denenmedi (otomatik oyuncu iki saniyede bir haml
 - Giriş filmi `final/video/giris.mp4` (22,6 sn; `?film=0` atlar). Test: `final/index.html?film=0&kat=1..3`.
 - Akış: Paris kurtulunca harita ekranında "🏠 İstanbul'a dönüyorum!" → `final/`. Los Angeles hâlâ yok; yapılırsa final onun arkasına alınır (`hamur_kahraman/oyun.js`, `#londra` tıklaması).
 - Robotla ölçüldü (12'şer oyun): rastgele atan 0/12; uzaylıya nişan alan (%8 hata) 11–12/12, (%15 hata) 10–12/12, (%25 hata) 4–7/12. Gerçek parmakla ve çocukla denenmedi; sesler dinlenmedi.
+
+## 16 Kasım 2026 (gece 3) — Final yeniden kuruldu: tek kule, 5 simit
+- Yukarıdaki üç katlı sürüm kalktı. Tek oyun: Haliç'in karşısında (su 308–788 px) üç kanatlı büyük kule + nöbetçi sütunu, 9 uzaylı (tepede taçlı Zorgo). Yalnız 5 simit. Yarışma: kaç simitle yıkıldı (`localStorage hk_final_rekor`, 3 ve altı ★★★, 4 ★★, 5 ★).
+- Kurgu sapan türü: simit kepçeden iplerle geri çekilir (`GERME`), bırakılır; sıradaki simitler balkonda. Mancınık karşıya bakar (resim ters çevrilir), Ateş ve mancınık küçüldü.
+- Uzaylılar Uzaylı Tırtıl oyunundaki çok gözlü baş + gövde topundan birleştirildi (`kaynak/uzayli.py`).
+- Ölçüler: blok 40, tahta 16, kat 56 (`B`, `TH`, `KAT`); can taş 2, tahta 1, jöle 1, Zorgo 3. Simit kırdığı parçanın içinden geçer. Tahta, ağırlık merkezi desteklerinin arasındaysa durur.
+- Robot (12'şer oyun, uzaylıya nişan): %3 hata 6/12, %8 hata 3/12, %20 hata 0/12; hep 5 simitle. Alttaki sütunlara atan robot 0–1/12. Yani zor; 5'ten az simitle yıkan robot olmadı. Gerçek parmakla ve çocukla denenmedi.
+- Arka plan yeni (`kaynak/arka2.png`, 21:9; oyunda 150–1430 arası kesit). Film son karesi de yenilendi.
