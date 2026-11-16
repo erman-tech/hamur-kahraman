@@ -289,3 +289,4 @@ Bilinenler: zorluk bir çocukla denenmedi (otomatik oyuncu iki saniyede bir haml
 - Akış: Paris → Los Angeles → harita ekranında "İstanbul'a dönüyorum" → `final/` (istila). Finalde kahraman LA kostümünde.
 - Ölçülmedi: LA zorluğu, baştan sona oynanış; sesler dinlenmedi. Koşu pozları kos1 ve kos2 birbirine çok benziyor.
 - Tokyo'ya gidiş filmi stop motion sürümüyle değişti (`tokyo_kirmizi/siyah.mp4`; kaynak `oyunlar/hamur_filmler_stopmotion/`, eskisi `kaynak/eski_filmler/`). Öteki filmler hazır oldukça aynı yolla değişecek.
+- Stop motion sürümüyle değişen filmler: paris_kirmizi paris_siyah
