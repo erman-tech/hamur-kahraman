@@ -7,41 +7,41 @@
 <style>
   html, body { margin: 0; height: 100%; background: #101a3a; overflow: hidden; touch-action: none;
     font-family: "Arial Rounded MT Bold", "Chalkboard SE", "Trebuchet MS", sans-serif; user-select: none; -webkit-user-select: none; }
-  #sahne { position: absolute; left: 0; top: 0; width: 1280px; height: 720px; transform-origin: 0 0; overflow: hidden; background: #16224d; }
-  #sahne > * { position: absolute; left: 0; top: 0; width: 1280px; height: 720px; }
+  #sahne { position: absolute; left: 0; top: 0; width: 720px; height: 1280px; transform-origin: 0 0; overflow: hidden; background: #16224d; }
+  #sahne > * { position: absolute; left: 0; top: 0; width: 720px; height: 1280px; }
   canvas, video { display: block; }
-  video { object-fit: cover; background: #16224d; }
+  video { object-fit: contain; background: #16224d; }
   .ekran { display: none; align-items: center; justify-content: center; flex-direction: column; text-align: center; color: #fff; }
   .ekran.acik { display: flex; }
   .hamur { border: 0; cursor: pointer; font: inherit; font-size: 44px; color: #fff; padding: 22px 54px; border-radius: 40px;
     box-shadow: 0 10px 0 rgba(0,0,0,.35), inset 0 -8px 0 rgba(0,0,0,.18), inset 0 6px 0 rgba(255,255,255,.28); transition: transform .08s; }
   .hamur:active { transform: translateY(6px); }
   .kirmizi { background: #e23b2e; } .sari { background: #f2b61e; color: #3a2400; } .mavi { background: #2f7fd6; }
-  #kapak { background: #16224d url(varlik/kapak.jpg) center/cover no-repeat; justify-content: flex-end; }
-  #kapak .kutu { margin: 0 0 70px 60px; text-align: center; }
+  #kapak { background: #16224d url(varlik/kapak.jpg) center 240px/100% auto no-repeat; justify-content: flex-end; }
+  #kapak .kutu { margin: 0 0 330px 0; text-align: center; }
   #kapak p { font-size: 22px; margin: 16px 0 0; text-shadow: 0 3px 0 rgba(0,0,0,.6); }
-  #kapak .imza { position: absolute; left: 60px; top: auto; bottom: 20px; width: 1280px; height: auto; font-size: 24px; color: #ffd23a; text-shadow: 0 3px 0 rgba(0,0,0,.6); }
+  #kapak .imza { position: absolute; left: 0; top: auto; bottom: 60px; width: 720px; text-align: center; height: auto; font-size: 24px; color: #ffd23a; text-shadow: 0 3px 0 rgba(0,0,0,.6); }
   #kapak .geri { position: absolute; left: 24px; top: 20px; width: auto; height: auto; font-size: 22px; color: #fff; text-decoration: none;
     background: rgba(20,30,70,.6); padding: 10px 20px; border-radius: 22px; }
   #gec { left: auto; top: auto; right: 28px; bottom: 26px; width: auto; height: auto; font-size: 24px; padding: 12px 26px; display: none; }
   #secim { background: #1b2a66; justify-content: flex-start; }
-  #secim h1 { font-size: 46px; margin: 22px 0 12px; text-shadow: 0 5px 0 rgba(0,0,0,.4); }
-  #kartlar { display: grid; grid-template-columns: repeat(4, 176px); gap: 14px 26px; }
-  #kartlar button { width: 176px; height: 268px; border: 0; padding: 0; border-radius: 26px; cursor: pointer; background: #dfe0e6 center/cover no-repeat;
+  #secim h1 { font-size: 46px; margin: 210px 0 30px; text-shadow: 0 5px 0 rgba(0,0,0,.4); }
+  #kartlar { display: grid; grid-template-columns: repeat(4, 156px); gap: 26px 16px; }
+  #kartlar button { width: 156px; height: 238px; border: 0; padding: 0; border-radius: 26px; cursor: pointer; background: #dfe0e6 center/cover no-repeat;
     box-shadow: 0 8px 0 rgba(0,0,0,.4), inset 0 0 0 6px rgba(255,255,255,.55); transition: transform .08s; }
   #kartlar button:active { transform: translateY(5px) scale(.97); }
   #karistir { left: auto; right: 20px; top: 12px; bottom: auto; width: auto; height: auto; font-size: 22px; padding: 12px 22px; display: none; }
   #sonuc { background: rgba(16,26,58,.8); }
-  #sonuc h1 { font-size: 68px; margin: 0 0 8px; text-shadow: 0 6px 0 rgba(0,0,0,.4); }
-  #sonuc h2 { font-size: 30px; margin: 0 60px 14px; font-weight: normal; }
+  #sonuc h1 { font-size: 50px; margin: 0 30px 12px; text-shadow: 0 6px 0 rgba(0,0,0,.4); }
+  #sonuc h2 { font-size: 26px; margin: 0 50px 18px; font-weight: normal; }
   #yildizlar { font-size: 80px; letter-spacing: 12px; margin-bottom: 22px; color: #ffd23a; text-shadow: 0 6px 0 rgba(0,0,0,.4); min-height: 20px; }
-  #sonuc .dugmeler { display: flex; gap: 30px; }
+  #sonuc .dugmeler { display: flex; flex-direction: column; gap: 26px; }
   #sonuc .hamur { font-size: 30px; padding: 16px 34px; }
 </style>
 </head>
 <body>
 <div id="sahne">
-  <canvas id="tuval" width="1280" height="720"></canvas>
+  <canvas id="tuval" width="720" height="1280"></canvas>
   <video id="film" playsinline preload="auto" style="display:none"></video>
   <div id="kapak" class="ekran acik">
     <a class="geri" href="../index.html">◀ Oyunlar</a>
