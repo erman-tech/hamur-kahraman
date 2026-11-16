@@ -211,3 +211,4 @@ Bilinenler: zorluk bir çocukla denenmedi (otomatik oyuncu iki saniyede bir haml
 - Portalda yalnız iki oyun var; Aslı Beliz sürümü kendi adresinde duruyor, portalda bağlantısı yok.
 - Kahramanın odası alçaltıldı (`ODA`), taşlar tavana kadar dolar. Uzay gemisi yerde bekler; kaybedilince kahramanı alıp uçar.
 - Taşların yerini hamur lav aldı (`varlik/lav1.png`, `lav2.png`; taş görsellerinden renklendirildi, kodda adı hâlâ `tas`). Lav ile kahraman arasında kapı var: lav kapıyı, kapı kahramanı iter.
+- Şeker tahtası artık tam bir eşleştirme oyunu: lav kuyusunun dışındaki sütunlarda şekerler aşağı düşer, üstten yenileri gelir, zincirleme patlamalar olur (`patlat`, `yercekimi`). Yan yana 4 ya da 5 aynı şeker gelirse hepsi patlar. Boşluk yalnız kuyunun altındaki dört sütunda kalır; lav oradan suya iner. Kolaylaştırıldı: `ITME = 110`, `YEDEK_TAS = 150`.
