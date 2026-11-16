@@ -89,7 +89,8 @@
     $("kartlar").appendChild(d);
   });
   $("basla").addEventListener("click", function () { filmOynat("giris", secimAc); });
-  $("tekrar").addEventListener("click", function () { oyunBaslat(); });
+  $("tekrar").addEventListener("click", function () { if (D.sonraki) D.bolum = (D.bolum || 1) + 1; D.sonraki = false; oyunBaslat(); });
+  $("yeni").addEventListener("click", function () { muzikDur(); location.href = "../index.html"; });
   $("degistir").addEventListener("click", secimAc);
   var BAG = new URLSearchParams(location.search); // 1. oyundan "İstanbul'da kalacağım" ile gelindiyse seri taşınır
   $("londraGit").addEventListener("click", function () { muzikDur(); location.href = "../istanbul/index.html?londra=1&seri=" + (BAG.get("seri") === "kotu" ? "kotu" : "iyi"); });
@@ -108,7 +109,8 @@
   var KUYU0 = YS0 * B, KUYU1 = (YS1 + 1) * B;           // kuyunun çakıl sütunları [KUYU0, KUYU1)
   var YEDEK_TAS = 300, PUSKURT = 16;                    // tırtılın püskürteceği toplam lav ve saniyedeki topak sayısı                                  // kuyunun üstünden gelmeye devam eden taş sayısı
   var HX0 = BX + (YS1 + 1) * H + 40, HX1 = 612;       // kahramanın başladığı yer ve tuzak (uzay gemisinin ışığı)
-  var YURU = 9, ITME = 40, GERI = 0.02, IPUCU_SN = 6, ERIME = 22; // ERIME: lav altındaki şekeri bu kadar saniyede kendisi eritir (çıkmaz olmasın) // GERI: lavın altında patlayan her şeker kapıyı bu kadar geri iter                             // tırtılın yığına varma süresi; dolu yığınla tuzağa itme süresi (sn)
+  var BOLUM_SAYISI = 5, ITME_B = [28, 26, 24, 22, 20], LAV_B = [300, 325, 350, 375, 400]; /* bölüm bölüm: kapıyı itme süresi (sn) ve püskürtülen lav */
+  var YURU = 9, ITME = 28, GERI = 0.02, IPUCU_SN = 6, ERIME = 22; // ERIME: lav altındaki şekeri bu kadar saniyede kendisi eritir (çıkmaz olmasın) // GERI: lavın altında patlayan her şeker kapıyı bu kadar geri iter                             // tırtılın yığına varma süresi; dolu yığınla tuzağa itme süresi (sn)
   var TOPLAM = YEDEK_TAS;
   // Yer altı labirenti: tırtıl sağ üstteki delikten çıkar, üç kez kıvrılıp lav kuyusuna soldan gelir. Kuyruğunun ucu delikten hiç çıkmaz.
   var KOR = 46, TUNEL = 70, ODA = 126;                  // koridor kalınlığı; tünelde kuyudan önce yığılı lavın boyu; kahramanın odasının yüksekliği
@@ -173,11 +175,12 @@
     }
   }
   function oyunBaslat() {
+    D.bolum = Math.max(1, Math.min(BOLUM_SAYISI, D.bolum || 1)); ITME = ITME_B[D.bolum - 1];
     var g = [], tas = [], r, s2;
     for (r = 0; r < SAT; r++) { g.push([]); for (s2 = 0; s2 < SUT; s2++) g[r].push(-1); }
     tahtaKur(g);
     for (r = 0; r < TSAT; r++) { tas.push([]); for (s2 = 0; s2 < TS; s2++) tas[r].push(0); }
-    D.oyun = { t: 0, g: g, tas: tas, yedek: YEDEK_TAS, durum: "oyna", kum: 0, adim: 0, kirinti: [], yazi: [], dokulen: 0, ipucu: 7, inilti: 4,
+    D.oyun = { t: 0, g: g, tas: tas, yedek: LAV_B[D.bolum - 1], durum: "oyna", kum: 0, adim: 0, kirinti: [], yazi: [], dokulen: 0, ipucu: 7, inilti: 4,
       secili: null, bekle: 0, zincir: 0, kay: g.map(function (x) { return x.map(function () { return 0; }); }), soz: {}, bitis: 0, itme: 0, tik: 1, surt: 0, yildiz: 0, sallan: null, karistir: 0, damla: [], pus: 0, dolu: false, bos: 0, oner: null, erime: {}, tasSes: 0, hamle: 0, kalan: 0 };
     ekranAc("oyun"); muzikBasla(); cal("p_nasil", 1);
   }
@@ -357,9 +360,14 @@
   function sonucGoster(kazandi) {
     var o = D.oyun; if (o.durum === "bitti") return;
     o.yildiz = kazandi ? (o.kalan > 0.4 ? 3 : o.kalan > 0.15 ? 2 : 1) : 0; o.durum = "bitti"; muzikDur();
-    $("sonucBaslik").textContent = kazandi ? "Kurtuldun!" : "Portal seni Vıcık'ın gezegenine götürdü!";
-    $("kacis").style.display = kazandi ? "none" : ""; $("londraGit").style.display = kazandi ? "" : "none";
-    $("sonucYazi").textContent = kazandi ? "Önce kendini kurtardın. Londra'yı kurtarmaya şimdi hazır mısın?" : "Baştan başlayabilir ya da uzaylı gezegeninden kaçmayı deneyebilirsin.";
+    var son = D.bolum >= BOLUM_SAYISI; D.sonraki = kazandi && !son;
+    $("sonucBaslik").textContent = !kazandi ? "Portal seni Vıcık'ın gezegenine götürdü!" : son ? "Vıcık'ı beş kez yendin!" : "Bölüm " + D.bolum + " tamam!";
+    $("sonucYazi").textContent = !kazandi ? "Gezegenden kaçmayı dene ya da yeni bir oyuna başla." : son ? "Kendini kurtardın. Londra'yı kurtarmaya şimdi hazır mısın?" : "Vıcık sudan çıktı, daha hızlı geliyor! Sıradaki bölüm: " + (D.bolum + 1) + " / " + BOLUM_SAYISI;
+    $("kacis").style.display = kazandi ? "none" : ""; $("yeni").style.display = kazandi ? "none" : "";
+    $("londraGit").style.display = kazandi && son ? "" : "none";
+    $("tekrar").style.display = D.sonraki ? "" : "none"; $("tekrar").textContent = "Sıradaki bölüm ▶";
+    $("degistir").style.display = kazandi ? "" : "none";
+    if (!kazandi || son) D.bolum = 1;
     $("yildizlar").textContent = kazandi ? "★★★".slice(0, o.yildiz) + "☆☆☆".slice(0, 3 - o.yildiz) : "";
     ekranAc("sonuc"); cal(kazandi ? "p_kazandin" : "p_kaybettin", 1);
   }
@@ -479,7 +487,7 @@
     c.textAlign = "left"; yazi("Tuzağa uzaklık", 20, gy, 18);
     c.fillStyle = "rgba(20,25,60,.75)"; yuvarlak(20, gy + 8, 300, 18, 9); c.fill();
     c.fillStyle = o.itme > 0.62 ? "#ff5a4a" : o.itme > 0.35 ? "#f7b21e" : "#5fd16a"; yuvarlak(20, gy + 8, Math.max(18, 300 * (1 - o.itme)), 18, 9); c.fill();
-    yazi("Kalan lav: " + kalanTas(o), 360, gy + 22, 20);
+    yazi("Kalan lav: " + kalanTas(o), 360, gy + 22, 20); yazi("Bölüm " + D.bolum + " / " + BOLUM_SAYISI, 580, gy + 22, 20, "#ffd23a");
     c.textAlign = "center";
     if (o.durum === "oyna" && o.ipucu > 0) { yazi("Vıcık lav püskürtüyor! Kuyu dolarsa lav seni portala iter!", G / 2, YER + 34, 23, "#ffd23a"); yazi("Lavın altındaki şekerleri patlat: lav suya dökülsün!", G / 2, YER + 68, 22); }
     else if (panik && poz % 2) yazi("Tuzağa çok yaklaştın!", G / 2, YER + 40, 36, "#ffd23a");
