@@ -258,3 +258,4 @@ Bilinenler: zorluk bir çocukla denenmedi (otomatik oyuncu iki saniyede bir haml
 - Londra bitince iki seçenek: "Tokyo'ya hazırım" ya da "Eve dönmek istiyorum". Eve dönerse `ufo_kirmizi/siyah.mp4` oynar (Zorgo'nun UFO'su jeti ışınlar) ve Gezegenden Kaçış açılır (`kacis/index.html?sonra=tokyo`). Kaçınca "Tokyo'ya hazırım" → `istanbul/index.html?londra=1&don=tokyo`.
 - Test bağlantısı artık önce o şehrin geçiş filmini oynatır. Düğme yazısı şehre göre ("Paris'e hazırım").
 - Ölçülmedi: Paris'in zorluğu; sesler dinlenmedi.
+- Tokyo'ya gidiş filmi papağan kaçırma senaryosuyla yeniden kuruldu (neon pul, dronlar, Pufi iz buluyor, roket Big Ben'den). Tokyo bölümünde papağan Neon Ejder yenilene kadar çizilmez (`papaganKayip`), yenilince ejderin yanından kahramana uçar. Tokyo'nun üç sesi yenilendi (p_tokyo artık anlatıcı sesi). Ayrıntılı senaryo: `hamur_portal/SENARYO.md` (yayına gitmez).

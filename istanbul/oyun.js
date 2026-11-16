@@ -67,7 +67,7 @@
     londra: { ad: "Londra", eki: "Londra'yı", arka: "arka_l", on: { iyi: "kl_", kotu: "sl_" }, topla: "cay", toplaAd: "Çay fincanı", platform: "otobus", kral: "kont", kralAd: "Sis Kontu", kralEki: "Sis Kontu'nu", pBasla: "p_londra", pKral: "p_kont", zafer: "a_londra", kralOlcek: 0.9, kotu: { yur: ["l_yur1", "l_yur2"], uc: ["l_uc1", "l_uc2"], yuv: "l_yuv", yurOlcek: 0.95, ucOlcek: 0.85 }, guc: "zaman", gucBekle: 14, toplaOlcek: 0.8, gecis: { iyi: "us_kirmizi", kotu: "us_siyah" },
       bolum: { uz: 14000, simit: 32, kotu: 18, kralAra: 1.4, meteorAra: 2.2, yurAra: 430, yurHiz: 105, ucAra: 700, ucHiz: 150, kralCan: 12, yuvar: 7, dal: 5 } }, // guc: bu şehrin kostümüne özel güç
     tokyo: { ad: "Tokyo", eki: "Tokyo'yu", arka: "arka_t", on: { iyi: "kt_", kotu: "st_" }, topla: "onigiri", toplaAd: "Onigiri", platform: "t_platform", kral: "ejder", kralAd: "Neon Ejder", kralEki: "Neon Ejder'i", pBasla: "p_tokyo", pKral: "p_ejder", zafer: "a_tokyo", kralOlcek: 0.85,
-      kotu: { yur: ["t_yur1", "t_yur2"], uc: ["t_uc1", "t_uc2"], yuv: "t_yuv", yurOlcek: 0.95, ucOlcek: 0.9 }, guc: "ninja", gucBekle: 12, toplaOlcek: 0.75, gecis: { iyi: "tokyo_kirmizi", kotu: "tokyo_siyah" },
+      kotu: { yur: ["t_yur1", "t_yur2"], uc: ["t_uc1", "t_uc2"], yuv: "t_yuv", yurOlcek: 0.95, ucOlcek: 0.9 }, guc: "ninja", gucBekle: 12, toplaOlcek: 0.75, gecis: { iyi: "tokyo_kirmizi", kotu: "tokyo_siyah" }, papaganKayip: true, // papağan kaçırıldı: Neon Ejder yenilene kadar görünmez
       bolum: { uz: 17000, simit: 40, kotu: 24, kralAra: 1.25, meteorAra: 2.0, yurAra: 390, yurHiz: 120, ucAra: 620, ucHiz: 165, kralCan: 16, yuvar: 6, dal: 4 } },
     // Paris: şehir gri başlar, ilerledikçe renklenir (arkaGri üstüne renkli arka plan poz poz açılır). Güç: renk dalgası.
     paris: { ad: "Paris", eki: "Paris'i", yon: "Paris'e", arka: "arka_p", arkaGri: "arka_p_gri", on: { iyi: "kp_", kotu: "sp_" }, topla: "boya", toplaAd: "Boya tüpü", platform: "p_platform", kral: "ressam", kralAd: "Gölge Ressam", kralEki: "Gölge Ressam'ı", pBasla: "p_paris", pKral: "p_ressam", zafer: "a_paris", kralOlcek: 0.9, mermi: "p_top",
@@ -413,7 +413,8 @@
         if (kr.can <= 0) {
           kr.yenildi = true; if (!SEHIRLER[TEST]) kostumAc(sehir().on[D.secim].replace("_", "")); o.bitti = "zafer"; // kostüm, şehri bitirince açılır
            o.bitisSayac = 3.4; o.meteorlar.length = 0;
-          cal("e_zafer", 0.8); setTimeout(function () { cal(sehir().zafer || (D.secim === "iyi" ? "a_kazandin_c" : "a_kazandin_u"), 1); }, 900); mesajVer("Tebrikler! " + ad() + ", " + sehir().eki + " kurtardı!", 4);
+          cal("e_zafer", 0.8); setTimeout(function () { cal(sehir().zafer || (D.secim === "iyi" ? "a_kazandin_c" : "a_kazandin_u"), 1); }, 900); mesajVer("Tebrikler! " + ad() + ", " + sehir().eki + " kurtardı!" + (sehir().papaganKayip ? " Papağan da özgür!" : ""), 4);
+          if (sehir().papaganKayip) { o.p.x = kr.x; o.p.y = kr.y - 220; } // papağan ejderin yanından kahramana uçar
           parca(o, kr.x, kr.y - 100, "#ffd23a", 40);
         }
       }
@@ -524,7 +525,7 @@
       c.save(); c.translate(yx, yy2); c.rotate(ya); c.drawImage(R.shuriken, -24, -24, 48, 48); c.restore(); // hamur ninja yıldızı
     }
     // papağan
-    ciz(R[(D.secim === "iyi" ? "pb" : "ps") + (kare() % 2 + 1)], o.p.x, o.p.y, 0.62, k.yon < 0);
+    if (!(sehir().papaganKayip && !(o.kral && o.kral.yenildi))) ciz(R[(D.secim === "iyi" ? "pb" : "ps") + (kare() % 2 + 1)], o.p.x, o.p.y, 0.62, k.yon < 0);
 
     for (i = 0; i < o.mermiler.length; i++) {
       m = o.mermiler[i]; var yon = m.vx > 0 ? 1 : -1;
