@@ -148,20 +148,21 @@
       o.kotuler.push({ tur: "uc", x: a[0], y: a[1], y0: a[1], x0: a[0] - 220, x1: a[0] + 220, yon: i % 2 ? 1 : -1, hiz: 110, faz: i, g: 80, y_: 70 });
     });
     [2300, 4600, 6800, 7850].forEach(function (x) { o.sandiklar.push({ x: x, y: ZEMIN, g: 70 }); });
-    UZUNLUK = 9000; GOREV_SIMIT = 20; GOREV_KOTU = 10; o.kralAra = 2.1; o.meteorAra = 3.5;
-    o.kral = { x: 8650, y: ZEMIN, can: 6, yon: -1, atSn: 2, vurSn: 0, yenildi: false, g: 190, y_: 250 };
-    if (D.sehir === "londra") { // daha uzun, daha kalabalık, baş kötü daha dayanıklı ve daha sık atar
-      UZUNLUK = 14000; GOREV_SIMIT = 32; GOREV_KOTU = 18; o.kralAra = 1.4; o.meteorAra = 2.2; o.meteorSn = 4;
-      o.platformlar = []; o.simitler = []; o.kotuler = []; o.sandiklar = [];
-      var yk = [500, 410, 330, 440, 360, 480], n = 0, x;
-      for (x = 850; x < UZUNLUK - 1700; x += 300 + (n % 3) * 110, n++) { o.platformlar.push({ x: x, y: yk[n % 6], g: 174 }); o.simitler.push({ x: x + 87, y: yk[n % 6] - 48 }); }
-      for (x = 500; x < UZUNLUK - 1500; x += 520) { o.simitler.push({ x: x, y: ZEMIN - 60 }); o.simitler.push({ x: x + 80, y: ZEMIN - 60 }); }
-      for (x = 1500, n = 0; x < UZUNLUK - 1500; x += 1300, n++) o.simitler.push({ x: x, y: 230 + (n % 2) * 40 });
-      for (x = 1100, n = 0; x < UZUNLUK - 1500; x += 430, n++) o.kotuler.push({ tur: "yur", x: x, y: ZEMIN, x0: x - 170, x1: x + 170, yon: n % 2 ? 1 : -1, hiz: 105, g: 60, y_: 75 });
-      for (x = 1500, n = 0; x < UZUNLUK - 1500; x += 700, n++) { var yy = 260 + (n % 3) * 50; o.kotuler.push({ tur: "uc", x: x, y: yy, y0: yy, x0: x - 240, x1: x + 240, yon: n % 2 ? 1 : -1, hiz: 150, faz: n, g: 80, y_: 70 }); }
-      for (x = 2200; x < UZUNLUK - 900; x += 2300) o.sandiklar.push({ x: x, y: ZEMIN, g: 70 });
-      o.kral = { x: UZUNLUK - 350, y: ZEMIN, can: 12, yon: -1, atSn: 2, vurSn: 0, yenildi: false, g: 210, y_: 260 };
-    }
+    // Bölüm tasarımı iki şehirde aynı kalıpla dizilir; sayılar şehre göre (İstanbul öğretir, Londra zorlar).
+    var A = D.sehir === "londra"
+      ? { uz: 14000, simit: 32, kotu: 18, kralAra: 1.4, meteorAra: 2.2, yurAra: 430, yurHiz: 105, ucAra: 700, ucHiz: 150, kralCan: 12, yuvar: 7, dal: 5 }
+      : { uz: 10000, simit: 22, kotu: 12, kralAra: 2.1, meteorAra: 3.5, yurAra: 640, yurHiz: 75, ucAra: 1050, ucHiz: 115, kralCan: 6, yuvar: 12, dal: 9 };
+    UZUNLUK = A.uz; GOREV_SIMIT = A.simit; GOREV_KOTU = A.kotu; o.kralAra = A.kralAra; o.meteorAra = A.meteorAra; o.meteorSn = 5;
+    o.yuvarAra = A.yuvar; o.yuvarSn = A.yuvar; o.dalAra = A.dal;
+    o.platformlar = []; o.simitler = []; o.kotuler = []; o.sandiklar = [];
+    var yk = [500, 410, 330, 440, 360, 480], n = 0, x;
+    for (x = 850; x < UZUNLUK - 1700; x += 300 + (n % 3) * 110, n++) { o.platformlar.push({ x: x, y: yk[n % 6], g: 174 }); o.simitler.push({ x: x + 87, y: yk[n % 6] - 48 }); }
+    for (x = 500; x < UZUNLUK - 1500; x += 520) { o.simitler.push({ x: x, y: ZEMIN - 60 }); o.simitler.push({ x: x + 80, y: ZEMIN - 60 }); }
+    for (x = 1500, n = 0; x < UZUNLUK - 1500; x += 1300, n++) o.simitler.push({ x: x, y: 230 + (n % 2) * 40 });
+    for (x = 1100, n = 0; x < UZUNLUK - 1500; x += A.yurAra, n++) o.kotuler.push({ tur: "yur", x: x, y: ZEMIN, x0: x - 170, x1: x + 170, yon: n % 2 ? 1 : -1, hiz: A.yurHiz, g: 60, y_: 75 });
+    for (x = 1500, n = 0; x < UZUNLUK - 1500; x += A.ucAra, n++) { var yy = 260 + (n % 3) * 50; o.kotuler.push({ tur: "uc", x: x, y: yy, y0: yy, x0: x - 240, x1: x + 240, yon: n % 2 ? 1 : -1, hiz: A.ucHiz, faz: n, g: 80, y_: 70, dalSn: 3 + n % 4 }); }
+    for (x = 2200; x < UZUNLUK - 900; x += 2300) o.sandiklar.push({ x: x, y: ZEMIN, g: 70 });
+    o.kral = { x: UZUNLUK - 350, y: ZEMIN, can: A.kralCan, canMax: A.kralCan, yon: -1, atSn: 2, vurSn: 0, yenildi: false, g: 200, y_: 255, ozelSn: 7, sis: 0, yaylim: 0 };
     return o;
   }
 
@@ -204,7 +205,7 @@
     // --- kahraman ---
     var canli = o.bitti !== "kayip";
     var hedef = canli ? ((T.sag ? 1 : 0) - (T.sol ? 1 : 0)) * 310 : 0;
-    k.vx += (hedef - k.vx) * Math.min(1, dt * 12);
+    k.vx += (hedef - k.vx) * Math.min(1, dt * (hedef ? 12 : 22)); if (!hedef && Math.abs(k.vx) < 25) k.vx = 0;
     if (hedef) k.yon = hedef > 0 ? 1 : -1;
     if (canli && yukariYeni && k.yerde) { k.vy = -640; k.yerde = false; }
     else if (canli && T.yukari && !k.yerde && k.yakit > 0) { k.vy += (-300 - k.vy) * Math.min(1, dt * 7); k.yakit -= dt / 3.5; k.ucuyor = true; }
@@ -212,7 +213,7 @@
     yukariYeni = false;
     k.vy += 1700 * dt; if (k.vy > 900) k.vy = 900;
     var eskiY = k.y;
-    k.x += k.vx * dt; k.y += k.vy * dt;
+    k.x += k.vx * dt; k.y += k.vy * dt; k.adim = (k.adim || 0) + Math.abs(k.vx) * dt;
     k.x = Math.max(40, Math.min(UZUNLUK - 40, k.x));
     if (k.y < 70) { k.y = 70; if (k.vy < 0) k.vy = 0; }
     k.yerde = false;
@@ -249,20 +250,42 @@
     for (i = o.kotuler.length - 1; i >= 0; i--) {
       e = o.kotuler[i];
       if (e.yakalandi) { e.sn -= dt; e.vy += 1500 * dt; e.y += e.vy * dt; if (e.sn <= 0) o.kotuler.splice(i, 1); continue; }
-      e.x += e.yon * e.hiz * dt; if (e.x < e.x0) e.yon = 1; if (e.x > e.x1) e.yon = -1;
-      if (e.tur === "uc") e.y = e.y0 + Math.sin(o.t * 2 + e.faz) * 60;
+      if (e.tur === "yuv") { e.x -= e.hiz * dt; e.aci -= e.hiz * dt / 34; if (e.x < o.kam - 200) { o.kotuler.splice(i, 1); continue; } }
+      else { e.x += e.yon * e.hiz * dt; if (e.x < e.x0) e.yon = 1; if (e.x > e.x1) e.yon = -1; }
+      if (e.tur === "uc") { // arada bir kahramana dalış yapar, sonra yerine döner
+        if (e.dal > 0) { e.dal -= dt; e.y = e.y0 + Math.sin(Math.PI * (1 - e.dal / 1.3)) * (e.dalY - e.y0); }
+        else {
+          e.y = e.y0 + Math.sin(o.t * 2 + e.faz) * 60; e.dalSn -= dt;
+          if (e.dalSn <= 0 && Math.abs(e.x - k.x) < 380 && !o.bitti) { e.dalSn = o.dalAra + Math.random() * 3; e.dal = 1.3; e.dalY = Math.min(ZEMIN - 20, k.y - 20); cal("e_meteor", 0.2); }
+        }
+      }
       if (kutuCakis(k.x, k.y, 44, 116, e.x, e.y, e.g, e.y_)) incit(o);
+    }
+
+    // --- aniden yuvarlanarak gelen düşman ---
+    o.yuvarSn -= dt;
+    if (o.yuvarSn <= 0 && !o.bitti && k.x > 700 && k.x < UZUNLUK - 1300) {
+      o.yuvarSn = o.yuvarAra + Math.random() * 4;
+      o.kotuler.push({ tur: "yuv", x: o.kam + G + 120, y: ZEMIN, hiz: 360, aci: 0, g: 64, y_: 64 });
+      mesajVer("Dikkat! Yuvarlanan geliyor, zıpla!", 1.6); cal("e_meteor", 0.3);
     }
 
     // --- Meteor Kralı ---
     var kr = o.kral;
     if (!o.kralGeldi && k.x > UZUNLUK - 1050) { o.kralGeldi = true; cal(sehir().pKral, 1); mesajVer("Dikkat! " + sehir().kralAd + " geldi!", 3); }
     if (kr && !kr.yenildi && o.kralGeldi) {
-      kr.x += kr.yon * 90 * dt; if (kr.x < 8350) kr.yon = 1; if (kr.x > 8850) kr.yon = -1;
+      kr.x += kr.yon * 90 * dt; if (kr.x < UZUNLUK - 650) kr.yon = 1; if (kr.x > UZUNLUK - 150) kr.yon = -1;
       kr.y = ZEMIN - Math.abs(Math.sin(o.t * 2.2)) * 40;
       if (kr.vurSn > 0) kr.vurSn -= dt;
       kr.atSn -= dt;
       if (kr.atSn <= 0) { kr.atSn = o.kralAra; var uz = k.x - kr.x; o.meteorlar.push({ x: kr.x, y: kr.y - 200, vx: uz / 1.2, vy: -520, yer: 1500, kral: true }); cal("e_meteor", 0.35); }
+      // Sis Kontu'nun kendine has saldırısı: sise karışıp görünmez olur ve art arda meteor yağdırır
+      if (D.sehir === "londra") {
+        if (kr.sis > 0) {
+          kr.sis -= dt; kr.yaylim -= dt;
+          if (kr.yaylim <= 0) { kr.yaylim = 0.45; o.meteorlar.push({ x: k.x - 260 + Math.random() * 520, y: -60, vx: 0, vy: 420, yer: 0 }); cal("e_meteor", 0.25); }
+        } else { kr.ozelSn -= dt; if (kr.ozelSn <= 0) { kr.ozelSn = 9 + Math.random() * 3; kr.sis = 3.2; kr.yaylim = 0.6; mesajVer("Sis saldırısı! Sis Kontu görünmez oldu!", 2.2); } }
+      }
       if (kutuCakis(k.x, k.y, 44, 116, kr.x, kr.y, kr.g - 40, kr.y_ - 40)) incit(o);
     }
 
@@ -353,6 +376,7 @@
 
     for (i = 0; i < o.kotuler.length; i++) {
       e = o.kotuler[i]; var kr2 = kare(i) % 2;
+      if (e.tur === "yuv") { c.save(); c.globalAlpha = e.yakalandi ? Math.max(0, e.sn / 0.9) : 1; c.translate(e.x, e.y - 34); c.rotate(Math.round(e.aci * 3) / 3); c.drawImage(R.meteor, -36, -36, 72, 72); c.restore(); continue; }
       var im = e.tur === "yur" ? (kr2 ? R.yur1 : R.yur2) : (kr2 ? R.uc1 : R.uc2);
       var olcek = e.tur === "yur" ? 0.6 : 0.62;
       ciz(im, e.x + titre(i), e.y, olcek, e.yon < 0, e.yakalandi ? Math.max(0, e.sn / 0.9) : 1);
@@ -362,9 +386,9 @@
 
     var kr = o.kral;
     if (kr && o.kralGeldi) {
-      ciz(R[sehir().kral], kr.x + titre(7), kr.y, sehir().kralOlcek, kr.yon > 0, kr.yenildi ? Math.max(0, o.bitisSayac / 3.4) : 1);
+      ciz(R[sehir().kral], kr.x + titre(7), kr.y, sehir().kralOlcek, kr.yon > 0, kr.yenildi ? Math.max(0, o.bitisSayac / 3.4) : kr.sis > 0 ? 0.22 : 1);
       if (kr.vurSn > 0) { c.fillStyle = "rgba(255,255,255,.5)"; c.beginPath(); c.arc(kr.x, kr.y - 120, 120, 0, 7); c.fill(); }
-      if (!kr.yenildi) for (i = 0; i < 6; i++) { c.fillStyle = i < kr.can ? "#b04ad8" : "rgba(40,30,60,.5)"; c.beginPath(); c.arc(kr.x - 75 + i * 30, kr.y - 275, 11, 0, 7); c.fill(); }
+      if (!kr.yenildi) for (i = 0; i < kr.canMax; i++) { c.fillStyle = i < kr.can ? "#b04ad8" : "rgba(40,30,60,.5)"; c.beginPath(); c.arc(kr.x - (kr.canMax - 1) * 12 + i * 24, kr.y - 285, 9, 0, 7); c.fill(); }
     }
     for (i = 0; i < o.meteorlar.length; i++) {
       m = o.meteorlar[i];
@@ -374,9 +398,9 @@
 
     // kahraman
     c.fillStyle = 'rgba(40,30,30,.22)'; c.beginPath(); c.ellipse(k.x, ZEMIN + 2, 38 - Math.min(20, (ZEMIN - k.y) / 20), 8, 0, 0, 7); c.fill();
-    var poz = k.atSn > 0 ? "at" : !k.yerde ? "uc" : Math.abs(k.vx) > 40 ? (kare() % 2 ? "kos1" : "kos2") : "dur";
+    var poz = k.atSn > 0 ? "at" : !k.yerde ? "uc" : Math.abs(k.vx) > 25 ? (Math.floor(k.adim / 62) % 2 ? "kos1" : "kos2") : "dur";
     if (!(k.dokunulmaz > 0 && kare() % 2 && Math.floor(o.t * 16) % 2))
-      ciz(R[on + poz], k.x + titre(1) * 0.6, k.y + (poz === "uc" ? -20 : 0), 0.55, k.yon < 0);
+      ciz(R[on + poz], k.x + (poz === "dur" ? titre(1) * 0.6 : 0), k.y + (poz === "uc" ? -20 : 0), 0.55, k.yon < 0);
     // papağan
     ciz(R[(D.secim === "iyi" ? "pb" : "ps") + (kare() % 2 + 1)], o.p.x, o.p.y, 0.62, k.yon < 0);
 
@@ -406,6 +430,11 @@
     gorevSatir(gx, 74, sehir().toplaAd + " topla", o.simit, GOREV_SIMIT);
     gorevSatir(gx, 102, "Kötü yakala", o.yakalanan, GOREV_KOTU);
     yazi((kr.yenildi ? "✔ " : "• ") + sehir().kralEki + " yen", gx, 130, 22, kr.yenildi ? "#8dff9a" : "#fff");
+    if (o.kral && o.kral.sis > 0 && !o.kral.yenildi) { // sis saldırısı: ekran sisle kaplanır
+      var sa = Math.min(1, o.kral.sis / 0.5, (3.2 - o.kral.sis) / 0.5) * 0.5;
+      c.fillStyle = "rgba(190,185,215," + sa + ")"; c.fillRect(0, 0, G, Y);
+      for (var sb = 0; sb < 7; sb++) { c.fillStyle = "rgba(235,232,245," + sa * 0.7 + ")"; c.beginPath(); c.ellipse((sb * 230 + kare() * 14) % (G + 300) - 150, 180 + (sb % 3) * 150, 190, 60, 0, 0, 7); c.fill(); }
+    }
     if (o.mesajSn > 0) yazi(o.mesaj, G / 2, 200, 34, "#fff", "center");
   }
   function gorevSatir(x, y, ad, n, hedef) { var t = n >= hedef; yazi((t ? "✔ " : "• ") + ad + "  " + Math.min(n, hedef) + "/" + hedef, x, y, 22, t ? "#8dff9a" : "#fff"); }
@@ -425,7 +454,7 @@
     $("harita").style.backgroundImage = "linear-gradient(rgba(16,26,58,.55),rgba(16,26,58,.55)),url(varlik/dunya.jpg)";
     D.kurtarilan[D.sehir] = true;
     $("sonuc").textContent = "Görevler: " + "★".repeat(yildiz) + "☆".repeat(3 - yildiz) + "   " + sehir().toplaAd + " " + o.simit + "   Yakalanan kötü " + o.yakalanan;
-    $("kartlar").innerHTML = [["istanbul", "İstanbul"], ["londra", "Londra"], ["", "Adana"], ["", "Paris"], ["", "Los Angeles"]].map(function (q) {
+    $("kartlar").innerHTML = [["istanbul", "İstanbul"], ["londra", "Londra"], ["", "Tokyo"], ["", "Paris"], ["", "Los Angeles"]].map(function (q) {
       var t = D.kurtarilan[q[0]], sira = q[0] === "londra" && !t;
       return '<div class="kart' + (t ? " tamam" : "") + '">' + q[1] + "<small>" + (t ? "✔ Kurtarıldı" : sira ? "✈ Sıradaki görev" : "🔒 Yakında") + "</small></div>";
     }).join("");

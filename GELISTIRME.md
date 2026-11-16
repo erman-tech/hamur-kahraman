@@ -229,3 +229,4 @@ Bilinenler: zorluk bir çocukla denenmedi (otomatik oyuncu iki saniyede bir haml
 - İki oyunda kahraman %10 büyütüldü.
 - 2. oyun: kaybedince portal filmi (`video/portal.mp4`) oynar, sonra "Baştan başla" ve "Gezegenden kaçış (yakında)" seçenekleri gelir.
 - Hikâye: her şehre düşen meteordan çıkan uzaylı o şehrin bir şeyine dönüşür. Londra'da sise karışıp Sis Kontu oldu (papağan filmde söyler).
+- 1. oyun oynanış: iki şehir aynı kalıpla dizilir, sayılar `bolumKur` içindeki `A` tablosunda (uzunluk, görevler, düşman aralığı ve hızı, baş kötü canı). Üçüncü düşman: aniden sağdan yuvarlanarak gelen (`tur: "yuv"`, `yuvarAra`). Yarasalar arada kahramana dalış yapar (`dal`, `dalAra`). Sis Kontu sise karışıp görünmez olur ve art arda meteor yağdırır (`kr.sis`, `kr.yaylim`); ekran sisle kaplanır. Yürürken ayak kayması: koşu pozu zamana değil gidilen yola bağlı (`k.adim`). Şehir listesinde Adana yerine Tokyo.
