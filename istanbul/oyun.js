@@ -411,7 +411,10 @@
     } else { c.fillStyle = "#f3c9c0"; c.fillRect(0, 0, G, Y); }
     c.save(); c.translate(-kam, 0);
 
-    for (i = 0; i < o.platformlar.length; i++) { m = o.platformlar[i]; c.drawImage(R[sehir().platform], m.x, m.y - 8, m.g, m.g * 56 / 174); }
+    for (i = 0; i < o.platformlar.length; i++) { // platform arka plandan ayrılsın: canlı renkli hamur + altında yumuşak gölge
+      m = o.platformlar[i]; var pim = R[sehir().platform], ph = pim.width ? m.g * pim.height / pim.width : m.g * 56 / 174;
+      c.save(); c.shadowColor = "rgba(20,15,40,.5)"; c.shadowBlur = 14; c.shadowOffsetY = 9; c.drawImage(pim, m.x, m.y - 8, m.g, ph); c.restore();
+    }
     for (i = 0; i < o.sandiklar.length; i++) ciz(R.sandik, o.sandiklar[i].x, o.sandiklar[i].y, 0.9);
     for (i = 0; i < o.simitler.length; i++) { m = o.simitler[i]; ciz(R[sehir().topla], m.x, m.y + 28 + (kare(i) % 2 ? 3 : -3), sehir().toplaOlcek); }
     for (i = 0; i < o.esyalar.length; i++) ciz(R.kalp, o.esyalar[i].x, o.esyalar[i].y + 30, 0.7);
