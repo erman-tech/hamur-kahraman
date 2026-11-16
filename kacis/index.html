@@ -28,6 +28,9 @@
   #sonuc h2 { font-size: 26px; margin: 0 50px 30px; font-weight: normal; }
   #sonuc .dugmeler { display: flex; flex-direction: column; gap: 26px; }
   #sonuc .hamur { font-size: 30px; padding: 16px 34px; }
+  /* Film yataydır: sahnenin dışında, bütün ekranı kaplar */
+  #film { position: fixed; inset: 0; width: 100vw; height: 100vh; object-fit: contain; background: #101a3a; z-index: 40; display: none; }
+  #gec { position: fixed; right: 20px; bottom: 18px; z-index: 41; font-size: 22px; padding: 10px 24px; display: none; }
   /* Telefon yan tutuluyorsa: bu oyun dik oynanır */
   #dondur { position: fixed; inset: 0; z-index: 50; background: #101a3a; color: #fff; display: none; align-items: center; justify-content: center;
     flex-direction: column; text-align: center; font-size: 26px; }
@@ -56,6 +59,8 @@
     </div>
   </div>
 </div>
+<video id="film" playsinline preload="auto"></video>
+<button id="gec" class="hamur sari">Geç ▶</button>
 <div id="dondur"><div class="tel"></div>Bu bölüm dik oynanır.<br>Telefonu dik tut!</div>
 <script src="oyun.js"></script>
 </body>

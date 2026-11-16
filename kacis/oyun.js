@@ -16,12 +16,12 @@
     s.style.left = (innerWidth - G * k) / 2 + "px";
     s.style.top = (innerHeight - Y * k) / 2 + "px";
     // dokunmatik cihaz yan tutuluyorsa "dik tut" işareti
-    $("dondur").style.display = ("ontouchstart" in window) && innerWidth > innerHeight * 1.15 ? "flex" : "none";
+    $("dondur").style.display = ("ontouchstart" in window) && innerWidth > innerHeight * 1.15 && !(window.__film) ? "flex" : "none"; // film yatay izlenir, oyun dik oynanır
   }
   addEventListener("resize", olcekle); olcekle();
 
   // ---------- kahraman: tırtıl oyunundan gelen (k=) ya da 1. oyunda açılan son kostüm ----------
-  var GECERLI = ["e1", "e2", "e3", "e4", "k1", "k2", "k3", "k4", "k", "s", "kl", "sl"], KAHRAMAN = "e4";
+  var GECERLI = ["e1", "e2", "e3", "e4", "k1", "k2", "k3", "k4", "k", "s", "kl", "sl", "kt", "st"], KAHRAMAN = "e4";
   try { var acik = JSON.parse(localStorage.getItem("hk_kostum") || "[]"); if (acik.length && GECERLI.indexOf(acik[acik.length - 1]) >= 0) KAHRAMAN = acik[acik.length - 1]; } catch (e) {}
   if (GECERLI.indexOf(BAG.get("k")) >= 0) KAHRAMAN = BAG.get("k");
 
@@ -68,7 +68,14 @@
   var D = { ekran: "kapak", oyun: null };
   function ekranAc(ad) { D.ekran = ad; ["kapak", "sonuc"].forEach(function (e) { $(e).classList.toggle("acik", e === ad); }); }
   var SERI = BAG.get("seri") === "kotu" ? "kotu" : "iyi";
-  $("basla").addEventListener("click", function () { oyunBaslat(); });
+  // giriş filmi (yatay). Bitince ya da "Geç" denince oyun başlar; telefon yansa "dik tut" işareti çıkar.
+  var film = $("film");
+  function filmBitti() { if (!window.__film) return; window.__film = false; film.pause(); film.style.display = "none"; $("gec").style.display = "none"; olcekle(); oyunBaslat(); }
+  film.addEventListener("ended", filmBitti); film.addEventListener("error", filmBitti); $("gec").addEventListener("click", filmBitti);
+  $("basla").addEventListener("click", function () {
+    window.__film = true; film.src = "video/giris.mp4"; film.style.display = "block"; $("gec").style.display = "block"; olcekle();
+    var p = film.play(); if (p && p.catch) p.catch(function () { filmBitti(); });
+  });
   $("tekrar").addEventListener("click", function () { oyunBaslat(); });
   $("yeni").addEventListener("click", function () { muzikDur(); location.href = "../index.html"; });
   $("londraGit").addEventListener("click", function () { muzikDur(); location.href = "../istanbul/index.html?londra=1&seri=" + SERI; });
@@ -198,7 +205,7 @@
     if (o.t > 3) o.lav -= (LAV_HIZ0 + (LAV_HIZ1 - LAV_HIZ0) * ilerleme) * dt; // ilk üç saniye lav bekler
     if (o.lav > o.kam + LAV_UZAK) o.lav = o.kam + LAV_UZAK;
     var lavUzak = o.lav - k.y;
-    if (lavUzak < 330 && !o.soz.yakin) { o.soz.yakin = true; cal("p_yakin", 1); mesajVer("Lav çok yakın!", 1.6); }
+    if (lavUzak < 330 && o.t > 6 && !o.soz.yakin) { o.soz.yakin = true; cal("p_yakin", 1); mesajVer("Lav çok yakın!", 1.6); }
     if (lavUzak > 700) o.soz.yakin = false;
     if (ilerleme > 0.8 && !o.soz.yari) { o.soz.yari = true; cal("p_yari", 1); mesajVer("Portal göründü!", 2); }
     if (k.y > o.lav + 10) { // lava değen bir can kaybeder ve yukarı fırlar; son canda yakalanır

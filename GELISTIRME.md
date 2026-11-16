@@ -237,3 +237,6 @@ Bilinenler: zorluk bir çocukla denenmedi (otomatik oyuncu iki saniyede bir haml
 - Londra: 4 pozlu koşu (kl_kos1..4), şehre özel kötüler (`SEHIRLER.londra.kotu`: sis bulutu, şemsiye, melon şapka), kostüm gücü "zamanı durdur" (Z tuşu ya da ⏱; 3,5 sn, 14 sn bekleme).
 - Uzaylı tırtılın adı Zorgo (yazılarda; tırtıl filminin sesinde eski ad geçiyor olabilir).
 - Her oyunda "telefonu çevir" işareti: dokunmatik cihaz oyunun yönünde tutulmuyorsa görünür (`#dondur`).
+- Tokyo bölümü (1. oyun): `SEHIRLER.tokyo`, geçiş filmi `video/tokyo_kirmizi|siyah.mp4` (Londra bitişi → karargâhta Tokyo alarmı → Şimşek Ninja kostümü → jet → Tokyo; kaynak `kaynak/tokyo/film_t.py`, `kur_t.sh`). Kötüler: şans kedisi robot, fener hayalet, yuvarlanan daruma. Baş kötü Neon Ejder: yer şimşeği yollar (zıplanır), üç saldırıda bir ışınlanır. Kostüm gücü `guc: "ninja"`: atılış + gölge ninjalar ekrandaki kötüleri yakalar, baş kötüden 2 can alır (Z / ⚡, 12 sn bekleme).
+- Şehir sırası `SIRA`; her şehrin zorluk sayıları `SEHIRLER.<şehir>.bolum` içinde. Harita düğmesi sıradaki şehre göre yazılır.
+- Gezegenden Kaçış'ın giriş filmi `kacis/video/giris.mp4` (yatay, tam ekran; bitince oyun dik başlar).
