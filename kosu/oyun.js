@@ -174,11 +174,11 @@
       resim(R.papagan_ag, G / 2 + (o.sx * SERIT + 150 - 0) * pk, 500 + (TABAN - 620) * pk, 300);
     }
     // gösterge
-    for (i = 0; i < 3; i++) resim(R.kalp, 60 + i * 62, 96, 54, i < o.can ? 1 : 0.25);
-    resim(R.onigiri, 60, 168, 54); yazi("" + o.onigiri, 100, 160, 34, "#ffd23a", "left");
-    c.fillStyle = "rgba(20,25,60,.6)"; c.fillRect(250, 60, 420, 26);
-    c.fillStyle = "#39d0e8"; c.fillRect(254, 64, 412 * o.yakin, 18);
-    yazi("dronlara uzaklık", 460, 116, 22);
+    for (i = 0; i < 3; i++) resim(R.kalp, 130 + i * 54, 96, 48, i < o.can ? 1 : 0.25); // sol üst köşe ⏸ düğmesine ayrıldı
+    resim(R.onigiri, 130, 168, 54); yazi("" + o.onigiri, 170, 160, 34, "#ffd23a", "left");
+    c.fillStyle = "rgba(20,25,60,.6)"; c.fillRect(290, 60, 390, 26);
+    c.fillStyle = "#39d0e8"; c.fillRect(294, 64, 382 * o.yakin, 18);
+    yazi("dronlara uzaklık", 485, 116, 22);
     if (o.t < 6 && o.durum === "oyna") { yazi("Kaydır: ← → şerit", G / 2, 300, 34, "#ffd23a"); yazi("↑ zıpla   ↓ kay", G / 2, 346, 30); }
     if (o.mesajSn > 0 && o.mesaj) yazi(o.mesaj, G / 2, 420, 40);
   }

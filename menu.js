@@ -38,8 +38,13 @@
   // --- görünüm ---
   var stil = document.createElement("style");
   stil.textContent =
-    "#hkDur{position:fixed;top:8px;left:50%;margin-left:-28px;width:56px;height:56px;border-radius:28px;z-index:45;border:3px solid rgba(255,255,255,.7);" +
-    "background:rgba(16,26,58,.55);color:#fff;font-size:26px;line-height:50px;text-align:center;padding:0;cursor:pointer;touch-action:manipulation;display:none}" +
+    // ⏸: oyun alanının sol üst köşesinde, hamur düğmesi gibi kabarık; dokunma alanı görünenden büyük (::before)
+    "#hkDur{position:fixed;left:0;top:0;width:56px;height:56px;border-radius:50%;z-index:45;border:0;padding:0;cursor:pointer;touch-action:manipulation;display:none;" +
+    "background:radial-gradient(circle at 35% 30%,#3d5bb0,#1f2f6e 70%);box-shadow:0 4px 0 rgba(0,0,0,.4),inset 0 -4px 0 rgba(0,0,0,.25),inset 0 3px 0 rgba(255,255,255,.25);opacity:.88}" +
+    "#hkDur::before{content:'';position:absolute;inset:-14px}" +
+    "#hkDur i{position:absolute;top:28%;height:44%;width:15%;border-radius:4px;background:#fff;box-shadow:0 2px 0 rgba(0,0,0,.25)}" +
+    "#hkDur i:first-child{left:30%}#hkDur i:last-child{right:30%}" +
+    "#hkDur:active{transform:translateY(3px);box-shadow:0 1px 0 rgba(0,0,0,.4),inset 0 -2px 0 rgba(0,0,0,.25)}" +
     "#hkMenu{position:fixed;inset:0;z-index:48;background:rgba(10,16,40,.78);display:none;align-items:center;justify-content:center;font-family:inherit}" +
     "#hkMenu.acik{display:flex}" +
     "#hkMenu .kutu{background:#1b2a5e;border:4px solid #ffd23a;border-radius:28px;padding:26px 30px;display:flex;flex-direction:column;gap:14px;min-width:280px;max-width:90vw;text-align:center}" +
@@ -52,7 +57,7 @@
   document.head.appendChild(stil);
 
   var dugme = document.createElement("button");
-  dugme.id = "hkDur"; dugme.type = "button"; dugme.textContent = "⏸"; dugme.setAttribute("aria-label", "Oyunu durdur");
+  dugme.id = "hkDur"; dugme.type = "button"; dugme.innerHTML = "<i></i><i></i>"; dugme.setAttribute("aria-label", "Oyunu durdur");
   var menu = document.createElement("div");
   menu.id = "hkMenu";
   menu.innerHTML =
@@ -72,9 +77,18 @@
   if (document.body) kur(); else document.addEventListener("DOMContentLoaded", kur);
 
   function gorunurluk() {
-    var e = ekran();
-    dugme.style.display = !window.__durdu && e && e !== "kapak" ? "block" : "none";
+    var e = ekran(), gor = !window.__durdu && e && e !== "kapak";
+    dugme.style.display = gor ? "block" : "none";
+    if (gor) yerlestir();
   }
+  // oyun alanı (#sahne) ekrana göre büyüyüp küçülür; düğme onun sol üst köşesine oturur, boyu alana göre
+  function yerlestir() {
+    var sahne = document.getElementById("sahne"), r = sahne ? sahne.getBoundingClientRect() : { left: 0, top: 0, width: innerWidth, height: innerHeight };
+    var b = Math.round(Math.max(40, Math.min(70, Math.min(r.width, r.height) * 0.1))), p = Math.round(b * 0.22);
+    dugme.style.width = dugme.style.height = b + "px";
+    dugme.style.left = Math.round(Math.max(0, r.left) + p) + "px"; dugme.style.top = Math.round(Math.max(0, r.top) + p) + "px";
+  }
+  addEventListener("resize", function () { if (dugme.style.display === "block") yerlestir(); });
 
   // --- durdur / devam ---
   var durdurulan = [];

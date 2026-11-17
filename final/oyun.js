@@ -253,8 +253,8 @@
     o.parcalar.forEach(function (p) { resim(p.res, p.x - p.b / 2, p.y - p.b / 2, p.b, p.b); });
     // gösterge: kalan simit ve uzaylı
     c.font = "26px 'Arial Rounded MT Bold','Trebuchet MS',sans-serif"; c.textBaseline = "middle";
-    c.fillStyle = "rgba(20,16,60,.62)"; yuvarlak(14, 12, 232, 54, 26);
-    for (i = 0; i < SIMIT; i++) { c.globalAlpha = i < o.simit ? 1 : 0.25; resim("simit", 28 + i * 40, 22, 34, 34); } c.globalAlpha = 1;
+    c.fillStyle = "rgba(20,16,60,.62)"; yuvarlak(110, 12, 232, 54, 26); // sol üst köşe ⏸ düğmesine ayrıldı
+    for (i = 0; i < SIMIT; i++) { c.globalAlpha = i < o.simit ? 1 : 0.25; resim("simit", 124 + i * 40, 22, 34, 34); } c.globalAlpha = 1;
     c.fillStyle = "rgba(20,16,60,.62)"; yuvarlak(G - 234, 12, 220, 54, 26); c.fillStyle = "#ffd23a"; c.textAlign = "right"; c.fillText("Uzaylı " + uzayliSay(o) + " / " + o.toplam, G - 32, 40);
     if (o.mesajSn > 0) {
       c.font = "34px 'Arial Rounded MT Bold','Trebuchet MS',sans-serif"; c.textAlign = "center"; var gn = c.measureText(o.mesaj).width + 60;

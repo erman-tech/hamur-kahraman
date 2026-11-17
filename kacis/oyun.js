@@ -272,8 +272,8 @@
     c.restore();
     // gösterge
     c.textAlign = "left";
-    for (i = 0; i < 3; i++) resim(R.kalp, 44 + i * 52, 70, 46, false, i < o.can ? 1 : 0.25);
-    yazi("✦ " + o.kristal, 190, 58, 32, "#ffd23a");
+    for (i = 0; i < 3; i++) resim(R.kalp, 140 + i * 52, 70, 46, false, i < o.can ? 1 : 0.25); // sol üst köşe ⏸ düğmesine ayrıldı
+    yazi("✦ " + o.kristal, 286, 58, 32, "#ffd23a");
     // yükseklik çubuğu (sağda): kahraman ve lav
     var cy0 = 120, cb = 700, cx = G - 34, oran = function (yy) { return Math.max(0, Math.min(1, -yy / YUKSEKLIK)); };
     c.fillStyle = "rgba(20,25,60,.6)"; c.fillRect(cx - 8, cy0, 16, cb);

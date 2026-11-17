@@ -636,7 +636,8 @@
       yazi("!", G - 70, 488, 52, "#ffd23a");
     }
 
-    // --- gösterge ---
+    // --- gösterge --- (sol üst köşe ⏸ düğmesine ayrıldı: kalpler ve çubuklar 96 px sağda)
+    c.save(); c.translate(96, 0);
     for (i = 0; i < 3; i++) ciz(R.kalp, 46 + i * 62, 78, 0.68, false, i < k.can ? 1 : 0.22);
     c.fillStyle = "rgba(20,25,60,.55)"; yuvarlak(22, 92, 190, 22, 11); c.fill();
     c.fillStyle = D.secim === "iyi" ? "#ff5a4a" : "#ff3030"; yuvarlak(25, 95, Math.max(0, 184 * k.yakit), 16, 8); c.fill();
@@ -647,9 +648,10 @@
       c.fillStyle = "rgba(20,25,60,.55)"; yuvarlak(22, 122, 190, 22, 11); c.fill();
       c.fillStyle = o.durSn > 0 ? "#7fe9ff" : zh >= 1 ? (ninja ? "#ffd23a" : "#39d0e8") : "#5b7f99"; yuvarlak(25, 125, Math.max(0, 184 * zh), 16, 8); c.fill();
       yazi(o.durSn > 0 ? "zaman durdu!" : zh >= 1 ? (dubG ? "🎬 dublör (Z)" : renkG ? "🎨 renk dalgası (Z)" : ninja ? "⚡ ninja saldırısı (Z)" : "⏱ zamanı durdur (Z)") : (dubG ? "dublör hazırlanıyor" : renkG ? "renk gücü doluyor" : ninja ? "ninja gücü doluyor" : "zaman gücü doluyor"), 222, 140, 18, "#fff");
-      if (o.durSn > 0) { c.fillStyle = "rgba(120,220,255,.16)"; c.fillRect(0, 0, G, Y); }
     }
     yazi(ad(), 232, 62, 34, D.secim === "iyi" ? "#ff6a5a" : "#d8d8e0");
+    c.restore();
+    if (sehir().guc && o.durSn > 0) { c.fillStyle = "rgba(120,220,255,.16)"; c.fillRect(0, 0, G, Y); }
     var gx = G - 330;
     c.fillStyle = "rgba(20,25,60,.55)"; yuvarlak(gx - 16, 14, 330, 132, 22); c.fill();
     yazi("GÖREVLER", gx, 44, 22, "#ffd23a");
