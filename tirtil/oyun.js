@@ -362,7 +362,7 @@
     } else {
       o.bitis += dt;
       if (o.durum === "kacti" && o.bitis > 3.2) sonucGoster(true);
-      if (o.durum === "yakalandi" && o.bitis > 2.2 && !o.filmde) { o.filmde = true; muzikDur(); filmOynat("portal_v2", function () { sonucGoster(false); }); } // portaldan geçiş filmi, sonra seçenekler
+      if (o.durum === "yakalandi" && o.bitis > 2.2 && !o.filmde) { o.filmde = true; muzikDur(); filmOynat("portal_v3", function () { sonucGoster(false); }); } // portaldan geçiş filmi, sonra seçenekler
     }
   }
   function sonucGoster(kazandi) {
