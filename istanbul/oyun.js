@@ -170,7 +170,7 @@
   function tus(ad, basili) { if (ad === "yukari" && basili && !T.yukari) yukariYeni = true; if (ad === "zaman" && basili && !T.zaman) zamanYeni = true; T[ad] = basili; }
   addEventListener("keydown", function (e) { var a = HARITA[e.code]; if (a) { tus(a, true); e.preventDefault(); } });
   addEventListener("keyup", function (e) { var a = HARITA[e.code]; if (a) { tus(a, false); e.preventDefault(); } });
-  Array.prototype.forEach.call(document.querySelectorAll("#dokunma button"), function (b) {
+  Array.prototype.forEach.call(document.querySelectorAll("#dokunma [data-tus]"), function (b) {
     var ad = b.dataset.tus;
     b.addEventListener("touchstart", function (e) { tus(ad, true); b.classList.add("bas"); e.preventDefault(); });
     b.addEventListener("touchend", function (e) { tus(ad, false); b.classList.remove("bas"); e.preventDefault(); });
