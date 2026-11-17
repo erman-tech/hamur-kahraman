@@ -76,7 +76,6 @@
   <video id="film" playsinline preload="auto" style="display:none"></video>
   <div id="sehirler"><span>İstanbul</span><span>Londra</span><span>Tokyo</span><span>Paris</span><span>Los Angeles</span></div>
   <div id="kapak" class="ekran acik">
-    <a class="geri" href="../index.html">◀ Oyunlar</a>
     <div class="kutu"><button id="basla" class="hamur kirmizi">▶ BAŞLA</button>
     <p>Sesi açmayı unutma!</p></div>
     <div class="imza">designed by Can Ateş Ünal</div>
@@ -110,6 +109,7 @@
 </div>
 <div id="dondur"><div class="tel"></div>Bu bölüm yatay oynanır.<br>Telefonu yan çevir!</div>
 <script>(function () { var dik = false; function k() { var y = innerWidth > innerHeight * 1.15, d = innerHeight > innerWidth * 1.15; document.getElementById("dondur").style.display = ("ontouchstart" in window) && (dik ? y : d) ? "flex" : "none"; } addEventListener("resize", k); k(); })();</script>
+<script src="../menu.js"></script>
 <script src="oyun.js"></script>
 </body>
 </html>

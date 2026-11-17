@@ -264,7 +264,7 @@
   function yuvarlak(x, y, w, h, r) { c.beginPath(); c.moveTo(x + r, y); c.arcTo(x + w, y, x + w, y + h, r); c.arcTo(x + w, y + h, x, y + h, r); c.arcTo(x, y + h, x, y, r); c.arcTo(x, y, x + w, y, r); c.fill(); }
 
   var son = 0;
-  function dongu(z) { var dt = Math.min(0.05, (z - son) / 1000 || 0); son = z; var n = Math.max(1, Math.round(dt * 120)); for (var i = 0; i < n; i++) guncelle(dt / n); ciz(); requestAnimationFrame(dongu); }
+  function dongu(z) { var dt = Math.min(0.05, (z - son) / 1000 || 0); son = z; if (window.__durdu) { requestAnimationFrame(dongu); return; } var n = Math.max(1, Math.round(dt * 120)); for (var i = 0; i < n; i++) guncelle(dt / n); ciz(); requestAnimationFrame(dongu); }
   requestAnimationFrame(dongu);
 
   // ---------- film ve düğmeler ----------
@@ -279,6 +279,7 @@
   $("tekrar").addEventListener("click", function () { baslat(); });
   $("devam").addEventListener("click", function () { muzik(false); location.href = "../tirtil/index.html?baglanti=1&final=1&seri=" + SERI; });
 
+  window.__menu = { ekran: function () { return D.ekran; }, bolumVar: function () { return D.ekran === "oyun" && !!D.oyun; }, bolumBastan: function () { muzik(false); baslat(); } }; // ⏸ menüsü
   window.__oyun = { D: D, baslat: baslat, ATIS: ATIS, GUC: GUC, uzayliMi: uzayliMi, at: function (dx, dy) { var o = D.oyun; if (o.durum !== "nisan") return false; firlat(o, dx * GUC, dy * GUC); return true; },
     ilerlet: function (sn) { for (var t = 0; t < sn; t += 1 / 120) guncelle(1 / 120); ciz(); var o = D.oyun; return { durum: o.durum, uzayli: uzayliSay(o), simit: o.simit, atilan: o.atilan }; } };
 })();

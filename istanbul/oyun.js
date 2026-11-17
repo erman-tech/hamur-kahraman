@@ -723,10 +723,14 @@
   var son = 0;
   function dongu(z) {
     var dt = Math.min(0.05, (z - son) / 1000 || 0); son = z;
+    if (window.__durdu) { requestAnimationFrame(dongu); return; } // ⏸ menüsü açık
     if (D.ekran === "oyun") { guncelle(dt); cizOyun(); }
     requestAnimationFrame(dongu);
   }
   requestAnimationFrame(dongu);
+
+  // ⏸ menüsü (../menu.js): bölüm baştan yalnız oyun sırasında; film sırasında film devam eder ya da geçilir
+  window.__menu = { ekran: function () { return D.ekran; }, bolumVar: function () { return D.ekran === "oyun" && !!D.secim; }, bolumBastan: function () { oyunBaslat(); } };
 
   // deneme kancası: arka plandaki sekmede kareler durduğu için elle ilerletilir
   window.__oyun = {

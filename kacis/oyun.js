@@ -79,7 +79,7 @@
     var p = film.play(); if (p && p.catch) p.catch(function () { filmBitti(); });
   });
   $("tekrar").addEventListener("click", function () { oyunBaslat(); });
-  $("yeni").addEventListener("click", function () { muzikDur(); location.href = "../index.html"; });
+  $("yeni").addEventListener("click", function () { muzikDur(); location.href = "../istanbul/index.html"; });
   $("londraGit").addEventListener("click", function () { muzikDur(); location.href = FINALDEN ? "../tirtil/index.html?baglanti=1&final=1&seri=" + SERI : "../istanbul/index.html?londra=1&seri=" + SERI + (SONRA ? "&don=" + SONRA : ""); });
   var FINALDEN = BAG.get("final") === "1"; if (FINALDEN) $("londraGit").textContent = "▶ Tırtıl görevine dön"; // şehirler bittikten sonra portala düşüldüyse: kaçınca Londra değil, tırtıl görevi sürer
   var SONRA = BAG.get("sonra") === "tokyo" ? "tokyo" : ""; if (SONRA) $("londraGit").textContent = "✈ Tokyo'ya hazırım!"; if (SONRA) document.querySelector("#kapak h2").textContent = "Zorgo'nun UFO'su seni gezegenine ışınladı. Platformlara zıpla, yukarıdaki portala ulaş. Lav yükseliyor!"; // Londra'dan eve dönerken kaçırıldıysa: kaçınca Tokyo görevi sorulur
@@ -290,10 +290,12 @@
   var son = performance.now();
   function dongu(simdi) {
     var dt = Math.min(0.05, (simdi - son) / 1000); son = simdi;
+    if (window.__durdu) { requestAnimationFrame(dongu); return; } // ⏸ menüsü açık
     if (D.ekran === "oyun") { var n = Math.max(1, Math.ceil(dt / 0.017)); for (var i = 0; i < n; i++) guncelle(dt / n); }
     ciz(); requestAnimationFrame(dongu);
   }
   requestAnimationFrame(dongu);
 
+  window.__menu = { ekran: function () { return D.ekran; }, bolumVar: function () { return D.ekran === "oyun"; }, bolumBastan: function () { oyunBaslat(); } }; // ⏸ menüsü
   window.__oyun = { D: D, baslat: oyunBaslat, ilerlet: function (sn) { for (var t = 0; t < sn; t += 1 / 60) guncelle(1 / 60); }, sabit: { YUKSEKLIK: YUKSEKLIK } };
 })();

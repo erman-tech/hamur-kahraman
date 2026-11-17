@@ -97,7 +97,7 @@
   });
   $("basla").addEventListener("click", function () { filmOynat("giris", secimAc); });
   $("tekrar").addEventListener("click", function () { if (D.sonraki) D.bolum = (D.bolum || 1) + 1; D.sonraki = false; oyunBaslat(); });
-  $("yeni").addEventListener("click", function () { muzikDur(); location.href = "../index.html"; });
+  $("yeni").addEventListener("click", function () { muzikDur(); location.href = "../istanbul/index.html"; });
   $("degistir").addEventListener("click", secimAc);
   var BAG = new URLSearchParams(location.search); if (+BAG.get("bolum")) D.bolum = +BAG.get("bolum"); // test: ?bolum=1..5 // 1. oyundan "İstanbul'da kalacağım" ile gelindiyse seri taşınır
   $("londraGit").addEventListener("click", function () { muzikDur(); location.href = "../istanbul/index.html?londra=1&seri=" + (BAG.get("seri") === "kotu" ? "kotu" : "iyi"); });
@@ -541,6 +541,7 @@
   var once = 0, sonPoz = -1;
   function dongu(z) {
     var dt = Math.min(0.05, (z - once) / 1000 || 0); once = z;
+    if (window.__durdu) { requestAnimationFrame(dongu); return; } // ⏸ menüsü açık
     if (D.oyun && D.ekran === "oyun" && D.oyun.durum !== "bitti") {
       guncelle(dt);
       var poz = Math.floor(D.oyun.t * POZ); if (poz !== sonPoz && D.oyun.durum !== "bitti") { sonPoz = poz; ciz(); }
@@ -551,6 +552,7 @@
 
   // deneme kancası
   function durum() { var o = D.oyun; return { t: Math.round(o.t * 10) / 10, kalan: kalanTas(o), dokulen: o.dokulen, durum: o.durum, yildiz: o.yildiz, hamle: o.hamle }; }
+  window.__menu = { ekran: function () { return D.ekran; }, bolumVar: function () { return D.ekran === "oyun"; }, bolumBastan: function () { oyunBaslat(); } }; // ⏸ menüsü
   window.__oyun = { D: D, baslat: function (k) { if (k) D.kahraman = k; oyunBaslat(); }, takas: takas, hamleler: function () { return hamleler(D.oyun).length; }, karistir: karistir, durum: durum,
     ilerlet: function (sn) { for (var t = 0; t < sn && D.oyun.durum !== "bitti"; t += 1 / 60) guncelle(1 / 60); if (D.oyun.durum !== "bitti") ciz(); return durum(); },
     // deneme oyuncusu: taşların ulaşabildiği boşluğa değen, en aşağı inen hamleyi seçer

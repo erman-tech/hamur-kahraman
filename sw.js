@@ -1,5 +1,5 @@
 // Hamur Kahraman: çevrimdışı kip (uçakta, internetsiz oynamak için).
-// Dosyaları ana sayfadaki "Çevrimdışı için indir" düğmesi kaydeder; bu dosya kayıttan sunar.
+// 17 Kasım 2026: indirme kaldırıldı, yeni cihaz bu dosyayı kaydetmez. Önceden indirmiş cihaz (Ateş'in iPad'i) çalışmaya devam etsin diye dosya yerinde.
 // Kural: sayfa ve kod önce internetten (güncel kalsın), olmazsa kayıttan; görsel, ses ve film önce kayıttan.
 var KAYIT = "hamur-kahraman";
 var MEDYA = /\.(png|jpg|jpeg|mp3|mp4|webmanifest)$/i;
@@ -43,13 +43,13 @@ self.addEventListener("fetch", function (e) {
       var kopya = y.clone();
       caches.open(KAYIT).then(function (c) {
         var yol = u.pathname.slice(-1) === "/" ? u.pathname + "index.html" : u.pathname;
-        c.match(yol).then(function (var_) { if (var_) c.put(yol, kopya); }); // yalnız indirilmiş olanı tazele
+        c.match(yol).then(function (var_) { if (var_ || /\/menu\.js$/.test(yol)) c.put(yol, kopya); }); // indirilmiş olanı tazele; sonradan eklenen ⏸ menüsü de kaydedilir
       });
     }
     return y;
   }).catch(function () {
     return kayittan(istek).then(function (y) {
-      return y || new Response("İnternet yok ve bu sayfa indirilmemiş. Ana sayfadan \"Çevrimdışı için indir\"e bas.", { status: 503, headers: { "Content-Type": "text/plain; charset=utf-8" } });
+      return y || new Response("İnternet yok ve bu sayfa indirilmemiş. İnternete bağlanınca yeniden dene.", { status: 503, headers: { "Content-Type": "text/plain; charset=utf-8" } });
     });
   }));
 });

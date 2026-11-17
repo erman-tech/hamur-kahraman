@@ -185,12 +185,13 @@
 
   $("basla").addEventListener("click", baslat);
   $("tekrar").addEventListener("click", baslat);
-  $("yeni").addEventListener("click", function () { muzik(false); location.href = "../index.html"; });
+  $("yeni").addEventListener("click", function () { muzik(false); location.href = "../istanbul/index.html"; });
   $("devam").addEventListener("click", function () { muzik(false); location.href = "../istanbul/index.html?devam=tokyo&seri=" + SERI; });
 
   var son = 0;
-  function dongu(zmn) { var dt = Math.min(0.05, (zmn - son) / 1000 || 0); son = zmn; if (D.ekran === "oyun") { guncelle(dt); ciz(); } requestAnimationFrame(dongu); }
+  function dongu(zmn) { var dt = Math.min(0.05, (zmn - son) / 1000 || 0); son = zmn; if (window.__durdu) { requestAnimationFrame(dongu); return; } if (D.ekran === "oyun") { guncelle(dt); ciz(); } requestAnimationFrame(dongu); }
   requestAnimationFrame(dongu);
   // deneme kancası
+  window.__menu = { ekran: function () { return D.ekran; }, bolumVar: function () { return D.ekran === "oyun"; }, bolumBastan: function () { muzik(false); baslat(); } }; // ⏸ menüsü
   window.__oyun = { D: D, baslat: baslat, hamle: hamle, ilerlet: function (sn) { for (var t = 0; t < sn; t += 1 / 60) guncelle(1 / 60); ciz(); var o = D.oyun; return { yakin: +o.yakin.toFixed(2), can: o.can, durum: o.durum, onigiri: o.onigiri }; } };
 })();
