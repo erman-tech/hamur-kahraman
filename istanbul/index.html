@@ -42,6 +42,35 @@
   .kart.tamam { background: #2e9b4a; }
   #harita .dugmeler { display: flex; gap: 30px; margin-top: 30px; }
   #harita .hamur { font-size: 30px; padding: 16px 34px; }
+  /* Profil ismi: ilk BAŞLA'da bir kez sorulur */
+  #isim { background: linear-gradient(rgba(16,26,58,.75),rgba(16,26,58,.85)), url(varlik/kapak.jpg) center/cover; }
+  #isim h1 { font-size: 54px; margin: 0 0 18px; text-shadow: 0 6px 0 rgba(0,0,0,.4); }
+  #isimGir { font: inherit; font-size: 40px; padding: 14px 24px; border-radius: 26px; border: 5px solid #ffd23a; width: 520px; text-align: center; color: #1b2a5e; }
+  #isim .hamur { font-size: 34px; padding: 16px 50px; margin-top: 22px; }
+  #isimEski { display: flex; gap: 12px; margin-top: 18px; flex-wrap: wrap; justify-content: center; max-width: 1000px; }
+  #isimEski button { font: inherit; font-size: 24px; color: #fff; background: #3d56b8; border: 0; border-radius: 20px; padding: 10px 22px; cursor: pointer; box-shadow: 0 5px 0 rgba(0,0,0,.35); }
+  #merkezIsim { position: absolute; right: 22px; top: 16px; font: inherit; font-size: 22px; color: #fff; background: rgba(61,86,184,.9); border: 0; border-radius: 18px; padding: 8px 18px; cursor: pointer; }
+  #merkezPuan { position: absolute; left: 110px; top: 20px; font-size: 22px; color: #ffd23a; }
+  /* Görevler merkezi: açılan kostümler ve bölümler; filmden sonra, oyundan önce */
+  #merkez { background: linear-gradient(rgba(16,26,58,.7),rgba(16,26,58,.82)), url(varlik/dunya.jpg) center/cover; justify-content: flex-start; padding-top: 18px; }
+  #merkez h2 { font-size: 30px; margin: 6px 0 10px; color: #ffd23a; text-shadow: 0 4px 0 rgba(0,0,0,.4); }
+  #kostumler { display: flex; gap: 16px; justify-content: center; }
+  .kostum { width: 150px; height: 214px; border-radius: 26px; border: 5px solid transparent; background: #2c3f8f center 18px/auto 68% no-repeat; position: relative; cursor: pointer;
+    box-shadow: 0 7px 0 rgba(0,0,0,.35), inset 0 5px 0 rgba(255,255,255,.18); padding: 0; font: inherit; color: #fff; }
+  .kostum b { position: absolute; left: 0; right: 0; bottom: 30px; font-size: 19px; white-space: nowrap; }
+  .kostum small { position: absolute; left: 4px; right: 4px; bottom: 8px; font-size: 14px; opacity: .92; white-space: nowrap; overflow: hidden; }
+  .kostum.secili { border-color: #ffd23a; background-color: #3d56b8; transform: translateY(-6px); }
+  .kostum.secili::after { content: "✔"; position: absolute; top: 6px; right: 10px; color: #ffd23a; font-size: 26px; }
+  .kostum.kilit { filter: grayscale(1) brightness(.45); cursor: default; }
+  #gorevler { display: grid; grid-template-columns: repeat(5, 214px); gap: 14px; justify-content: center; }
+  .gorev { height: 104px; border-radius: 22px; border: 0; padding: 0; font: inherit; color: #fff; cursor: pointer; position: relative; overflow: hidden;
+    background: #3b4a7a center/cover no-repeat; box-shadow: 0 7px 0 rgba(0,0,0,.35); }
+  .gorev::before { content: ""; position: absolute; inset: 0; background: linear-gradient(rgba(10,16,40,.15), rgba(10,16,40,.78)); }
+  .gorev b, .gorev small { position: relative; display: block; text-shadow: 0 2px 0 rgba(0,0,0,.5); }
+  .gorev b { font-size: 23px; margin-top: 46px; } .gorev small { font-size: 16px; margin-top: 2px; }
+  .gorev.sira { outline: 5px solid #ffd23a; } .gorev.bitti small { color: #8dff9a; }
+  .gorev.kilit { filter: grayscale(1) brightness(.5); cursor: default; }
+  .gorev:not(.kilit):active, .kostum:not(.kilit):active { transform: translateY(5px); }
   #dokunma { display: none; pointer-events: none; }
   #dokunma button { position: absolute; width: 86px; height: 86px; border-radius: 43px; border: 3px solid rgba(255,255,255,.55); font-size: 38px; color: #fff;
     background: rgba(20,30,70,.22); pointer-events: auto; touch-action: none; padding: 0; }
@@ -98,6 +127,19 @@
       <button id="tekrar" class="hamur sari">Tekrar oyna</button>
       <button id="diger" class="hamur mavi">Diğer tarafı dene</button>
     </div>
+  </div>
+  <div id="isim" class="ekran">
+    <h1>Adın ne?</h1>
+    <input id="isimGir" maxlength="20" autocomplete="off" placeholder="Adını yaz">
+    <button id="isimTamam" class="hamur kirmizi">Tamam ▶</button>
+    <div id="isimEski"></div>
+  </div>
+  <div id="merkez" class="ekran">
+    <div id="merkezPuan"></div><button id="merkezIsim" type="button"></button>
+    <h2>Kahramanını seç</h2>
+    <div id="kostumler"></div>
+    <h2>Görevini seç</h2>
+    <div id="gorevler"></div>
   </div>
   <div id="dokunma">
     <div id="joyAlan"></div>

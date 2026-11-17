@@ -125,6 +125,7 @@
   function bitir(o, kazandi, neden) {
     if (o.durum !== "oyna") return;
     o.durum = kazandi ? "kazandi" : "kayip"; o.bitis = 0; o.neden = neden; muzikDur();
+    if (kazandi && window.HK) HK.bitir("kacis");
     cal(kazandi ? "e_zafer" : "e_ah", 0.8);
   }
   function sonucGoster() {
@@ -133,6 +134,7 @@
     $("sonucYazi").textContent = kazandi ? "Zorgo'nun gezegeninden kaçtın. " + o.kristal + " kristal topladın. " + (FINALDEN ? "Tırtıl görevine devam etmeye hazır mısın?" : (SONRA ? "Tokyo'yu" : "Londra'yı") + " kurtarmaya şimdi hazır mısın?") : "Portala " + Math.max(0, Math.round((YUKSEKLIK + o.k.y) / 100)) + " adım kalmıştı. Bir daha dene!";
     $("londraGit").style.display = kazandi ? "" : "none"; $("tekrar").style.display = kazandi ? "none" : "";
     ekranAc("sonuc"); cal(kazandi ? "p_kazandin" : "p_kaybettin", 1);
+    if (window.HK) HK.skorGoster("kacis", [["Kristal", o.kristal, o.kristal * 10], ["Ezilen uzaylı", o.ezilen, o.ezilen * 20], ["Kalan can", Math.max(0, o.can), Math.max(0, o.can) * 50]].concat(kazandi ? [["Portaldan geçtin", "✔", 300]] : []), kazandi);
   }
 
   // ---------- yönlendirme ----------

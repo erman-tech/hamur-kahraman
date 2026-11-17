@@ -99,7 +99,8 @@
   $("tekrar").addEventListener("click", function () { if (D.sonraki) D.bolum = (D.bolum || 1) + 1; D.sonraki = false; oyunBaslat(); });
   $("yeni").addEventListener("click", function () { muzikDur(); location.href = "../istanbul/index.html"; });
   $("degistir").addEventListener("click", secimAc);
-  var BAG = new URLSearchParams(location.search); if (+BAG.get("bolum")) D.bolum = +BAG.get("bolum"); // test: ?bolum=1..5 // 1. oyundan "İstanbul'da kalacağım" ile gelindiyse seri taşınır
+  var BAG = new URLSearchParams(location.search); if (+BAG.get("bolum")) D.bolum = +BAG.get("bolum");
+  if (ACIK.indexOf(BAG.get("k")) >= 0) D.kahraman = BAG.get("k"); // Görevler merkezinden seçilen kostüm // test: ?bolum=1..5 // 1. oyundan "İstanbul'da kalacağım" ile gelindiyse seri taşınır
   $("londraGit").addEventListener("click", function () { muzikDur(); location.href = "../istanbul/index.html?londra=1&seri=" + (BAG.get("seri") === "kotu" ? "kotu" : "iyi"); });
   if (BAG.get("baglanti") === "1") setTimeout(function () { // film kendiliğinden başlasın; tarayıcı sesi engellerse kapak kalır
     film.src = "video/giris.mp4"; var p = film.play();
@@ -367,7 +368,8 @@
   function sonucGoster(kazandi) {
     var o = D.oyun; if (o.durum === "bitti") return;
     o.yildiz = kazandi ? (o.kalan > 0.4 ? 3 : o.kalan > 0.15 ? 2 : 1) : 0; o.durum = "bitti"; muzikDur();
-    var son = D.bolum >= BOLUM_SAYISI; D.sonraki = kazandi && !son;
+    var son = D.bolum >= BOLUM_SAYISI; D.sonraki = kazandi && !son; var skorBolum = D.bolum || 1;
+    if (kazandi && son && window.HK) HK.bitir("tirtil");
     $("sonucBaslik").textContent = !kazandi ? "Portal seni Zorgo'nun gezegenine götürdü!" : son ? "Zorgo'yu beş kez yendin!" : "Bölüm " + D.bolum + " tamam!";
     $("sonucYazi").textContent = !kazandi ? "Gezegenden kaçmayı dene ya da yeni bir oyuna başla." : son ? (BAG.get("final") === "1" ? "Tırtıl istilası da bitti! Yeni görevler gelecek." : "Kendini kurtardın. Londra'yı kurtarmaya şimdi hazır mısın?") : "Zorgo sudan çıktı, daha hızlı geliyor! Sıradaki bölüm: " + (D.bolum + 1) + " / " + BOLUM_SAYISI;
     $("kacis").style.display = kazandi ? "none" : ""; $("yeni").style.display = kazandi ? "none" : "";
@@ -378,6 +380,7 @@
     if (!kazandi || son) D.bolum = 1;
     $("yildizlar").textContent = kazandi ? "★★★".slice(0, o.yildiz) + "☆☆☆".slice(0, 3 - o.yildiz) : "";
     ekranAc("sonuc"); cal(kazandi ? "p_kazandin" : "p_kaybettin", 1);
+    if (window.HK) HK.skorGoster("tirtil_" + skorBolum, [["Yıldız", o.yildiz, o.yildiz * 100], ["Zorgo'dan uzaklık", "%" + Math.round(Math.max(0, o.kalan || 0) * 100), Math.round(Math.max(0, o.kalan || 0) * 200)]].concat(kazandi ? [["Bölüm " + skorBolum + " tamam", "✔", 200]] : []), kazandi);
   }
   function karistir(kendiliginden) { // kalan şekerleri yeniden dizer: hazır üçlü olmasın, en az bir hamle kalsın
     var o = D.oyun; if (!o || o.durum !== "oyna" || o.karistir > 0 || o.bekle > 0) return;

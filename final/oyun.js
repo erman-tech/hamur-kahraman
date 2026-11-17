@@ -17,6 +17,7 @@
   var BAG = new URLSearchParams(location.search), SERI = BAG.get("seri") === "kotu" ? "kotu" : "iyi";
   try { var tf = localStorage.getItem("hk_taraf"); if (!BAG.get("seri") && (tf === "iyi" || tf === "kotu")) SERI = tf; } catch (e) {}
   var KAH = SERI === "iyi" ? "ka_at" : "sa_at"; // Los Angeles'tan dönen kahraman film yıldızı kostümündedir
+  if (["k", "kl", "kt", "kp", "ka", "s", "sl", "st", "sp", "sa"].indexOf(BAG.get("k")) >= 0) KAH = BAG.get("k") + "_at"; // Görevler merkezinden seçilen kostüm
 
   var R = {};
   ["arka.jpg", "mancinik", "tas", "jole", "tahta", "tirtil", "tirtil2", "tirtil3", "zorgo", "simit", KAH].forEach(function (a) {
@@ -179,6 +180,7 @@
   function bitir(kazandi) {
     var o = D.oyun; o.durum = "bitti"; muzik(false);
     if (kazandi) {
+      if (window.HK) HK.bitir("final");
       var yeni = rekorYaz(o.atilan), y = yildiz(o.atilan);
       $("sonucBaslik").textContent = "Kuleyi " + o.atilan + " simitle yıktın!";
       $("sonucYazi").textContent = "★".repeat(y) + "☆".repeat(3 - y) + "   Zorgo yenildi, İstanbul kurtuldu. " + (yeni ? "Yeni rekor!" : "Rekorun: " + rekorOku() + " simit.") + " Ama dur! Zorgo'nun dev tırtılı Ateş için geliyor…";
@@ -189,7 +191,9 @@
     }
     $("devam").style.display = kazandi ? "" : "none";   // kule yıkılınca hikâye Uzaylı Tırtıl oyunuyla sürer
     cal(kazandi ? "a_fkazan" : "a_fkayip", 1); if (kazandi) cal("e_zafer", 0.6); rekorGoster();
-    setTimeout(function () { if (D.oyun === o && o.durum === "bitti") ekranAc("sonuc"); }, kazandi ? 1400 : 700);
+    setTimeout(function () { if (D.oyun === o && o.durum === "bitti") { ekranAc("sonuc");
+      var yik = o.toplam - uzayliSay(o), art = kazandi ? Math.max(0, SIMIT - o.atilan) : 0;
+      if (window.HK) HK.skorGoster("final", [["Yenilen uzaylı", yik, yik * 30], ["Artan simit", art, art * 50]].concat(kazandi ? [["Kule yıkıldı", "✔", 300]] : []), kazandi); } }, kazandi ? 1400 : 700);
   }
 
   // ---------- nişan: parmağını geri çek, simit iplerle gerilir ----------

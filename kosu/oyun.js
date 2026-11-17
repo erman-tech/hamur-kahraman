@@ -35,11 +35,13 @@
 
   var D = { ekran: "kapak", oyun: null };
   function ekranAc(ad) { D.ekran = ad; ["kapak", "sonuc"].forEach(function (e) { $(e).classList.toggle("acik", e === ad); }); }
-  var SURE = 46; // engelsiz koşuda dronlara yetişme süresi (sn)
+  var SURE = 85; // engelsiz koşuda dronlara yetişme süresi (sn); 17 Kas 2026: 46'dan uzatıldı, dönüşler eklendi
+  var VIRAJ_ILK = 11, VIRAJ_ARA = [13, 19], VIRAJ_PENCERE = 760; // dönüş: ilki 11. sn, sonra 13–19 sn'de bir; kaydırma bu mesafeden itibaren dönüş sayılır
 
   function yeniOyun() {
     return { t: 0, yol: 0, hiz: 820, serit: 0, sx: 0, zy: 0, zvy: 0, kay: 0, can: 3, dokunulmaz: 0, onigiri: 0, yakin: 0, durum: "oyna", bitis: 0,
-      engeller: [], sonraki: 1500, mesaj: "", mesajSn: 0, tohum: 1 + Math.floor(Math.random() * 9999), parcalar: [] };
+      engeller: [], sonraki: 1500, mesaj: "", mesajSn: 0, tohum: 1 + Math.floor(Math.random() * 9999), parcalar: [],
+      viraj: null, virajSn: VIRAJ_ILK, donus: null, donen: 0 };
   }
   function rasgele(o) { o.tohum = (o.tohum * 16807) % 2147483647; return o.tohum / 2147483647; }
   function mesajVer(o, m, sn) { o.mesaj = m; o.mesajSn = sn; }
@@ -47,11 +49,11 @@
 
   // Engel sırası: her sırada en az bir şerit ya boş ya da aşılabilir (zıpla/kay) kalır.
   function siraEkle(o, z) {
-    var zor = Math.min(1, o.t / 45), tip = rasgele(o), bos = Math.floor(rasgele(o) * 3) - 1, i;
+    var zor = Math.min(1, o.t / 60), tip = rasgele(o), bos = Math.floor(rasgele(o) * 3) - 1, i;
     for (i = -1; i <= 1; i++) {
       if (i === bos) { if (rasgele(o) < 0.75) for (var j = 0; j < 3; j++) o.engeller.push({ z: z + j * 150, serit: i, tur: "onigiri" }); continue; }
       var r = rasgele(o);
-      if (r < 0.5 - zor * 0.15) continue;                                   // bu şerit de boş
+      if (r < 0.45 - zor * 0.3) continue;                                   // bu şerit de boş (zamanla daha az boş şerit)
       o.engeller.push({ z: z, serit: i, tur: tip < 0.38 ? "bariyer" : tip < 0.7 ? "kapi" : r < 0.75 ? "blok" : "bariyer" });
     }
   }
@@ -59,6 +61,12 @@
   var tus = {};
   function hamle(yon) {
     var o = D.oyun; if (!o || o.durum !== "oyna") return;
+    // dönüş yaklaşırken sağa/sola kaydırmak şerit değiştirmez, köşeyi döner
+    if ((yon === "sol" || yon === "sag") && o.viraj && o.viraj.z < VIRAJ_PENCERE) {
+      if ((yon === "sag" ? 1 : -1) === o.viraj.yon) { donusYap(o, o.viraj.yon); cal("e_simit", 0.5); }
+      else { o.viraj.yanlis = true; cal("e_pop", 0.25); mesajVer(o, o.viraj.yon > 0 ? "Öbür yana! SAĞA dön!" : "Öbür yana! SOLA dön!", 1); }
+      return;
+    }
     if (yon === "sol" && o.serit > -1) { o.serit--; cal("e_pop", 0.25); }
     if (yon === "sag" && o.serit < 1) { o.serit++; cal("e_pop", 0.25); }
     if (yon === "yukari" && o.zy === 0 && o.kay <= 0) { o.zvy = 1250; cal("e_pop", 0.4); }
@@ -78,6 +86,11 @@
   }, { passive: true });
   sahne.addEventListener("touchend", function () { dok = null; }, { passive: true });
 
+  function donusYap(o, yon) {
+    o.viraj = null; o.donus = { sn: 0, yon: yon }; o.donen++; o.virajSn = VIRAJ_ARA[0] + rasgele(o) * (VIRAJ_ARA[1] - VIRAJ_ARA[0]);
+    o.engeller = o.engeller.filter(function (e) { return e.z > 900; }); // köşedeki engeller yeni yolda kalmaz
+    o.serit = 0;
+  }
   function incit(o) {
     if (o.dokunulmaz > 0) return;
     o.can--; o.dokunulmaz = 1.3; o.yakin = Math.max(0, o.yakin - 0.05); o.hiz = Math.max(650, o.hiz - 250); cal("e_ah", 0.7);
@@ -86,22 +99,28 @@
   }
   function bitir(o, kazandi) {
     if (o.durum !== "oyna") return; o.durum = kazandi ? "kazandi" : "kayip"; o.bitis = kazandi ? 2.6 : 1.4;
+    if (kazandi && window.HK) HK.bitir("kosu");
     if (kazandi) { cal("e_zafer", 0.8); cal("a_kosu2", 1); setTimeout(function () { cal("p_kosu3", 1); }, 2300); mesajVer(o, "Yakaladın! Papağan kurtuldu!", 3); }
     else cal("a_kosu4", 1);
   }
   function sonucAc(o) {
     muzik(false); var kz = o.durum === "kazandi";
     $("sonucBaslik").textContent = kz ? "Papağan kurtuldu!" : "Dronlar kaçtı!";
-    $("sonucYazi").textContent = kz ? o.onigiri + " onigiri topladın. Şimdi papağanla birlikte Tokyo'yu kurtarma zamanı!" : "Engellere üç kez çarptın. Bir daha dene, bu sefer yetişirsin!";
+    $("sonucYazi").textContent = kz ? o.onigiri + " onigiri topladın, " + o.donen + " köşe döndün. Şimdi papağanla birlikte Tokyo'yu kurtarma zamanı!" : "Engellere üç kez çarptın. Bir daha dene, bu sefer yetişirsin!";
     $("devam").style.display = kz ? "" : "none"; $("tekrar").style.display = kz ? "none" : "";
     ekranAc("sonuc");
+    if (window.HK) HK.skorGoster("kosu", [["Onigiri", o.onigiri, o.onigiri * 10], ["Dönülen köşe", o.donen, o.donen * 40], ["Kalan can", o.can, o.can * 50]].concat(kz ? [["Papağan kurtuldu", "✔", 300]] : []), kz);
   }
 
   function guncelle(dt) {
     var o = D.oyun; if (!o) return; o.t += dt;
     if (o.mesajSn > 0) o.mesajSn -= dt;
     if (o.durum !== "oyna") { o.bitis -= dt; if (o.durum === "kazandi") o.yol += o.hiz * 0.4 * dt; if (o.bitis <= 0 && D.ekran === "oyun") sonucAc(o); return; }
-    var hedef = 820 + 380 * o.yakin; o.hiz += (hedef - o.hiz) * Math.min(1, dt * 0.8);
+    var hedef = 860 + 560 * o.yakin; o.hiz += (hedef - o.hiz) * Math.min(1, dt * 0.8); // zamanla daha hızlı
+    if (o.donus) { o.donus.sn += dt; if (o.donus.sn > 0.5) o.donus = null; }
+    // dönüş: önce uzakta duvar ve ok belirir; kaydırılmazsa kahraman duvara çarpar (can gider) ve yine döner
+    if (!o.viraj && o.yakin < 0.94) { o.virajSn -= dt; if (o.virajSn <= 0) { o.viraj = { z: 2700, yon: rasgele(o) < 0.5 ? -1 : 1 }; o.engeller = o.engeller.filter(function (e) { return e.z < 1900; }); } }
+    if (o.viraj) { o.viraj.z -= o.hiz * dt; if (o.viraj.z <= 30) { var vy = o.viraj.yon; incit(o); mesajVer(o, "Duvara çarptın! Köşede kaydır!", 1.4); if (o.durum === "oyna") donusYap(o, vy); } }
     o.yol += o.hiz * dt; o.yakin = Math.min(1, o.yakin + dt / SURE);
     if (o.dokunulmaz > 0) o.dokunulmaz -= dt;
     o.sx += (o.serit - o.sx) * Math.min(1, dt * 14);
@@ -109,7 +128,7 @@
     if (o.kay > 0) o.kay -= dt;
     // engeller yaklaşır
     o.sonraki -= o.hiz * dt;
-    if (o.sonraki <= 0 && o.yakin < 0.97) { siraEkle(o, 2700); o.sonraki = 1150 - 250 * Math.min(1, o.t / 40) + rasgele(o) * 250; }
+    if (o.sonraki <= 0 && o.yakin < 0.97) { if (!o.viraj) siraEkle(o, 2700); o.sonraki = 1100 - 400 * Math.min(1, o.t / 60) + rasgele(o) * 220; } // dönüş yaklaşırken yeni engel yok
     for (var i = o.engeller.length - 1; i >= 0; i--) {
       var e = o.engeller[i], once = e.z; e.z -= o.hiz * dt;
       if (once > 30 && e.z <= 30 && Math.abs(e.serit - o.sx) < 0.5) {       // kahramanın hizasına geldi
@@ -130,10 +149,30 @@
     c.lineWidth = boy / 5; c.strokeStyle = "rgba(20,25,60,.85)"; c.lineJoin = "round"; c.strokeText(m, x, y); c.fillStyle = renk || "#fff"; c.fillText(m, x, y);
   }
   var BOY = { bariyer: 135, kapi: 400, blok: 330, onigiri: 80 };
+  function virajCiz(o, poz) { // yolun sonu: hamur duvar ve dönülecek yanı gösteren büyük ok
+    var v = o.viraj, t = oran(v.z), y = ey(v.z), gen = 2 * YOL * t + 40 * t, yuk = 360 * t, al = v.z > 2200 ? (2600 - v.z) / 400 : 1;
+    c.save(); c.globalAlpha = al;
+    c.fillStyle = "#8a5a3c"; c.fillRect(G / 2 - gen / 2, y - yuk, gen, yuk);
+    c.fillStyle = "#a8714c"; for (var i = 0; i < 4; i++) c.fillRect(G / 2 - gen / 2, y - yuk + i * yuk / 4, gen, yuk / 8);
+    // ok: dönülecek yana bakar, yaklaştıkça yanıp söner
+    var ox = G / 2, oy = y - yuk * 0.55, ob = 150 * t + 40, yon = v.yon;
+    if (!(v.z < VIRAJ_PENCERE && poz % 2)) {
+      c.fillStyle = "#ffd23a"; c.strokeStyle = "rgba(60,20,0,.85)"; c.lineWidth = 6 * t + 2;
+      c.beginPath(); c.moveTo(ox - yon * ob * 0.6, oy - ob * 0.18); c.lineTo(ox + yon * ob * 0.1, oy - ob * 0.18); c.lineTo(ox + yon * ob * 0.1, oy - ob * 0.45);
+      c.lineTo(ox + yon * ob * 0.65, oy); c.lineTo(ox + yon * ob * 0.1, oy + ob * 0.45); c.lineTo(ox + yon * ob * 0.1, oy + ob * 0.18); c.lineTo(ox - yon * ob * 0.6, oy + ob * 0.18); c.closePath();
+      c.stroke(); c.fill();
+    }
+    c.restore();
+    if (v.z < 1600) yazi(yon > 0 ? "SAĞA KAYDIR!" : "SOLA KAYDIR!", G / 2, 560, 46, "#ffd23a");
+  }
   function ciz() {
     var o = D.oyun; if (!o) return;
     var poz = Math.floor(o.t * 12), yolAdim = Math.floor(o.yol / 40) * 40, i;
+    // dönüşte sahne dönülen yandan kayarak gelir (poz poz, stop motion)
+    var dp = o.donus ? Math.floor(Math.min(1, o.donus.sn / 0.5) * 6) / 6 : 1;
+    c.save(); if (dp < 1) c.translate(o.donus.yon * G * 0.55 * (1 - dp), 0);
     c.drawImage(R.arka, 0, 0, G, Y);
+    if (dp < 1) c.drawImage(R.arka, -o.donus.yon * G, 0, G, Y);
     // zemin: hamur çatı dokusu satır satır, derinliğe göre daralarak
     var z = R.zemin;
     if (z.complete && z.naturalWidth) {
@@ -161,14 +200,18 @@
         resim(R[K + ad], 0, ky + (ad === "_kay" ? 10 : 0), ad === "_kay" ? 190 : ad === "_zip" ? 270 : 290); c.restore();
       }
     }
+    var virajCizildi = !(o.viraj && o.viraj.z < 2600);
     for (i = 0; i < sirali.length; i++) {
       var e = sirali[i];
+      if (!virajCizildi && e.z < o.viraj.z) { virajCiz(o, poz); virajCizildi = true; } // duvar, önündeki engellerin arkasında kalır
       if (!kahCizildi && e.z < 0) { kahraman(); kahCizildi = true; }
       var et = oran(e.z); if (e.z > 2600) continue;
       var alfa = e.z > 2200 ? (2600 - e.z) / 400 : e.z < -120 ? Math.max(0, (260 + e.z) / 140) : 1;
       resim(R[e.tur], ex(e.serit, e.z), ey(e.z) - (e.tur === "onigiri" ? 60 * et : 0), BOY[e.tur] * et, alfa);
     }
+    if (!virajCizildi) virajCiz(o, poz);
     if (!kahCizildi) kahraman();
+    c.restore();
     if (kzn) { // papağan ağdan çıktı: kahramanın yanına iner
       var pk = Math.min(1, (2.6 - o.bitis) / 1.2);
       resim(R.papagan_ag, G / 2 + (o.sx * SERIT + 150 - 0) * pk, 500 + (TABAN - 620) * pk, 300);
@@ -179,7 +222,7 @@
     c.fillStyle = "rgba(20,25,60,.6)"; c.fillRect(290, 60, 390, 26);
     c.fillStyle = "#39d0e8"; c.fillRect(294, 64, 382 * o.yakin, 18);
     yazi("dronlara uzaklık", 485, 116, 22);
-    if (o.t < 6 && o.durum === "oyna") { yazi("Kaydır: ← → şerit", G / 2, 300, 34, "#ffd23a"); yazi("↑ zıpla   ↓ kay", G / 2, 346, 30); }
+    if (o.t < 6 && o.durum === "oyna") { yazi("Kaydır: ← → şerit", G / 2, 300, 34, "#ffd23a"); yazi("↑ zıpla   ↓ kay   köşede: dön", G / 2, 346, 30); }
     if (o.mesajSn > 0 && o.mesaj) yazi(o.mesaj, G / 2, 420, 40);
   }
 

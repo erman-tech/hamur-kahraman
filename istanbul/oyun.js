@@ -84,10 +84,13 @@
   function yonAd(s) { return SEHIRLER[s].yon || SEHIRLER[s].ad + "'ya"; }
   function siradaki() { for (var i = 0; i < SIRA.length; i++) if (!D.kurtarilan[SIRA[i]]) return SIRA[i]; return null; }
   function sehir() { return SEHIRLER[D.sehir]; }
+  // Kostüm şehirden ayrı seçilebilir (Görevler merkezi): İstanbul, Londra kostümüyle ve onun gücüyle oynanabilir.
+  // D.kostum boşsa hikâyedeki gibi şehrin kendi kostümü giyilir.
+  function kostum() { return SEHIRLER[D.kostum] || sehir(); }
   function kostumAc(on) { try { var l = JSON.parse(localStorage.getItem("hk_kostum") || "[]"); if (l.indexOf(on) < 0) l.push(on); localStorage.setItem("hk_kostum", JSON.stringify(l)); } catch (e) {} }
   function ekranAc(ad) {
     D.ekran = ad;
-    ["kapak", "secim", "harita"].forEach(function (e) { $(e).classList.toggle("acik", e === ad); });
+    ["kapak", "secim", "harita", "merkez", "isim"].forEach(function (e) { $(e).classList.toggle("acik", e === ad); });
     film.style.display = ad === "film" ? "block" : "none";
     $("gec").style.display = ad === "film" ? "block" : "none";
     $("sehirler").style.display = ad === "film" && film.dataset.ad === "giris" ? "flex" : "none";
@@ -106,7 +109,7 @@
   film.addEventListener("ended", filmBitti);
   $("gec").addEventListener("click", filmBitti);
   // İlk film sayfa açılırken indirilmeye başlar; BAŞLA'ya basınca beklemesin (test ve devam bağlantılarında gerekmez)
-  (function () { var q = new URLSearchParams(location.search); if (!q.get("test") && !q.get("devam") && !q.get("londra")) { film.src = "video/giris.mp4"; film.load(); } })();
+  (function () { var q = new URLSearchParams(location.search); if (!q.get("test") && !q.get("devam") && !q.get("londra") && !q.get("merkez")) { film.src = "video/giris.mp4"; film.load(); } })();
   film.addEventListener("timeupdate", function () {
     if (film.dataset.ad !== "giris") return;
     var t = film.currentTime, ss = $("sehirler").children;
@@ -126,7 +129,24 @@
     filmOynat(deger === "iyi" ? "donusum_kirmizi" : "donusum_siyah", oyunBaslat);
   }
   var TEST = new URLSearchParams(location.search).get("test"); // test: ?test=<şehir>&seri=iyi|kotu → o bölüm doğrudan açılır, taraf kilidine dokunmaz
+  // Profil ismi: ilk BAŞLA'da bir kez sorulur; daha önce bu cihazda girilen isimler tek dokunuşla seçilir (kardeşler için)
+  var isimSonra = null;
+  function isimSor(sonra) {
+    isimSonra = sonra; $("isimGir").value = window.HK ? HK.isim() : "";
+    var l = window.HK ? HK.isimler() : [];
+    $("isimEski").innerHTML = (Array.isArray(l) ? l : []).slice(-6).map(function (x) { return '<button type="button" data-isim="' + String(x.ad).replace(/"/g, "&quot;").replace(/</g, "&lt;") + '">' + String(x.ad).replace(/</g, "&lt;") + "</button>"; }).join("");
+    ekranAc("isim"); setTimeout(function () { try { $("isimGir").focus(); } catch (h) {} }, 50);
+  }
+  function isimBitti(ad) {
+    if (!window.HK || !HK.isimKaydet(ad)) { $("isimGir").focus(); return; }
+    $("isimGir").blur(); var f = isimSonra; isimSonra = null; if (f) f();
+  }
+  $("isimTamam").addEventListener("click", function () { isimBitti($("isimGir").value); });
+  $("isimGir").addEventListener("keydown", function (e) { if (e.key === "Enter") { e.preventDefault(); isimBitti($("isimGir").value); } });
+  $("isimEski").addEventListener("click", function (e) { var b = e.target.closest("[data-isim]"); if (b) isimBitti(b.dataset.isim); });
+
   $("basla").addEventListener("click", function () {
+    if (window.HK && !HK.isim() && !SEHIRLER[TEST]) { isimSor(function () { $("basla").click(); }); return; }
     var DEVAM = new URLSearchParams(location.search).get("devam"); // koşu oyunundan dönüş: o şehir filmsiz başlar
     if (SEHIRLER[DEVAM]) {
       D.secim = tarafOku() || (new URLSearchParams(location.search).get("seri") === "kotu" ? "kotu" : "iyi");
@@ -138,7 +158,52 @@
       var tg = SEHIRLER[TEST].gecis, tb = function () { D.sehir = TEST; oyunBaslat(); };
       if (tg) filmOynat(tg[D.secim], tb); else tb(); return;
     }
-    filmOynat("giris", function () { var t = tarafOku(); if (t) sec(t); else secimEkrani(); }); });
+    filmOynat("giris", function () { var t = tarafOku(); if (t && window.HK && HK.merkezVar()) { D.secim = t; merkezAc(); } else if (t) sec(t); else secimEkrani(); }); });
+
+  // ---------- Görevler merkezi ----------
+  // İlk görev bittikten sonra filmden sonra açılır: açılan kostümlerden biri seçilir, biten ya da sıradaki görev oynanır.
+  var GOREV_RESIM = { istanbul: "varlik/arka.jpg", londra: "varlik/arka_l.jpg", tokyo: "varlik/arka_t.jpg", paris: "varlik/arka_p.jpg", losangeles: "varlik/arka_a.jpg",
+    tirtil: "../tirtil/varlik/kapak.jpg", kacis: "../kacis/varlik/kapak.jpg", kosu: "../kosu/varlik/arka.jpg", final: "../final/varlik/arka.jpg" };
+  function kostumSehri(kod) { // "kl" → "londra"
+    var son = (kod || "").slice(1), k = window.HK ? HK.KOSTUMLER.filter(function (x) { return x.kod === son; })[0] : null;
+    return k ? k.sehir : null;
+  }
+  function merkezAc() {
+    if (!window.HK) return;
+    D.secim = D.secim || tarafOku() || "iyi";
+    var on = D.secim === "kotu" ? "s" : "k", acik = HK.acikKostumler(), sec = HK.seciliKostum();
+    $("kostumler").innerHTML = HK.KOSTUMLER.map(function (k) {
+      var kod = on + k.kod, a = acik.indexOf(kod) >= 0;
+      return '<button class="kostum' + (a ? "" : " kilit") + (kod === sec ? " secili" : "") + '" data-kostum="' + kod + '" style="background-image:url(varlik/' + kod + '_dur.png)">' +
+        "<b>" + k.ad + "</b><small>" + (a ? (k.guc || "güç yok") : "🔒 " + SEHIRLER[k.sehir].ad + " sonunda") + "</small></button>";
+    }).join("");
+    $("gorevler").innerHTML = HK.gorevDurumu().map(function (g) {
+      return '<button class="gorev ' + g.durum + '" data-gorev="' + g.ad + '" style="background-image:url(' + GOREV_RESIM[g.ad] + ')"><b>' + g.baslik + "</b><small>" +
+        (g.durum === "bitti" ? "✔ Tekrar oyna" : g.durum === "sira" ? "★ Sıradaki görev" : g.durum === "acik" ? "▶ Oyna" : "🔒 Kilitli") + "</small></button>";
+    }).join("");
+    $("merkezIsim").textContent = "👤 " + (HK.isim() || "İsim yok") + "  ✎";
+    $("merkezPuan").textContent = "★ Toplam puan: " + HK.toplamPuan();
+    muzikDur(); ekranAc("merkez");
+  }
+  $("merkezIsim").addEventListener("click", function () { isimSor(merkezAc); });
+  $("kostumler").addEventListener("click", function (e) {
+    var b = e.target.closest("[data-kostum]"); if (!b || b.classList.contains("kilit")) return;
+    HK.kostumSec(b.dataset.kostum); cal("e_pop", 0.6);
+    Array.prototype.forEach.call($("kostumler").children, function (x) { x.classList.toggle("secili", x === b); });
+  });
+  $("gorevler").addEventListener("click", function (e) {
+    var b = e.target.closest("[data-gorev]"); if (!b || b.classList.contains("kilit")) return;
+    var ad = b.dataset.gorev, sira = b.classList.contains("sira"), seri = D.secim, kk = HK.seciliKostum(), bit = HK.bitenler();
+    SIRA.forEach(function (s) { if (bit.indexOf(s) >= 0) D.kurtarilan[s] = true; });
+    if (SEHIRLER[ad]) {
+      D.kostum = kostumSehri(kk);
+      var bas = function () { D.sehir = ad; oyunBaslat(); }, gs = SEHIRLER[ad].gecis;
+      if (sira && gs) filmOynat(gs[seri], bas); else bas(); // sıradaki şehrin hikâye filmi bir kez izlenir; tekrarlarda film yok
+      return;
+    }
+    var q = "?seri=" + seri + (kk ? "&k=" + kk : "") + "&gorev=1", git = function () { location.href = "../" + ad + "/index.html" + q; };
+    if (ad === "kosu" && sira) filmOynat(SEHIRLER.tokyo.gecis[seri], git); else git(); // papağan koşusu Tokyo filminin devamı
+  });
   if (SEHIRLER[TEST]) $("basla").textContent = "▶ TEST: " + SEHIRLER[TEST].ad;
   if (SEHIRLER[new URLSearchParams(location.search).get("devam")]) $("basla").textContent = "▶ " + SEHIRLER[new URLSearchParams(location.search).get("devam")].eki + " kurtar!";
   $("evet").addEventListener("click", function () { sec("iyi"); });
@@ -168,8 +233,8 @@
   var HARITA = { ArrowLeft: "sol", KeyA: "sol", ArrowRight: "sag", KeyD: "sag", ArrowUp: "yukari", KeyW: "yukari", Space: "yukari",
     KeyX: "ates", KeyF: "ates", Enter: "ates", KeyZ: "zaman", KeyC: "zaman" };
   function tus(ad, basili) { if (ad === "yukari" && basili && !T.yukari) yukariYeni = true; if (ad === "zaman" && basili && !T.zaman) zamanYeni = true; T[ad] = basili; }
-  addEventListener("keydown", function (e) { var a = HARITA[e.code]; if (a) { tus(a, true); e.preventDefault(); } });
-  addEventListener("keyup", function (e) { var a = HARITA[e.code]; if (a) { tus(a, false); e.preventDefault(); } });
+  addEventListener("keydown", function (e) { if (e.target && e.target.tagName === "INPUT") return; var a = HARITA[e.code]; if (a) { tus(a, true); e.preventDefault(); } });
+  addEventListener("keyup", function (e) { if (e.target && e.target.tagName === "INPUT") return; var a = HARITA[e.code]; if (a) { tus(a, false); e.preventDefault(); } });
   Array.prototype.forEach.call(document.querySelectorAll("#dokunma [data-tus]"), function (b) {
     var ad = b.dataset.tus;
     b.addEventListener("touchstart", function (e) { tus(ad, true); b.classList.add("bas"); e.preventDefault(); });
@@ -250,7 +315,7 @@
   }
 
   function oyunBaslat() {
-    $("zamanAlan").style.display = sehir().guc ? "" : "none"; $("zamanD").textContent = sehir().guc === "dublor" ? "🎬" : sehir().guc === "renk" ? "🎨" : sehir().guc === "ninja" ? "⚡" : "⏱";
+    $("zamanAlan").style.display = kostum().guc ? "" : "none"; $("zamanD").textContent = kostum().guc === "dublor" ? "🎬" : kostum().guc === "renk" ? "🎨" : kostum().guc === "ninja" ? "⚡" : "⏱";
     D.oyun = bolumKur(); ekranAc("oyun");
     muzikBasla();
     cal(sehir().pBasla, 1);
@@ -273,7 +338,8 @@
   }
   function kotuYakala(o, e) {
     e.yakalandi = D.secim === "iyi" ? "ag" : "elektrik"; e.sn = 0.9; e.vy = -260; o.yakalanan++;
-    cal("e_pop"); parca(o, e.x, e.y - 40, D.secim === "iyi" ? "#ffffff" : "#ff3030", 10);
+    cal("e_pop", 0.8); parca(o, e.x, e.y - 40, D.secim === "iyi" ? "#ffffff" : "#ff3030", 10);
+    parca(o, e.x, e.y - 40, D.secim === "iyi" ? "#cfe6ff" : "#ffd23a", 6);
   }
 
   function guncelle(dt) {
@@ -324,7 +390,8 @@
       k.mermi -= 1; o.mermiUyari = false;
       k.bekleme = 0.38; k.atSn = 0.25;
       o.mermiler.push({ x: k.x + k.yon * 50, y: k.y - 95, vx: k.yon * 760, yol: 0, tur: D.secim === "iyi" ? "ag" : "elektrik", tohum: Math.random() * 99 });
-      cal(D.secim === "iyi" ? "e_ag" : "e_elektrik", 0.5);
+      cal(D.secim === "iyi" ? "e_ag" : "e_elektrik", 0.38);
+      parca(o, k.x + k.yon * 60, k.y - 95, D.secim === "iyi" ? "#ffffff" : "#ffd23a", 5); // elden çıkış kıvılcımı
     }
 
     // --- papağan ---
@@ -343,22 +410,22 @@
 
     // --- kostüm gücü: zamanı durdur (Londra kostümü). Kötüler, baş kötü ve meteorlar donar; kahraman hareket eder ---
     if (o.durBekle > 0) o.durBekle -= dt;
-    if (zamanYeni && sehir().guc === "zaman" && !(o.durBekle > 0) && !o.bitti) { o.durSn = 3.5; o.durBekle = sehir().gucBekle; mesajVer("Zaman durdu!", 1.5); cal("e_simit", 0.8); }
-    if (zamanYeni && sehir().guc === "ninja" && !(o.durBekle > 0) && !o.bitti) { // Tokyo kostümü: sis bombası → sisin içinden her yöne ninja yıldızları
-      o.durBekle = sehir().gucBekle; k.dokunulmaz = Math.max(k.dokunulmaz, 1.6); o.duman = { sn: 1.25 }; o.ninjaSay = 0;
+    if (zamanYeni && kostum().guc === "zaman" && !(o.durBekle > 0) && !o.bitti) { o.durSn = 3.5; o.durBekle = kostum().gucBekle; mesajVer("Zaman durdu!", 1.5); cal("e_simit", 0.8); }
+    if (zamanYeni && kostum().guc === "ninja" && !(o.durBekle > 0) && !o.bitti) { // Tokyo kostümü: sis bombası → sisin içinden her yöne ninja yıldızları
+      o.durBekle = kostum().gucBekle; k.dokunulmaz = Math.max(k.dokunulmaz, 1.6); o.duman = { sn: 1.25 }; o.ninjaSay = 0;
       var ni;
       for (ni = 0; ni < 12; ni++) o.yildizlar.push({ x: k.x, y: k.y - 70, hx: k.x + Math.cos(ni * Math.PI / 6) * 640, hy: k.y - 70 + Math.sin(ni * Math.PI / 6) * 420, t: 0, sure: 0.5, bekle: 0.32 + ni * 0.01 });
       o.kotuler.forEach(function (q) { if (!q.yakalandi && Math.abs(q.x - k.x) < 720) o.yildizlar.push({ x: k.x, y: k.y - 70, hx: q.x, hy: q.y - 40, t: 0, sure: 0.4, bekle: 0.36, hedef: q }); });
       var kq = o.kral; if (kq && o.kralGeldi && !kq.yenildi && Math.abs(kq.x - k.x) < 800) o.yildizlar.push({ x: k.x, y: k.y - 70, hx: kq.x, hy: kq.y - 120, t: 0, sure: 0.4, bekle: 0.4, kral: true });
       mesajVer("Sis bombası!", 1.2); cal("e_pop", 0.9);
     }
-    if (zamanYeni && sehir().guc === "dublor" && !(o.durBekle > 0) && !o.bitti) { // Los Angeles kostümü: dublör çıkar, kötüler ona saldırır
-      o.durBekle = sehir().gucBekle; o.dublor = { x: k.x, yon: k.yon, sn: 5 }; o.ninjaSay = 0;
+    if (zamanYeni && kostum().guc === "dublor" && !(o.durBekle > 0) && !o.bitti) { // Los Angeles kostümü: dublör çıkar, kötüler ona saldırır
+      o.durBekle = kostum().gucBekle; o.dublor = { x: k.x, yon: k.yon, sn: 5 }; o.ninjaSay = 0;
       mesajVer("Dublör sahnede! Kötüler ona koşuyor!", 1.6); cal("e_pop", 0.9);
     }
     if (o.dublor) { o.dublor.sn -= dt; if (o.dublor.sn <= 0) { parca(o, o.dublor.x, ZEMIN - 70, "#ffd23a", 12); o.dublor = null; cal("e_pop", 0.5); } }
-    if (zamanYeni && sehir().guc === "renk" && !(o.durBekle > 0) && !o.bitti) { // Paris kostümü: iki yana yayılan boya dalgası
-      o.durBekle = sehir().gucBekle; k.dokunulmaz = Math.max(k.dokunulmaz, 1.2); o.boyaDalga = { x: k.x, sn: 0, kral: false }; o.ninjaSay = 0; o.renk = Math.min(1, (o.renk || 0) + 0.15);
+    if (zamanYeni && kostum().guc === "renk" && !(o.durBekle > 0) && !o.bitti) { // Paris kostümü: iki yana yayılan boya dalgası
+      o.durBekle = kostum().gucBekle; k.dokunulmaz = Math.max(k.dokunulmaz, 1.2); o.boyaDalga = { x: k.x, sn: 0, kral: false }; o.ninjaSay = 0; o.renk = Math.min(1, (o.renk || 0) + 0.15);
       mesajVer("Renk dalgası!", 1.2); cal("e_pop", 0.9);
     }
     if (o.boyaDalga) {
@@ -488,7 +555,7 @@
       if (!vurdu && kr && !kr.yenildi && o.kralGeldi && Math.abs(m.x - kr.x) < kr.g / 2 && m.y > kr.y - kr.y_) {
         vurdu = true; kr.can--; kr.vurSn = 0.3; cal("e_pop"); parca(o, m.x, m.y, D.secim === "iyi" ? "#ffffff" : "#ff3030", 8);
         if (kr.can <= 0) {
-          kr.yenildi = true; if (!SEHIRLER[TEST]) kostumAc(sehir().on[D.secim].replace("_", "")); o.bitti = "zafer"; // kostüm, şehri bitirince açılır
+          kr.yenildi = true; if (!SEHIRLER[TEST]) { kostumAc(sehir().on[D.secim].replace("_", "")); if (window.HK) HK.bitir(D.sehir); } o.bitti = "zafer"; // kostüm, şehri bitirince açılır
            o.bitisSayac = 3.4; o.meteorlar.length = 0;
           cal("e_zafer", 0.8); setTimeout(function () { cal(sehir().zafer || (D.secim === "iyi" ? "a_kazandin_c" : "a_kazandin_u"), 1); }, 900); mesajVer("Tebrikler! " + ad() + ", " + sehir().eki + " kurtardı!" + (sehir().papaganKayip ? " Papağan da özgür!" : ""), 4);
           if (sehir().papaganKayip) { o.p.x = kr.x; o.p.y = kr.y - 220; } // papağan ejderin yanından kahramana uçar
@@ -527,7 +594,7 @@
 
   function cizOyun() {
     var o = D.oyun; if (!o) return;
-    var k = o.k, kam = Math.round(o.kam), i, e, m, on = sehir().on[D.secim];
+    var k = o.k, kam = Math.round(o.kam), i, e, m, on = kostum().on[D.secim];
     // arka plan: aynalı döşeme (dikiş görünmesin)
     var a = R[sehir().arka];
     if (a.complete && a.naturalWidth) {
@@ -615,12 +682,23 @@
 
     for (i = 0; i < o.mermiler.length; i++) {
       m = o.mermiler[i]; var yon = m.vx > 0 ? 1 : -1;
-      if (m.tur === "ag") {
-        c.strokeStyle = "rgba(255,255,255,.9)"; c.lineWidth = 4; c.beginPath(); c.moveTo(m.x - yon * Math.min(m.yol, 150), m.y); c.lineTo(m.x, m.y); c.stroke();
-        c.fillStyle = "#fff"; c.strokeStyle = "#cfd6e4"; c.lineWidth = 3;
-        for (var w = 0; w < 6; w++) { c.beginPath(); c.moveTo(m.x, m.y); c.lineTo(m.x + Math.cos(w * 1.047 + kare()) * 24, m.y + Math.sin(w * 1.047 + kare()) * 24); c.stroke(); }
-        c.beginPath(); c.arc(m.x, m.y, 12, 0, 7); c.fill();
-      } else simsek(m.x - yon * 130, m.y, m.x, m.y, m.tohum);
+      if (m.tur === "ag") { // ağ: kıvrılarak uzanan ipek + dönen örümcek ağı (stop motion: poz poz döner)
+        var tr = Math.min(m.yol, 160), wr = 22 + Math.min(10, m.yol / 40), wa = kare() * 0.5 * yon;
+        c.save(); c.shadowColor = "rgba(170,210,255,.9)"; c.shadowBlur = 10;
+        c.strokeStyle = "rgba(255,255,255,.85)"; c.lineWidth = 3; c.beginPath(); c.moveTo(m.x - yon * tr, m.y);
+        c.quadraticCurveTo(m.x - yon * tr / 2, m.y + (kare() % 2 ? 7 : -7), m.x, m.y); c.stroke();
+        c.translate(m.x, m.y); c.rotate(wa); c.strokeStyle = "#fff"; c.lineWidth = 2.5;
+        for (var w = 0; w < 8; w++) { c.beginPath(); c.moveTo(0, 0); c.lineTo(Math.cos(w * 0.785) * wr, Math.sin(w * 0.785) * wr); c.stroke(); }
+        for (var wq = 1; wq <= 3; wq++) { c.beginPath(); for (w = 0; w <= 8; w++) { var wrr = wr * wq / 3; c[w ? "lineTo" : "moveTo"](Math.cos(w * 0.785) * wrr, Math.sin(w * 0.785) * wrr); } c.stroke(); }
+        c.fillStyle = "#fff"; c.beginPath(); c.arc(0, 0, 5, 0, 7); c.fill(); c.restore();
+      } else { // elektrik: parlayan şimşek, yan dal ve ucunda yanıp sönen enerji topu
+        c.save(); c.shadowColor = "#ff3b3b"; c.shadowBlur = 16;
+        simsek(m.x - yon * 130, m.y, m.x, m.y, m.tohum);
+        if (kare() % 2) simsek(m.x - yon * 70, m.y, m.x - yon * 30, m.y + 24, m.tohum + 5);
+        var er = 13 + (kare() % 2) * 4, eg = c.createRadialGradient(m.x, m.y, 2, m.x, m.y, er);
+        eg.addColorStop(0, "#fffbe8"); eg.addColorStop(0.5, "#ffd23a"); eg.addColorStop(1, "rgba(255,60,40,0)");
+        c.fillStyle = eg; c.beginPath(); c.arc(m.x, m.y, er, 0, 7); c.fill(); c.restore();
+      }
     }
     for (i = 0; i < o.parcalar.length; i++) { m = o.parcalar[i]; c.globalAlpha = Math.max(0, m.sn / 0.6); c.fillStyle = m.renk; c.beginPath(); c.arc(m.x, m.y, m.r, 0, 7); c.fill(); }
     c.globalAlpha = 1;
@@ -643,15 +721,15 @@
     c.fillStyle = D.secim === "iyi" ? "#ff5a4a" : "#ff3030"; yuvarlak(25, 95, Math.max(0, 184 * k.yakit), 16, 8); c.fill();
     yazi("uçuş gücü", 222, 110, 18, "#fff");
     yazi("atış " + "●".repeat(Math.floor(k.mermi == null ? 5 : k.mermi)) + "○".repeat(5 - Math.floor(k.mermi == null ? 5 : k.mermi)), 330, 110, 18, "#ffd23a");
-    if (sehir().guc) { // kostüm gücü göstergesi: dolunca düğme (Z tuşu) ile kullanılır
-      var ninja = sehir().guc !== "zaman", renkG = sehir().guc === "renk", dubG = sehir().guc === "dublor", zh = o.durSn > 0 ? o.durSn / 3.5 : 1 - Math.max(0, o.durBekle || 0) / sehir().gucBekle;
+    if (kostum().guc) { // kostüm gücü göstergesi: dolunca düğme (Z tuşu) ile kullanılır
+      var ninja = kostum().guc !== "zaman", renkG = kostum().guc === "renk", dubG = kostum().guc === "dublor", zh = o.durSn > 0 ? o.durSn / 3.5 : 1 - Math.max(0, o.durBekle || 0) / kostum().gucBekle;
       c.fillStyle = "rgba(20,25,60,.55)"; yuvarlak(22, 122, 190, 22, 11); c.fill();
       c.fillStyle = o.durSn > 0 ? "#7fe9ff" : zh >= 1 ? (ninja ? "#ffd23a" : "#39d0e8") : "#5b7f99"; yuvarlak(25, 125, Math.max(0, 184 * zh), 16, 8); c.fill();
       yazi(o.durSn > 0 ? "zaman durdu!" : zh >= 1 ? (dubG ? "🎬 dublör (Z)" : renkG ? "🎨 renk dalgası (Z)" : ninja ? "⚡ ninja saldırısı (Z)" : "⏱ zamanı durdur (Z)") : (dubG ? "dublör hazırlanıyor" : renkG ? "renk gücü doluyor" : ninja ? "ninja gücü doluyor" : "zaman gücü doluyor"), 222, 140, 18, "#fff");
     }
     yazi(ad(), 232, 62, 34, D.secim === "iyi" ? "#ff6a5a" : "#d8d8e0");
     c.restore();
-    if (sehir().guc && o.durSn > 0) { c.fillStyle = "rgba(120,220,255,.16)"; c.fillRect(0, 0, G, Y); }
+    if (kostum().guc && o.durSn > 0) { c.fillStyle = "rgba(120,220,255,.16)"; c.fillRect(0, 0, G, Y); }
     var gx = G - 330;
     c.fillStyle = "rgba(20,25,60,.55)"; yuvarlak(gx - 16, 14, 330, 132, 22); c.fill();
     yazi("GÖREVLER", gx, 44, 22, "#ffd23a");
@@ -703,6 +781,8 @@
     $("karar").textContent = sr ? SEHIRLER[sr].eki + " kurtarmaya hazır mısın?" : "Beş şehir kurtuldu! Ama İstanbul'dan kötü haber var…";
     $("tekrar").style.display = "";
     D.sonYildiz = yildiz; ekranAc("harita");
+    if (window.HK && !SEHIRLER[TEST]) HK.skorGoster(D.sehir, [[sehir().toplaAd, o.simit, o.simit * 10], ["Yakalanan kötü", o.yakalanan, o.yakalanan * 20],
+      [sehir().kralAd + " yenildi", "✔", 300], ["Kalan can", o.k.can, o.k.can * 50]], true);
   }
 
   // 2. oyundan dönüş: "Londra'ya hazırım" denmişse karar ekranı Londra düğmesiyle açılır (film için bir dokunuş gerekir)
@@ -720,6 +800,10 @@
     $("kal").style.display = "none"; $("tekrar").style.display = "none"; $("diger").style.display = "none";
     ekranAc("harita");
   })();
+
+  // Görevler merkezine dönüş (öteki oyunlardan ya da ⏸ menüsünden): film yok, doğrudan merkez
+  if (new URLSearchParams(location.search).get("merkez") === "1" && window.HK && HK.merkezVar()) merkezAc();
+  window.__merkezAc = merkezAc;
 
   // ---------- döngü ----------
   var son = 0;
