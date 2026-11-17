@@ -276,7 +276,7 @@
     var f = $("film"), g = $("gec"), bitti = false;
     function kapat() { if (bitti) return; bitti = true; f.pause(); f.style.display = "none"; g.style.display = "none"; sonra(); }
     if (BAG.get("film") === "0") { sonra(); return; }
-    f.src = "video/giris.mp4"; f.style.display = "block"; g.style.display = "block"; f.onended = kapat; f.onerror = kapat; g.onclick = kapat;
+    f.src = "video/giris_v2.mp4"; f.style.display = "block"; g.style.display = "block"; f.onended = kapat; f.onerror = kapat; g.onclick = kapat;
     var p = f.play(); if (p && p.catch) p.catch(kapat);
   }
   $("basla").addEventListener("click", function () { ekranAc("oyun"); filmOynat(function () { baslat(); }); });

@@ -75,7 +75,7 @@
   function filmBitti() { if (!window.__film) return; window.__film = false; film.pause(); film.style.display = "none"; $("gec").style.display = "none"; olcekle(); oyunBaslat(); }
   film.addEventListener("ended", filmBitti); film.addEventListener("error", filmBitti); $("gec").addEventListener("click", filmBitti);
   $("basla").addEventListener("click", function () {
-    window.__film = true; film.src = "video/giris.mp4"; film.style.display = "block"; $("gec").style.display = "block"; olcekle();
+    window.__film = true; film.src = "video/giris_v2.mp4"; film.style.display = "block"; $("gec").style.display = "block"; olcekle();
     var p = film.play(); if (p && p.catch) p.catch(function () { filmBitti(); });
   });
   $("tekrar").addEventListener("click", function () { oyunBaslat(); });

@@ -69,18 +69,18 @@
   var SEHIRLER = {
     istanbul: { ad: "İstanbul", eki: "İstanbul'u", arka: "arka", on: { iyi: "k_", kotu: "s_" }, topla: "simit", toplaAd: "Simit", hepsiAd: "simitleri", platform: "platform", kral: "kral", kralAd: "Meteor Kralı", kralEki: "Meteor Kralı'nı", pBasla: "p_basla", pKral: "p_kral", zafer: null, kralOlcek: 1.15, kotu: { yur: ["yur1", "yur2"], uc: ["uc1", "uc2"], yuv: "meteor", yurOlcek: 0.6, ucOlcek: 0.62 }, toplaOlcek: 0.62,
       bolum: { uz: 10000, simit: 22, kotu: 12, kralAra: 2.1, meteorAra: 3.5, yurAra: 640, yurHiz: 75, ucAra: 1050, ucHiz: 115, kralCan: 6, yuvar: 12, dal: 9 } },
-    londra: { ad: "Londra", eki: "Londra'yı", arka: "arka_l", on: { iyi: "kl_", kotu: "sl_" }, topla: "cay", toplaAd: "Çay fincanı", hepsiAd: "çay fincanlarını", platform: "otobus", kral: "kont", kralAd: "Sis Kontu", kralEki: "Sis Kontu'nu", pBasla: "p_londra", pKral: "p_kont", zafer: "a_londra", kralOlcek: 0.9, kotu: { yur: ["l_yur1", "l_yur2"], uc: ["l_uc1", "l_uc2"], yuv: "l_yuv", yurOlcek: 0.95, ucOlcek: 0.85 }, guc: "zaman", gucBekle: 14, toplaOlcek: 0.8, gecis: { iyi: "us_kirmizi", kotu: "us_siyah" },
+    londra: { ad: "Londra", eki: "Londra'yı", arka: "arka_l", on: { iyi: "kl_", kotu: "sl_" }, topla: "cay", toplaAd: "Çay fincanı", hepsiAd: "çay fincanlarını", platform: "otobus", kral: "kont", kralAd: "Sis Kontu", kralEki: "Sis Kontu'nu", pBasla: "p_londra", pKral: "p_kont", zafer: "a_londra", kralOlcek: 0.9, kotu: { yur: ["l_yur1", "l_yur2"], uc: ["l_uc1", "l_uc2"], yuv: "l_yuv", yurOlcek: 0.95, ucOlcek: 0.85 }, guc: "zaman", gucBekle: 14, toplaOlcek: 0.8, gecis: { iyi: "us_kirmizi_v2", kotu: "us_siyah_v2" },
       bolum: { uz: 14000, simit: 32, kotu: 18, kralAra: 1.4, meteorAra: 2.2, yurAra: 430, yurHiz: 105, ucAra: 700, ucHiz: 150, kralCan: 12, yuvar: 7, dal: 5 } }, // guc: bu şehrin kostümüne özel güç
     tokyo: { ad: "Tokyo", eki: "Tokyo'yu", arka: "arka_t", on: { iyi: "kt_", kotu: "st_" }, topla: "onigiri", toplaAd: "Onigiri", hepsiAd: "onigirileri", platform: "t_platform", kral: "ejder", kralAd: "Neon Ejder", kralEki: "Neon Ejder'i", pBasla: "p_tokyo", pKral: "p_ejder", zafer: "a_tokyo", kralOlcek: 0.85,
       kotu: { yur: ["t_yur1", "t_yur2"], uc: ["t_uc1", "t_uc2"], yuv: "t_yuv", yurOlcek: 0.95, ucOlcek: 0.9 }, guc: "ninja", gucBekle: 12, toplaOlcek: 0.75, gecis: { iyi: "tokyo_kirmizi_v2", kotu: "tokyo_siyah_v2" },
       bolum: { uz: 17000, simit: 40, kotu: 24, kralAra: 1.25, meteorAra: 2.0, yurAra: 390, yurHiz: 120, ucAra: 620, ucHiz: 165, kralCan: 16, yuvar: 6, dal: 4 } },
     // Paris: şehir gri başlar, ilerledikçe renklenir (arkaGri üstüne renkli arka plan poz poz açılır). Güç: renk dalgası.
     paris: { ad: "Paris", eki: "Paris'i", yon: "Paris'e", arka: "arka_p", arkaGri: "arka_p_gri", on: { iyi: "kp_", kotu: "sp_" }, topla: "boya", toplaAd: "Boya tüpü", hepsiAd: "boya tüplerini", platform: "p_platform", kral: "ressam", kralAd: "Gölge Ressam", kralEki: "Gölge Ressam'ı", pBasla: "p_paris", pKral: "p_ressam", zafer: "a_paris", kralOlcek: 0.9, mermi: "p_top",
-      kotu: { yur: ["p_yur1", "p_yur2"], uc: ["p_uc1", "p_uc2"], yuv: "p_yuv", yurOlcek: 0.95, ucOlcek: 0.9 }, guc: "renk", gucBekle: 12, toplaOlcek: 0.75, gecis: { iyi: "paris_kirmizi", kotu: "paris_siyah" },
+      kotu: { yur: ["p_yur1", "p_yur2"], uc: ["p_uc1", "p_uc2"], yuv: "p_yuv", yurOlcek: 0.95, ucOlcek: 0.9 }, guc: "renk", gucBekle: 12, toplaOlcek: 0.75, gecis: { iyi: "paris_kirmizi_v2", kotu: "paris_siyah_v2" },
       bolum: { uz: 19000, simit: 46, kotu: 28, kralAra: 1.15, meteorAra: 1.9, yurAra: 370, yurHiz: 128, ucAra: 590, ucHiz: 172, kralCan: 18, yuvar: 6, dal: 4 } },
     // Los Angeles: Hollywood. Güç: dublör (kötüler dublöre saldırır, kahraman serbest kalır). Kral: Yönetmen ("Motor!" deyince film kutuları yuvarlanır).
     losangeles: { ad: "Los Angeles", eki: "Los Angeles'ı", yon: "Los Angeles'a", arka: "arka_a", on: { iyi: "ka_", kotu: "sa_" }, topla: "makara", toplaAd: "Film makarası", hepsiAd: "film makaralarını", platform: "a_platform", kral: "yonetmen", kralAd: "Yönetmen", kralEki: "Yönetmen'i", pBasla: "p_la", pKral: "p_yonetmen", zafer: "a_la", kralOlcek: 0.9, mermi: "a_top",
-      kotu: { yur: ["a_yur1", "a_yur2"], uc: ["a_uc1", "a_uc2"], yuv: "a_yuv", yurOlcek: 0.95, ucOlcek: 0.9 }, guc: "dublor", gucBekle: 12, toplaOlcek: 0.75, gecis: { iyi: "la_kirmizi", kotu: "la_siyah" },
+      kotu: { yur: ["a_yur1", "a_yur2"], uc: ["a_uc1", "a_uc2"], yuv: "a_yuv", yurOlcek: 0.95, ucOlcek: 0.9 }, guc: "dublor", gucBekle: 12, toplaOlcek: 0.75, gecis: { iyi: "la_kirmizi_v2", kotu: "la_siyah_v2" },
       bolum: { uz: 21000, simit: 50, kotu: 32, kralAra: 1.05, meteorAra: 1.8, yurAra: 350, yurHiz: 135, ucAra: 560, ucHiz: 180, kralCan: 20, yuvar: 5, dal: 3.5 } }
   };
   var SIRA = ["istanbul", "londra", "tokyo", "paris", "losangeles"];
@@ -216,7 +216,7 @@
   $("kal").addEventListener("click", function () {
     if (siradaki() === "tokyo") { // Londra'dan sonra eve dönmek isterse: Zorgo'nun UFO'su jeti yakalar, kötüler gezegenine ışınlar → Gezegenden Kaçış; kaçarsa Tokyo görevi yine sorulur
       muzikDur(); var kst = SEHIRLER.londra.on[D.secim].replace("_", "");
-      filmOynat(D.secim === "iyi" ? "ufo_kirmizi" : "ufo_siyah", function () { location.href = "../kacis/index.html?sonra=tokyo&k=" + kst + "&seri=" + (D.secim === "iyi" ? "iyi" : "kotu"); });
+      filmOynat(D.secim === "iyi" ? "ufo_kirmizi_v2" : "ufo_siyah_v2", function () { location.href = "../kacis/index.html?sonra=tokyo&k=" + kst + "&seri=" + (D.secim === "iyi" ? "iyi" : "kotu"); });
       return;
     }
     muzikDur(); location.href = "../tirtil/index.html?baglanti=1&seri=" + (D.secim === "iyi" ? "iyi" : "kotu"); });

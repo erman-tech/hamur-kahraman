@@ -95,7 +95,7 @@
     d.addEventListener("click", function () { D.kahraman = k; oyunBaslat(); });
     $("kartlar").appendChild(d);
   });
-  $("basla").addEventListener("click", function () { filmOynat("giris", secimAc); });
+  $("basla").addEventListener("click", function () { filmOynat("giris_v2", secimAc); });
   $("tekrar").addEventListener("click", function () { if (D.sonraki) D.bolum = (D.bolum || 1) + 1; D.sonraki = false; oyunBaslat(); });
   $("yeni").addEventListener("click", function () { muzikDur(); location.href = "../istanbul/index.html"; });
   $("degistir").addEventListener("click", secimAc);
@@ -103,7 +103,7 @@
   if (ACIK.indexOf(BAG.get("k")) >= 0) D.kahraman = BAG.get("k"); // Görevler merkezinden seçilen kostüm // test: ?bolum=1..5 // 1. oyundan "İstanbul'da kalacağım" ile gelindiyse seri taşınır
   $("londraGit").addEventListener("click", function () { muzikDur(); location.href = "../istanbul/index.html?londra=1&seri=" + (BAG.get("seri") === "kotu" ? "kotu" : "iyi"); });
   if (BAG.get("baglanti") === "1") setTimeout(function () { // film kendiliğinden başlasın; tarayıcı sesi engellerse kapak kalır
-    film.src = "video/giris.mp4"; var p = film.play();
+    film.src = "video/giris_v2.mp4"; var p = film.play();
     if (p && p.then) p.then(function () { filmBitince = secimAc; ekranAc("film"); }).catch(function () {});
   }, 200);
   $("kacis").addEventListener("click", function () { muzikDur(); location.href = "../kacis/index.html?k=" + D.kahraman + "&seri=" + (BAG.get("seri") === "kotu" ? "kotu" : "iyi") + (BAG.get("final") === "1" ? "&final=1" : ""); }); // şehirler bittikten sonra düşüldüyse kaçış yine tırtıl görevine döner
@@ -362,7 +362,7 @@
     } else {
       o.bitis += dt;
       if (o.durum === "kacti" && o.bitis > 3.2) sonucGoster(true);
-      if (o.durum === "yakalandi" && o.bitis > 2.2 && !o.filmde) { o.filmde = true; muzikDur(); filmOynat("portal", function () { sonucGoster(false); }); } // portaldan geçiş filmi, sonra seçenekler
+      if (o.durum === "yakalandi" && o.bitis > 2.2 && !o.filmde) { o.filmde = true; muzikDur(); filmOynat("portal_v2", function () { sonucGoster(false); }); } // portaldan geçiş filmi, sonra seçenekler
     }
   }
   function sonucGoster(kazandi) {
