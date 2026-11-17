@@ -26,14 +26,17 @@
   // Sesler: Web Audio (tablette de çalsın diye); olmazsa düz <audio>.
   var sesAdlari = ["e_ag", "e_elektrik", "e_pop", "e_simit", "e_ah", "e_zafer", "e_meteor", "p_soru", "p_basla", "p_kral", "p_tekrar", "p_gorev", "a_kazandin_c", "a_kazandin_u", "p_londra", "p_kont", "a_londra", "p_tokyo", "p_ejder", "a_tokyo", "p_paris", "p_ressam", "a_paris", "p_la", "p_yonetmen", "a_la", "muzik"];
   var AC = window.AudioContext || window.webkitAudioContext, ac = null, tampon = {}, yedek = {}, muzikDugum = null;
-  sesAdlari.forEach(function (a) { var s = new Audio(); s.preload = "auto"; s.src = "ses/" + a + ".mp3"; yedek[a] = s; });
+  // değiştirilen sesler yeni adla: daha önce indirilmiş cihaz eski dosyayı kayıttan çalmaya devam etmesin
+  var SES_DOSYA = { e_ag: "e_ag_v2", e_elektrik: "e_elektrik_v2" };
+  function sesYolu(a) { return "ses/" + (SES_DOSYA[a] || a) + ".mp3"; }
+  sesAdlari.forEach(function (a) { var s = new Audio(); s.preload = "auto"; s.src = sesYolu(a); yedek[a] = s; });
   yedek.muzik.loop = true; yedek.muzik.volume = 0.22;
   function sesAc() { // ilk dokunuşta çağrılır
     if (ac || !AC || location.protocol === "file:") { if (ac && ac.state === "suspended") ac.resume(); return; }
     try {
       ac = new AC(); ac.resume();
       sesAdlari.forEach(function (a) {
-        fetch("ses/" + a + ".mp3").then(function (r) { return r.arrayBuffer(); }).then(function (d) {
+        fetch(sesYolu(a)).then(function (r) { return r.arrayBuffer(); }).then(function (d) {
           ac.decodeAudioData(d, function (t) { tampon[a] = t; }, function () {});
         }).catch(function () {});
       });

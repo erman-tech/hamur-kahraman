@@ -33,7 +33,11 @@ self.addEventListener("fetch", function (e) {
   if (MEDYA.test(u.pathname)) {
     e.respondWith(kayittan(istek).then(function (y) {
       if (y) return aralik ? parca(y, aralik) : y;
-      return fetch(istek);
+      // kayıtta yoksa (sonradan eklenen görsel/ses) internetten alınır ve kaydedilir; film (parça istekleri) kaydedilmez
+      return fetch(istek).then(function (n) {
+        if (n && n.status === 200 && !aralik && !/\.mp4$/i.test(u.pathname)) { var k = n.clone(); caches.open(KAYIT).then(function (c) { c.put(u.pathname, k); }); }
+        return n;
+      });
     }));
     return;
   }
