@@ -250,7 +250,7 @@
   }
 
   function oyunBaslat() {
-    $("zamanD").style.display = sehir().guc ? "" : "none"; $("zamanD").textContent = sehir().guc === "dublor" ? "🎬" : sehir().guc === "renk" ? "🎨" : sehir().guc === "ninja" ? "⚡" : "⏱";
+    $("zamanAlan").style.display = sehir().guc ? "" : "none"; $("zamanD").textContent = sehir().guc === "dublor" ? "🎬" : sehir().guc === "renk" ? "🎨" : sehir().guc === "ninja" ? "⚡" : "⏱";
     D.oyun = bolumKur(); ekranAc("oyun");
     muzikBasla();
     cal(sehir().pBasla, 1);

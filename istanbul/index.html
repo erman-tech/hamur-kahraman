@@ -50,6 +50,11 @@
   #atesAlan { position: absolute; right: 0; bottom: 0; width: 320px; height: 400px; pointer-events: auto; touch-action: none; }
   #atesAlan .daire { position: absolute; right: 70px; bottom: 90px; width: 136px; height: 136px; border-radius: 68px; border: 4px solid rgba(255,255,255,.6);
     background: rgba(20,30,70,.24); color: #fff; font-size: 62px; line-height: 128px; text-align: center; pointer-events: none; }
+  /* güç (zaman durdurma, dublör, renk, ninja): ateşin hemen üstünde, aynı büyüklükte daire ve geniş alan */
+  #zamanAlan { position: absolute; right: 0; bottom: 400px; width: 320px; height: 170px; pointer-events: auto; touch-action: none; }
+  #zamanAlan .daire { position: absolute; right: 80px; bottom: 14px; width: 116px; height: 116px; border-radius: 58px; border: 4px solid rgba(255,255,255,.6);
+    background: rgba(20,30,70,.24); color: #fff; font-size: 54px; line-height: 108px; text-align: center; pointer-events: none; }
+  #zamanAlan.bas .daire { background: rgba(255,210,58,.5); transform: scale(.94); }
   #atesAlan.bas .daire { background: rgba(255,210,58,.5); transform: scale(.94); }
   /* sol joystick: sol alt çeyrekte nereye dokunulursa orada açılır */
   #joyAlan { position: absolute; left: 0; top: 240px; width: 360px; height: 480px; pointer-events: auto; touch-action: none; }
@@ -99,7 +104,7 @@
     <div id="joyAlan"></div>
     <div id="joyTaban"><div id="joyTopuz"></div></div>
     <div id="atesAlan" data-tus="ates"><div class="daire">✸</div></div>
-    <button data-tus="zaman" id="zamanD" style="right:90px;bottom:420px;display:none">⏱</button>
+    <div id="zamanAlan" data-tus="zaman" style="display:none"><div class="daire" id="zamanD">⏱</div></div>
   </div>
   <button id="gec" class="hamur sari">Geç ▶</button>
 </div>
