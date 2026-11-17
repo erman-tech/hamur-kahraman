@@ -43,8 +43,16 @@
   #harita .dugmeler { display: flex; gap: 30px; margin-top: 30px; }
   #harita .hamur { font-size: 30px; padding: 16px 34px; }
   #dokunma { display: none; pointer-events: none; }
-  #dokunma button { position: absolute; bottom: 24px; width: 110px; height: 110px; border-radius: 55px; border: 0; font-size: 50px; color: #fff;
-    background: rgba(20,30,70,.55); pointer-events: auto; touch-action: none; }
+  #dokunma button { position: absolute; width: 86px; height: 86px; border-radius: 43px; border: 3px solid rgba(255,255,255,.55); font-size: 38px; color: #fff;
+    background: rgba(20,30,70,.22); pointer-events: auto; touch-action: none; padding: 0; }
+  #dokunma button.bas { background: rgba(255,210,58,.45); }
+  /* sol joystick: sol alt çeyrekte nereye dokunulursa orada açılır */
+  #joyAlan { position: absolute; left: 0; top: 240px; width: 360px; height: 480px; pointer-events: auto; touch-action: none; }
+  #joyTaban { position: absolute; width: 170px; height: 170px; margin: -85px 0 0 -85px; border-radius: 85px; border: 4px solid rgba(255,255,255,.45);
+    background: rgba(20,30,70,.22); left: 120px; top: 600px; pointer-events: none; opacity: .55; }
+  #joyTaban.acik { opacity: 1; }
+  #joyTopuz { position: absolute; left: 50%; top: 50%; width: 76px; height: 76px; margin: -38px 0 0 -38px; border-radius: 38px;
+    background: rgba(255,210,58,.75); box-shadow: 0 4px 0 rgba(0,0,0,.3); }
   /* Telefon oyunun yönünde tutulmuyorsa "çevir" işareti */
   #dondur { position: fixed; inset: 0; z-index: 50; background: #101a3a; color: #fff; display: none; align-items: center; justify-content: center;
     flex-direction: column; text-align: center; font-size: 26px; font-family: inherit; }
@@ -83,11 +91,10 @@
     </div>
   </div>
   <div id="dokunma">
-    <button data-tus="sol" style="left:24px">◀</button>
-    <button data-tus="sag" style="left:150px">▶</button>
-    <button data-tus="ates" style="right:150px">✸</button>
-    <button data-tus="zaman" id="zamanD" style="right:276px;display:none">⏱</button>
-    <button data-tus="yukari" style="right:24px">▲</button>
+    <div id="joyAlan"></div>
+    <div id="joyTaban"><div id="joyTopuz"></div></div>
+    <button data-tus="ates" style="right:12px;bottom:110px">✸</button>
+    <button data-tus="zaman" id="zamanD" style="right:12px;bottom:208px;display:none">⏱</button>
   </div>
   <button id="gec" class="hamur sari">Geç ▶</button>
 </div>

@@ -2,6 +2,7 @@
    Akış: kapak → giriş filmi (meteorlar + kahraman + oyun adı) → seçim → dönüşüm filmi → oyun → dünya haritası. */
 (function () {
   "use strict";
+  var DOKUNMATIK = "ontouchstart" in window;
   var G = 1280, Y = 720, ZEMIN = 672, UZUNLUK = 9000;
   var $ = function (id) { return document.getElementById(id); };
   var tuval = $("tuval"), c = tuval.getContext("2d"), film = $("film");
@@ -171,10 +172,37 @@
   addEventListener("keyup", function (e) { var a = HARITA[e.code]; if (a) { tus(a, false); e.preventDefault(); } });
   Array.prototype.forEach.call(document.querySelectorAll("#dokunma button"), function (b) {
     var ad = b.dataset.tus;
-    b.addEventListener("touchstart", function (e) { tus(ad, true); e.preventDefault(); });
-    b.addEventListener("touchend", function (e) { tus(ad, false); e.preventDefault(); });
-    b.addEventListener("touchcancel", function () { tus(ad, false); });
+    b.addEventListener("touchstart", function (e) { tus(ad, true); b.classList.add("bas"); e.preventDefault(); });
+    b.addEventListener("touchend", function (e) { tus(ad, false); b.classList.remove("bas"); e.preventDefault(); });
+    b.addEventListener("touchcancel", function () { tus(ad, false); b.classList.remove("bas"); });
   });
+  // Sol joystick: parmak sağa sola yürütür, yukarı itmek zıplatır (tutunca jetpack).
+  // Taban dokunulan yerde açılır; parmak kaydırılarak yön değiştirilir.
+  var joy = null, JOY_R = 70, joyTaban = $("joyTaban"), joyTopuz = $("joyTopuz");
+  function sahneNokta(t) { var r = $("sahne").getBoundingClientRect(), k = r.width / G; return { x: (t.clientX - r.left) / k, y: (t.clientY - r.top) / k }; }
+  function joyYaz(dx, dy) {
+    var u = Math.sqrt(dx * dx + dy * dy); if (u > JOY_R) { dx = dx / u * JOY_R; dy = dy / u * JOY_R; }
+    joyTopuz.style.transform = "translate(" + dx + "px," + dy + "px)";
+    tus("sag", dx > 18); tus("sol", dx < -18); tus("yukari", dy < -38);
+  }
+  function joyBitir() {
+    joy = null; joyTaban.classList.remove("acik"); joyTaban.style.left = "120px"; joyTaban.style.top = "600px";
+    joyTopuz.style.transform = ""; tus("sag", false); tus("sol", false); tus("yukari", false);
+  }
+  $("joyAlan").addEventListener("touchstart", function (e) {
+    e.preventDefault(); if (joy) return;
+    var t = e.changedTouches[0], n = sahneNokta(t);
+    joy = { id: t.identifier, x: n.x, y: n.y }; joyTaban.style.left = n.x + "px"; joyTaban.style.top = n.y + "px"; joyTaban.classList.add("acik");
+  }, { passive: false });
+  addEventListener("touchmove", function (e) {
+    if (!joy) return;
+    for (var i = 0; i < e.changedTouches.length; i++) {
+      var t = e.changedTouches[i]; if (t.identifier !== joy.id) continue;
+      var n = sahneNokta(t); joyYaz(n.x - joy.x, n.y - joy.y); e.preventDefault();
+    }
+  }, { passive: false });
+  function joyBirak(e) { if (!joy) return; for (var i = 0; i < e.changedTouches.length; i++) if (e.changedTouches[i].identifier === joy.id) joyBitir(); }
+  addEventListener("touchend", joyBirak); addEventListener("touchcancel", joyBirak);
 
   // ---------- bölüm ----------
   var GOREV_SIMIT = 20, GOREV_KOTU = 10; // bölüm kurulurken şehre göre değişir
@@ -226,7 +254,7 @@
     D.oyun = bolumKur(); ekranAc("oyun");
     muzikBasla();
     cal(sehir().pBasla, 1);
-    mesajVer("Yürü: ← →   Zıpla ve uç: ↑ ya da Boşluk   " + (D.secim === "iyi" ? "Ağ at: X" : "Elektrik at: X"), 7);
+    mesajVer(DOKUNMATIK ? "Sol el: yürü, yukarı it zıpla   Sağ el: ✸ " + (D.secim === "iyi" ? "ağ at" : "elektrik at") : "Yürü: ← →   Zıpla ve uç: ↑ ya da Boşluk   " + (D.secim === "iyi" ? "Ağ at: X" : "Elektrik at: X"), 7);
   }
   function ad() { return D.secim === "iyi" ? "Cesur" : "Ürkek"; }
   function mesajVer(m, sn) { D.oyun.mesaj = m; D.oyun.mesajSn = sn; }
@@ -375,7 +403,7 @@
     o.yuvarSn -= dt;
     if (o.yuvarSn <= 0 && !o.bitti && k.x > 700 && k.x < UZUNLUK - 1300) {
       o.yuvarSn = o.yuvarAra + Math.random() * 4;
-      o.kotuler.push({ tur: "yuv", x: o.kam + G + 120, y: ZEMIN, hiz: 360, aci: 0, g: 64, y_: 64 });
+      o.kotuler.push({ tur: "yuv", x: o.kam + G + 480, y: ZEMIN, hiz: 360, aci: 0, g: 64, y_: 64 });
       mesajVer("Dikkat! Yuvarlanan geliyor, zıpla!", 1.6); cal("e_meteor", 0.3);
     }
 
@@ -480,7 +508,7 @@
     if (o.simit >= GOREV_SIMIT && !o.gorevSes.s) { o.gorevSes.s = 1; cal("p_gorev", 1); mesajVer("Harika! " + sehir().toplaAd + " görevi tamamlandı!", 3); }
     if (o.yakalanan >= GOREV_KOTU && !o.gorevSes.k) { o.gorevSes.k = 1; cal("p_gorev", 1); mesajVer("Harika! Kötüleri yakalama görevi tamamlandı!", 3); }
 
-    o.kam += (Math.max(0, Math.min(UZUNLUK - G, k.x - 420)) - o.kam) * Math.min(1, dt * 6);
+    o.kam += (Math.max(0, Math.min(UZUNLUK - G, k.x - (DOKUNMATIK ? 400 : 420))) - o.kam) * Math.min(1, dt * 6);
   }
 
   // ---------- çizim ----------
@@ -598,6 +626,15 @@
     c.globalAlpha = 1;
     if (k.x > UZUNLUK - 1400 && !o.kralGeldi) yazi(sehir().kralAd + " ➜", UZUNLUK - 1300, 300, 40, "#ffd23a");
     c.restore();
+
+    // --- sağdan yuvarlanan düşman uyarısı: ekrana girmeden önce sağ kenarda yanıp söner ---
+    for (i = 0; i < o.kotuler.length; i++) {
+      e = o.kotuler[i]; if (e.tur !== "yuv" || e.yakalandi) continue;
+      var ux = e.x - kam; if (ux < G - 10 || ux > G + 520 || Math.floor(o.t * 6) % 2) continue;
+      c.fillStyle = "#ffd23a"; c.strokeStyle = "rgba(60,20,0,.8)"; c.lineWidth = 5;
+      c.beginPath(); c.moveTo(G - 150, 470); c.lineTo(G - 104, 440); c.lineTo(G - 104, 500); c.closePath(); c.stroke(); c.fill();
+      yazi("!", G - 70, 488, 52, "#ffd23a");
+    }
 
     // --- gösterge ---
     for (i = 0; i < 3; i++) ciz(R.kalp, 46 + i * 62, 78, 0.68, false, i < k.can ? 1 : 0.22);
