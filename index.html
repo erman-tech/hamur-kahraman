@@ -77,7 +77,12 @@
   function mb(b) { return Math.round(b / 1048576); }
   function yaz(t) { durum.textContent = t; }
   function listeAl() { return fetch("dosyalar.json", { cache: "no-store" }).then(function (r) { if (!r.ok) throw new Error("liste"); return r.json(); }); }
-  var ANA = "Ana ekrana eklemek için: Safari'de Paylaş düğmesi, sonra \"Ana Ekrana Ekle\".";
+  // iPad/iPhone ana ekran simgesi Safari'den AYRI saklar: Safari'de indirilen oyun simgeye geçmez.
+  var SIMGE = navigator.standalone || (window.matchMedia && matchMedia("(display-mode: fullscreen), (display-mode: standalone)").matches);
+  var IOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  var ANA = SIMGE ? "Ana ekran simgesinden açtığında internetsiz oynanır."
+    : IOS ? "iPad'de ana ekran simgesi ayrı saklanır: önce Paylaş → \"Ana Ekrana Ekle\", sonra simgeden aç ve indirmeyi orada bir kez daha yap."
+    : "Ana ekrana eklemek için tarayıcı menüsünde \"Ana ekrana ekle\".";
   function denetle() { // kayıtta ne var: tam mı, eski mi, hiç yok mu
     var kayitli = localStorage.getItem("hk_cevrimdisi");
     return caches.open(KAYIT).then(function (c) { return c.keys(); }).then(function (anahtarlar) {
@@ -88,7 +93,8 @@
       return listeAl().then(function (l) {
         if (kayitli === l.surum && anahtarlar.length >= l.dosyalar.length) { dugme.textContent = "✔ Çevrimdışı hazır"; yaz("Oyun bu cihazda kayıtlı (" + mb(l.boyut) + " MB). İnternet olmadan oynanır. " + ANA); }
         else if (kayitli) { dugme.textContent = "✈ Güncellemeyi indir"; yaz("Oyun güncellendi. Çevrimdışı oynamadan önce yeniden indir (" + mb(l.boyut) + " MB)."); }
-        else yaz("Uçakta ya da internetsiz oynamak için bütün oyunu bu cihaza indirir (" + mb(l.boyut) + " MB). Wi-Fi ile indir.");
+        else yaz("Uçakta ya da internetsiz oynamak için bütün oyunu bu cihaza indirir (" + mb(l.boyut) + " MB). Wi-Fi ile indir."
+          + (IOS && !SIMGE ? " Ana ekran simgesinden oynayacaksan indirmeyi simgeden açıp orada yap." : ""));
       });
     }).catch(function () { // internete ulaşılamadı (uçak modu her zaman "çevrimdışı" demeyebilir)
       if (kayitli) { yaz("İnternete ulaşılamadı. Oyun bu cihazda kayıtlı, oynayabilirsin."); dugme.disabled = true; }
