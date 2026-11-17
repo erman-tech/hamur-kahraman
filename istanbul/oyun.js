@@ -796,7 +796,7 @@
     $("tekrar").style.display = "";
     D.sonYildiz = yildiz; ekranAc("harita");
     if (window.HK && !SEHIRLER[TEST]) HK.skorGoster(D.sehir, [[sehir().toplaAd, o.simit, o.simit * 10], ["Yakalanan kötü", o.yakalanan, o.yakalanan * 20],
-      [sehir().kralAd + " yenildi", "✔", 300], ["Kalan can", o.k.can, o.k.can * 50]].concat(o.hepsiBonus ? [["Hepsini topladın", "✔", 50]] : []), true);
+      [sehir().kralAd + " yenildi", "✔", 150], ["Kalan can", o.k.can, o.k.can * 50]].concat(o.hepsiBonus ? [["Hepsini topladın", "✔", 50]] : []), true);
   }
 
   // 2. oyundan dönüş: "Londra'ya hazırım" denmişse karar ekranı Londra düğmesiyle açılır (film için bir dokunuş gerekir)
