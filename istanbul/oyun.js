@@ -67,19 +67,19 @@
   var D = { ekran: "kapak", secim: null, oyun: null, sehir: "istanbul", kurtarilan: {} };
   // Şehirler: her şehrin arka planı, kostümü (kırmızı seri / siyah seri), toplanacak şeyi ve baş kötüsü ayrı.
   var SEHIRLER = {
-    istanbul: { ad: "İstanbul", eki: "İstanbul'u", arka: "arka", on: { iyi: "k_", kotu: "s_" }, topla: "simit", toplaAd: "Simit", platform: "platform", kral: "kral", kralAd: "Meteor Kralı", kralEki: "Meteor Kralı'nı", pBasla: "p_basla", pKral: "p_kral", zafer: null, kralOlcek: 1.15, kotu: { yur: ["yur1", "yur2"], uc: ["uc1", "uc2"], yuv: "meteor", yurOlcek: 0.6, ucOlcek: 0.62 }, toplaOlcek: 0.62,
+    istanbul: { ad: "İstanbul", eki: "İstanbul'u", arka: "arka", on: { iyi: "k_", kotu: "s_" }, topla: "simit", toplaAd: "Simit", hepsiAd: "simitleri", platform: "platform", kral: "kral", kralAd: "Meteor Kralı", kralEki: "Meteor Kralı'nı", pBasla: "p_basla", pKral: "p_kral", zafer: null, kralOlcek: 1.15, kotu: { yur: ["yur1", "yur2"], uc: ["uc1", "uc2"], yuv: "meteor", yurOlcek: 0.6, ucOlcek: 0.62 }, toplaOlcek: 0.62,
       bolum: { uz: 10000, simit: 22, kotu: 12, kralAra: 2.1, meteorAra: 3.5, yurAra: 640, yurHiz: 75, ucAra: 1050, ucHiz: 115, kralCan: 6, yuvar: 12, dal: 9 } },
-    londra: { ad: "Londra", eki: "Londra'yı", arka: "arka_l", on: { iyi: "kl_", kotu: "sl_" }, topla: "cay", toplaAd: "Çay fincanı", platform: "otobus", kral: "kont", kralAd: "Sis Kontu", kralEki: "Sis Kontu'nu", pBasla: "p_londra", pKral: "p_kont", zafer: "a_londra", kralOlcek: 0.9, kotu: { yur: ["l_yur1", "l_yur2"], uc: ["l_uc1", "l_uc2"], yuv: "l_yuv", yurOlcek: 0.95, ucOlcek: 0.85 }, guc: "zaman", gucBekle: 14, toplaOlcek: 0.8, gecis: { iyi: "us_kirmizi", kotu: "us_siyah" },
+    londra: { ad: "Londra", eki: "Londra'yı", arka: "arka_l", on: { iyi: "kl_", kotu: "sl_" }, topla: "cay", toplaAd: "Çay fincanı", hepsiAd: "çay fincanlarını", platform: "otobus", kral: "kont", kralAd: "Sis Kontu", kralEki: "Sis Kontu'nu", pBasla: "p_londra", pKral: "p_kont", zafer: "a_londra", kralOlcek: 0.9, kotu: { yur: ["l_yur1", "l_yur2"], uc: ["l_uc1", "l_uc2"], yuv: "l_yuv", yurOlcek: 0.95, ucOlcek: 0.85 }, guc: "zaman", gucBekle: 14, toplaOlcek: 0.8, gecis: { iyi: "us_kirmizi", kotu: "us_siyah" },
       bolum: { uz: 14000, simit: 32, kotu: 18, kralAra: 1.4, meteorAra: 2.2, yurAra: 430, yurHiz: 105, ucAra: 700, ucHiz: 150, kralCan: 12, yuvar: 7, dal: 5 } }, // guc: bu şehrin kostümüne özel güç
-    tokyo: { ad: "Tokyo", eki: "Tokyo'yu", arka: "arka_t", on: { iyi: "kt_", kotu: "st_" }, topla: "onigiri", toplaAd: "Onigiri", platform: "t_platform", kral: "ejder", kralAd: "Neon Ejder", kralEki: "Neon Ejder'i", pBasla: "p_tokyo", pKral: "p_ejder", zafer: "a_tokyo", kralOlcek: 0.85,
+    tokyo: { ad: "Tokyo", eki: "Tokyo'yu", arka: "arka_t", on: { iyi: "kt_", kotu: "st_" }, topla: "onigiri", toplaAd: "Onigiri", hepsiAd: "onigirileri", platform: "t_platform", kral: "ejder", kralAd: "Neon Ejder", kralEki: "Neon Ejder'i", pBasla: "p_tokyo", pKral: "p_ejder", zafer: "a_tokyo", kralOlcek: 0.85,
       kotu: { yur: ["t_yur1", "t_yur2"], uc: ["t_uc1", "t_uc2"], yuv: "t_yuv", yurOlcek: 0.95, ucOlcek: 0.9 }, guc: "ninja", gucBekle: 12, toplaOlcek: 0.75, gecis: { iyi: "tokyo_kirmizi", kotu: "tokyo_siyah" },
       bolum: { uz: 17000, simit: 40, kotu: 24, kralAra: 1.25, meteorAra: 2.0, yurAra: 390, yurHiz: 120, ucAra: 620, ucHiz: 165, kralCan: 16, yuvar: 6, dal: 4 } },
     // Paris: şehir gri başlar, ilerledikçe renklenir (arkaGri üstüne renkli arka plan poz poz açılır). Güç: renk dalgası.
-    paris: { ad: "Paris", eki: "Paris'i", yon: "Paris'e", arka: "arka_p", arkaGri: "arka_p_gri", on: { iyi: "kp_", kotu: "sp_" }, topla: "boya", toplaAd: "Boya tüpü", platform: "p_platform", kral: "ressam", kralAd: "Gölge Ressam", kralEki: "Gölge Ressam'ı", pBasla: "p_paris", pKral: "p_ressam", zafer: "a_paris", kralOlcek: 0.9, mermi: "p_top",
+    paris: { ad: "Paris", eki: "Paris'i", yon: "Paris'e", arka: "arka_p", arkaGri: "arka_p_gri", on: { iyi: "kp_", kotu: "sp_" }, topla: "boya", toplaAd: "Boya tüpü", hepsiAd: "boya tüplerini", platform: "p_platform", kral: "ressam", kralAd: "Gölge Ressam", kralEki: "Gölge Ressam'ı", pBasla: "p_paris", pKral: "p_ressam", zafer: "a_paris", kralOlcek: 0.9, mermi: "p_top",
       kotu: { yur: ["p_yur1", "p_yur2"], uc: ["p_uc1", "p_uc2"], yuv: "p_yuv", yurOlcek: 0.95, ucOlcek: 0.9 }, guc: "renk", gucBekle: 12, toplaOlcek: 0.75, gecis: { iyi: "paris_kirmizi", kotu: "paris_siyah" },
       bolum: { uz: 19000, simit: 46, kotu: 28, kralAra: 1.15, meteorAra: 1.9, yurAra: 370, yurHiz: 128, ucAra: 590, ucHiz: 172, kralCan: 18, yuvar: 6, dal: 4 } },
     // Los Angeles: Hollywood. Güç: dublör (kötüler dublöre saldırır, kahraman serbest kalır). Kral: Yönetmen ("Motor!" deyince film kutuları yuvarlanır).
-    losangeles: { ad: "Los Angeles", eki: "Los Angeles'ı", yon: "Los Angeles'a", arka: "arka_a", on: { iyi: "ka_", kotu: "sa_" }, topla: "makara", toplaAd: "Film makarası", platform: "a_platform", kral: "yonetmen", kralAd: "Yönetmen", kralEki: "Yönetmen'i", pBasla: "p_la", pKral: "p_yonetmen", zafer: "a_la", kralOlcek: 0.9, mermi: "a_top",
+    losangeles: { ad: "Los Angeles", eki: "Los Angeles'ı", yon: "Los Angeles'a", arka: "arka_a", on: { iyi: "ka_", kotu: "sa_" }, topla: "makara", toplaAd: "Film makarası", hepsiAd: "film makaralarını", platform: "a_platform", kral: "yonetmen", kralAd: "Yönetmen", kralEki: "Yönetmen'i", pBasla: "p_la", pKral: "p_yonetmen", zafer: "a_la", kralOlcek: 0.9, mermi: "a_top",
       kotu: { yur: ["a_yur1", "a_yur2"], uc: ["a_uc1", "a_uc2"], yuv: "a_yuv", yurOlcek: 0.95, ucOlcek: 0.9 }, guc: "dublor", gucBekle: 12, toplaOlcek: 0.75, gecis: { iyi: "la_kirmizi", kotu: "la_siyah" },
       bolum: { uz: 21000, simit: 50, kotu: 32, kralAra: 1.05, meteorAra: 1.8, yurAra: 350, yurHiz: 135, ucAra: 560, ucHiz: 180, kralCan: 20, yuvar: 5, dal: 3.5 } }
   };
@@ -347,7 +347,7 @@
 
   function guncelle(dt) {
     var o = D.oyun; if (!o) return;
-    o.t += dt; if (o.mesajSn > 0) o.mesajSn -= dt;
+    o.t += dt; if (o.mesajSn > 0) o.mesajSn -= dt; if (o.bonusSn > 0) o.bonusSn -= dt;
     var k = o.k, i, e, m;
 
     if (o.bitti) {
@@ -404,7 +404,12 @@
     // --- simit / eşya ---
     for (i = o.simitler.length - 1; i >= 0; i--) {
       m = o.simitler[i];
-      if (Math.abs(m.x - k.x) < 55 && m.y < k.y + 10 && m.y > k.y - 150) { o.simitler.splice(i, 1); o.simit++; cal("e_simit", 0.5); parca(o, m.x, m.y, "#f2c14e", 5); }
+      if (Math.abs(m.x - k.x) < 55 && m.y < k.y + 10 && m.y > k.y - 150) {
+        o.simitler.splice(i, 1); o.simit++; cal("e_simit", 0.5); parca(o, m.x, m.y, "#f2c14e", 5);
+        if (!o.simitler.length && !o.hepsiBonus) { // bölümdeki bütün simitler (çay, onigiri…) toplandı: +50 puan
+          o.hepsiBonus = true; o.bonusSn = 3.5; cal("e_zafer", 0.5); parca(o, k.x, k.y - 120, "#ffd23a", 30);
+        }
+      }
     }
     for (i = o.esyalar.length - 1; i >= 0; i--) {
       m = o.esyalar[i]; m.vy += 1200 * dt; m.y += m.vy * dt; if (m.y > ZEMIN - 30) { m.y = ZEMIN - 30; m.vy = 0; }
@@ -754,6 +759,12 @@
       c.restore();
     }
     if (o.mesajSn > 0) yazi(o.mesaj, G / 2, 200, 34, "#fff", "center");
+    if (o.bonusSn > 0) { // tümünü toplama bonusu: ortada büyük yazı, poz poz zıplar
+      var bz = Math.floor(o.bonusSn * 8) % 2 ? 6 : 0;
+      c.fillStyle = "rgba(20,25,60,.72)"; yuvarlak(G / 2 - 380, 262 - bz, 760, 120, 30); c.fill();
+      yazi("Tebrikler! Tüm " + sehir().hepsiAd + " topladın!", G / 2, 312 - bz, 36, "#ffd23a", "center");
+      yazi("+50 puan", G / 2, 362 - bz, 40, "#8dff9a", "center");
+    }
   }
   function gorevSatir(x, y, ad, n, hedef) { var t = n >= hedef; yazi((t ? "✔ " : "• ") + ad + "  " + Math.min(n, hedef) + "/" + hedef, x, y, 22, t ? "#8dff9a" : "#fff"); }
   function yuvarlak(x, y, g, yk, r) { c.beginPath(); c.moveTo(x + r, y); c.arcTo(x + g, y, x + g, y + yk, r); c.arcTo(x + g, y + yk, x, y + yk, r); c.arcTo(x, y + yk, x, y, r); c.arcTo(x, y, x + g, y, r); c.closePath(); }
@@ -785,7 +796,7 @@
     $("tekrar").style.display = "";
     D.sonYildiz = yildiz; ekranAc("harita");
     if (window.HK && !SEHIRLER[TEST]) HK.skorGoster(D.sehir, [[sehir().toplaAd, o.simit, o.simit * 10], ["Yakalanan kötü", o.yakalanan, o.yakalanan * 20],
-      [sehir().kralAd + " yenildi", "✔", 300], ["Kalan can", o.k.can, o.k.can * 50]], true);
+      [sehir().kralAd + " yenildi", "✔", 300], ["Kalan can", o.k.can, o.k.can * 50]].concat(o.hepsiBonus ? [["Hepsini topladın", "✔", 50]] : []), true);
   }
 
   // 2. oyundan dönüş: "Londra'ya hazırım" denmişse karar ekranı Londra düğmesiyle açılır (film için bir dokunuş gerekir)
