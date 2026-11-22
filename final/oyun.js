@@ -50,16 +50,28 @@
     if (tip === "zorgo") l.push({ tip: "zorgo", x: x + 34, y: y - 92, w: 52, h: 92 }); else l.push({ tip: tip, x: x + B + 3, y: y - 54, w: 34, h: 54 });
   }
   function kuleKur(l) {
-    var A = 806, M = 926, C = 1046;                 // üç bitişik kanat: sol (2 kat), orta (5 kat, tepede Zorgo), sağ (3 kat)
+    var A = 806, M = 926, C = 1046, sv = D.seviye;
+    function nobetci(tipler, ust) { tipler.forEach(function (tp, i) { l.push({ tip: tp, x: 1206, y: YER - (i + 1) * B, w: B, h: B }); }); l.push({ tip: ust, x: 1209, y: YER - tipler.length * B - 54, w: 34, h: 54 }); }
+    if (sv === 0) { goz(l, M, 0, "jole", 1); goz(l, M, 1, "jole", 1); tepe(l, M, 2, "tirtil2"); goz(l, C, 0, "jole", 1); tepe(l, C, 1, "tirtil3"); return; }
+    if (sv === 1) { goz(l, A, 0, "jole", 1); tepe(l, A, 1, "tirtil2"); goz(l, M, 0, "tas", 1); goz(l, M, 1, "jole", 1); goz(l, M, 2, "jole", 0); tepe(l, M, 3, "tirtil3"); goz(l, C, 0, "jole", 1); goz(l, C, 1, "tas", 0); tepe(l, C, 2, "tirtil2"); return; }
+    if (sv === 3) { goz(l, A, 0, "tas", 1); goz(l, A, 1, "tas", 1); goz(l, A, 2, "jole", 0); tepe(l, A, 3, "tirtil2"); goz(l, M, 0, "tas", 1); goz(l, M, 1, "tas", 0); goz(l, M, 2, "tas", 1); goz(l, M, 3, "jole", 1); goz(l, M, 4, "jole", 0); tepe(l, M, 5, "tirtil3");
+      goz(l, C, 0, "tas", 1); goz(l, C, 1, "jole", 1); goz(l, C, 2, "tas", 0); goz(l, C, 3, "jole", 1); tepe(l, C, 4, "tirtil2"); nobetci(["tas", "jole", "tas", "tas"], "tirtil2"); return; }
+    if (sv === 4) { goz(l, A, 0, "tas", 1); goz(l, A, 1, "tas", 1); goz(l, A, 2, "tas", 0); goz(l, A, 3, "jole", 1); tepe(l, A, 4, "tirtil2"); goz(l, M, 0, "tas", 1); goz(l, M, 1, "tas", 1); goz(l, M, 2, "tas", 0); goz(l, M, 3, "tas", 1); goz(l, M, 4, "jole", 1); goz(l, M, 5, "jole", 0); tepe(l, M, 6, "zorgo");
+      goz(l, C, 0, "tas", 1); goz(l, C, 1, "tas", 0); goz(l, C, 2, "tas", 1); goz(l, C, 3, "jole", 1); tepe(l, C, 4, "tirtil3"); nobetci(["tas", "tas", "jole", "tas"], "tirtil3"); return; }
+    // 3. seviye: özgün kule (Zorgo yalnız son seviyede)
+    var _a = 0;                 // üç bitişik kanat: sol (2 kat), orta (5 kat, tepede Zorgo), sağ (3 kat)
     goz(l, A, 0, "jole", 1); goz(l, A, 1, "tas", 0); tepe(l, A, 2, "tirtil2");
-    goz(l, M, 0, "tas", 1); goz(l, M, 1, "tas", 0); goz(l, M, 2, "jole", 1); goz(l, M, 3, "tas", 0); goz(l, M, 4, "jole", 1); tepe(l, M, 5, "zorgo");
+    goz(l, M, 0, "tas", 1); goz(l, M, 1, "tas", 0); goz(l, M, 2, "jole", 1); goz(l, M, 3, "tas", 0); goz(l, M, 4, "jole", 1); tepe(l, M, 5, "tirtil3");
     goz(l, C, 0, "tas", 0); goz(l, C, 1, "jole", 1); goz(l, C, 2, "jole", 0); tepe(l, C, 3, "tirtil3");
     // sağda tek başına nöbetçi sütunu
     [0, 1, 2].forEach(function (i) { l.push({ tip: i === 1 ? "jole" : "tas", x: 1206, y: YER - (i + 1) * B, w: B, h: B }); });
     l.push({ tip: "tirtil2", x: 1209, y: YER - 3 * B - 54, w: 34, h: 54 });
   }
 
-  var D = { ekran: "kapak", oyun: null };
+  var D = { ekran: "kapak", oyun: null, seviye: 0, sonraki: false };
+  try { var ks = parseInt(localStorage.getItem("hk_final_seviye"), 10); if (ks >= 0 && ks < 5) D.seviye = ks; } catch (e) {}
+  if (+BAG.get("seviye") >= 1 && +BAG.get("seviye") <= 5) D.seviye = +BAG.get("seviye") - 1;   // deneme: ?seviye=1..5
+  function seviyeYaz() { try { localStorage.setItem("hk_final_seviye", String(D.seviye)); } catch (e) {} }
   function ekranAc(ad) { D.ekran = ad; ["kapak", "sonuc"].forEach(function (e) { $(e).classList.toggle("acik", e === ad); }); }
   function rekorOku() { try { var r = parseInt(localStorage.getItem("hk_final_rekor"), 10); return r >= 1 && r <= SIMIT ? r : null; } catch (e) { return null; } }
   function rekorYaz(n) { try { var r = rekorOku(); if (!r || n < r) { localStorage.setItem("hk_final_rekor", String(n)); return true; } } catch (e) {} return false; }
@@ -70,10 +82,10 @@
     var l = []; kuleKur(l);
     l.forEach(function (b) { b.can = CAN[b.tip]; b.vx = 0; b.vy = 0; b.olu = false; b.sars = 0; });
     return { t: 0, cisim: l, toplar: [], simit: SIMIT, atilan: 0, toplam: l.filter(uzayliMi).length,
-      durum: "nisan", bekle: 0, cek: null, parcalar: [], mesaj: "5 simitle kuleyi yık!", mesajSn: 2.6, kol: 0 };
+      durum: "nisan", bekle: 0, cek: null, parcalar: [], mesaj: (D.seviye + 1) + ". kule: 5 simitle yık!", mesajSn: 2.6, kol: 0 };
   }
   function mesajVer(o, m, sn) { o.mesaj = m; o.mesajSn = sn; }
-  function baslat() { D.oyun = yeniOyun(); ekranAc("oyun"); muzik(true); cal("a_fbasla", 1); }
+  function baslat() { D.oyun = yeniOyun(); ekranAc("oyun"); muzik(true); if (D.seviye === 0) cal("a_fbasla", 1); }
   function uzayliSay(o) { return o.cisim.filter(function (b) { return !b.olu && uzayliMi(b); }).length; }
 
   function parca(o, x, y, res, n) {
@@ -180,11 +192,13 @@
   function bitir(kazandi) {
     var o = D.oyun; o.durum = "bitti"; muzik(false);
     if (kazandi) {
-      if (window.HK) HK.bitir("final");
+      D.sonraki = D.seviye < 4; if (!D.sonraki && window.HK) HK.bitir("final");   // görev ancak beşinci kule yıkılınca biter
       var yeni = rekorYaz(o.atilan), y = yildiz(o.atilan);
       $("sonucBaslik").textContent = "Kuleyi " + o.atilan + " simitle yıktın!";
       $("sonucYazi").textContent = "★".repeat(y) + "☆".repeat(3 - y) + "   Zorgo yenildi, İstanbul kurtuldu. " + (yeni ? "Yeni rekor!" : "Rekorun: " + rekorOku() + " simit.") + " Ama dur! Zorgo'nun dev tırtılı Ateş için geliyor…";
-      try { localStorage.setItem("hk_final", "1"); } catch (e) {}
+      $("devam").textContent = D.sonraki ? "Sıradaki kule ▶" : "▶ Devam et";
+      if (D.sonraki) { $("sonucBaslik").textContent = (D.seviye + 1) + ". kule yıkıldı!"; $("sonucYazi").textContent = "★".repeat(y) + "☆".repeat(3 - y) + "   " + o.atilan + " simit kullandın. Sıradaki kule daha büyük!"; }
+      else { D.seviye = 0; seviyeYaz(); try { localStorage.setItem("hk_final", "1"); } catch (e) {} }
     } else {
       $("sonucBaslik").textContent = "Simitler bitti!";
       $("sonucYazi").textContent = "Kulede hâlâ " + uzayliSay(o) + " uzaylı var (" + o.toplam + " taneydi). Alttaki sütunları dene!";
@@ -259,7 +273,7 @@
     c.font = "26px 'Arial Rounded MT Bold','Trebuchet MS',sans-serif"; c.textBaseline = "middle";
     c.fillStyle = "rgba(20,16,60,.62)"; yuvarlak(110, 12, 232, 54, 26); // sol üst köşe ⏸ düğmesine ayrıldı
     for (i = 0; i < SIMIT; i++) { c.globalAlpha = i < o.simit ? 1 : 0.25; resim("simit", 124 + i * 40, 22, 34, 34); } c.globalAlpha = 1;
-    c.fillStyle = "rgba(20,16,60,.62)"; yuvarlak(G - 234, 12, 220, 54, 26); c.fillStyle = "#ffd23a"; c.textAlign = "right"; c.fillText("Uzaylı " + uzayliSay(o) + " / " + o.toplam, G - 32, 40);
+    c.fillStyle = "rgba(20,16,60,.62)"; yuvarlak(G - 374, 12, 360, 54, 26); c.fillStyle = "#ffd23a"; c.textAlign = "right"; c.fillText("Kule " + (D.seviye + 1) + "/5  ·  Uzaylı " + uzayliSay(o) + "/" + o.toplam, G - 32, 40);
     if (o.mesajSn > 0) {
       c.font = "34px 'Arial Rounded MT Bold','Trebuchet MS',sans-serif"; c.textAlign = "center"; var gn = c.measureText(o.mesaj).width + 60;
       c.fillStyle = "rgba(20,16,60,.72)"; yuvarlak(G / 2 - gn / 2, 84, gn, 60, 30); c.fillStyle = "#fff"; c.fillText(o.mesaj, G / 2, 115);
@@ -281,7 +295,8 @@
   }
   $("basla").addEventListener("click", function () { ekranAc("oyun"); filmOynat(function () { baslat(); }); });
   $("tekrar").addEventListener("click", function () { baslat(); });
-  $("devam").addEventListener("click", function () { muzik(false); location.href = "../tirtil/index.html?baglanti=1&final=1&seri=" + SERI; });
+  if (D.seviye > 0) $("basla").textContent = "▶ " + (D.seviye + 1) + ". kule";
+  $("devam").addEventListener("click", function () { if (D.sonraki) { D.sonraki = false; D.seviye++; seviyeYaz(); baslat(); return; } muzik(false); location.href = "../tirtil/index.html?baglanti=1&final=1&seri=" + SERI; });
 
   window.__menu = { ekran: function () { return D.ekran; }, bolumVar: function () { return D.ekran === "oyun" && !!D.oyun; }, bolumBastan: function () { muzik(false); baslat(); } }; // ⏸ menüsü
   window.__oyun = { D: D, baslat: baslat, ATIS: ATIS, GUC: GUC, uzayliMi: uzayliMi, at: function (dx, dy) { var o = D.oyun; if (o.durum !== "nisan") return false; firlat(o, dx * GUC, dy * GUC); return true; },

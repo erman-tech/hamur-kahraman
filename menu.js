@@ -150,7 +150,18 @@
     "@media (max-height:440px){#hkSkor .kutu{padding:10px 18px}#hkSkor h2{font-size:19px;margin-bottom:4px}#hkSkor table{font-size:14px}#hkSkor td{padding:0 8px}" +
     "#hkSkor .bu-puan{font-size:26px;margin:4px 0 0}#hkSkor .eniyi{font-size:13px}#hkSkor h3{font-size:16px;margin:6px 0 4px}#hkSkor .liste{font-size:12px}" +
     "#hkSkor button{font-size:17px;padding:7px 30px;margin-top:8px}" +
-    "#hkMenu .kutu{padding:12px 22px;gap:8px}#hkMenu h2{font-size:22px;margin-bottom:0}#hkMenu button{font-size:19px;padding:8px 20px}}";
+    "#hkMenu .kutu{padding:12px 22px;gap:8px}#hkMenu h2{font-size:22px;margin-bottom:0}#hkMenu button{font-size:19px;padding:8px 20px}}" +
+    // 22 Kasım 2026 (Erman: "menüler profesyonel oyun gibi"): kapak, sonuç ve durdurma menüsünün ortak görünümü. Yalnız görünüm; düğmeler ve akış aynı.
+    "@keyframes hkPop{0%{transform:scale(.85)}70%{transform:scale(1.05)}100%{transform:scale(1)}}@keyframes hkNabiz{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}" +
+    ".hamur{background-image:linear-gradient(180deg,rgba(255,255,255,.28),rgba(255,255,255,0) 45%,rgba(0,0,0,.14));border:5px solid rgba(255,255,255,.9) !important;text-shadow:0 3px 0 rgba(0,0,0,.28);letter-spacing:.5px}" +
+    ".hamur.sari{text-shadow:0 2px 0 rgba(255,255,255,.4)}#kapak #basla{animation:hkNabiz 1.6s ease-in-out infinite}" +
+    "#kapak h1,#sonuc h1,#harita h1{-webkit-text-stroke:3px rgba(40,20,90,.9);paint-order:stroke fill;letter-spacing:1px;animation:hkPop .5s ease-out both}" +
+    "#sonuc .dugmeler,#harita .dugmeler{animation:hkPop .5s .15s ease-out both}" +
+    "#kapak h2,#sonuc h2{background:rgba(20,14,56,.55);border:3px solid rgba(255,255,255,.18);border-radius:28px;padding:18px 26px;box-sizing:border-box}#sonuc h2:empty{display:none}" +
+    "#hkMenu .kutu{background:linear-gradient(180deg,#34479a,#1b2a5e);border:6px solid #fff;border-radius:36px;box-shadow:0 12px 0 rgba(0,0,0,.4);animation:hkPop .3s ease-out both}" +
+    "#hkMenu h2{-webkit-text-stroke:2px rgba(20,20,70,.9);paint-order:stroke fill}" +
+    "#hkMenu button,#hkSkor button{border:4px solid rgba(255,255,255,.9);border-radius:26px;background-image:linear-gradient(180deg,rgba(255,255,255,.25),rgba(255,255,255,0) 45%,rgba(0,0,0,.14));text-shadow:0 2px 0 rgba(0,0,0,.28)}" +
+    "#hkSkor .kutu{border:6px solid #fff;border-radius:36px;box-shadow:0 12px 0 rgba(0,0,0,.4)}";
   document.head.appendChild(stil);
 
   var dugme = document.createElement("button");
