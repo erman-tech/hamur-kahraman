@@ -129,7 +129,7 @@
     try { localStorage.setItem("hk_taraf", deger); } catch (e) {}
     D.secim = deger; D.sehir = "istanbul";
     kostumAc(deger === "iyi" ? "k" : "s");
-    filmOynat(deger === "iyi" ? "donusum_kirmizi" : "donusum_siyah", oyunBaslat);
+    filmOynat(deger === "iyi" ? "donusum_kirmizi" : "donusum_siyah", window.HK && HK.herkeseAcik ? merkezAc : oyunBaslat); // bütün görevler açıkken ilk girişte de Görevler merkezi açılır
   }
   var TEST = new URLSearchParams(location.search).get("test"); // test: ?test=<şehir>&seri=iyi|kotu → o bölüm doğrudan açılır, taraf kilidine dokunmaz
   // Profil ismi: ilk BAŞLA'da bir kez sorulur; daha önce bu cihazda girilen isimler tek dokunuşla seçilir (kardeşler için)
@@ -196,16 +196,18 @@
   });
   $("gorevler").addEventListener("click", function (e) {
     var b = e.target.closest("[data-gorev]"); if (!b || b.classList.contains("kilit")) return;
-    var ad = b.dataset.gorev, sira = b.classList.contains("sira"), seri = D.secim, kk = HK.seciliKostum(), bit = HK.bitenler();
+    var ad = b.dataset.gorev, sira = !b.classList.contains("bitti"), seri = D.secim, kk = HK.seciliKostum(), bit = HK.bitenler();
     SIRA.forEach(function (s) { if (bit.indexOf(s) >= 0) D.kurtarilan[s] = true; });
     if (SEHIRLER[ad]) {
       D.kostum = kostumSehri(kk);
       var bas = function () { D.sehir = ad; oyunBaslat(); }, gs = SEHIRLER[ad].gecis;
-      if (sira && gs) filmOynat(gs[seri], bas); else bas(); // sıradaki şehrin hikâye filmi bir kez izlenir; tekrarlarda film yok
+      if (sira && gs) filmOynat(gs[seri], bas); else bas(); // bitmemiş şehrin hikâye filmi izlenir; bitmiş şehrin tekrarında film yok
       return;
     }
     var q = "?seri=" + seri + (kk ? "&k=" + kk : "") + "&gorev=1", git = function () { location.href = "../" + ad + "/index.html" + q; };
-    if (ad === "kosu" && sira) filmOynat(SEHIRLER.tokyo.gecis[seri], git); else git(); // papağan koşusu Tokyo filminin devamı
+    if (ad === "kosu" && sira) filmOynat(SEHIRLER.tokyo.gecis[seri], git); // papağan koşusu Tokyo filminin devamı
+    else if (ad === "kacis" && sira) filmOynat(seri === "iyi" ? "ufo_kirmizi_v2" : "ufo_siyah_v2", git); // kaçışın açılışı: UFO filmi
+    else git();
   });
   if (SEHIRLER[TEST]) $("basla").textContent = "▶ TEST: " + SEHIRLER[TEST].ad;
   if (SEHIRLER[new URLSearchParams(location.search).get("devam")]) $("basla").textContent = "▶ " + SEHIRLER[new URLSearchParams(location.search).get("devam")].eki + " kurtar!";

@@ -34,6 +34,8 @@
 
   // --- ilerleme: biten görevler ve açılan kostümler (bu cihazda saklanır) ---
   // Görev sırası: ana yol + iki yan görev. Ana yolda bitenler ve sıradaki açıktır; yan görevler kollarına ulaşınca açılır.
+  // 26 Kas 2026 (Erman): herkes her oyunu ve açılış filmini görebilsin diye bütün görevler açık. false yapılırsa eski sıra kilidi geri gelir.
+  var HERKESE_ACIK = true;
   var ANA = ["istanbul", "londra", "kosu", "tokyo", "paris", "losangeles", "final"];
   var GOREVLER = [
     { ad: "istanbul", baslik: "İstanbul", tur: "sehir" }, { ad: "tirtil", baslik: "Uzaylı Tırtıl", tur: "oyun", kol: "losangeles", sart: "losangeles" },
@@ -66,7 +68,7 @@
     for (var i = 0; i < ANA.length; i++) if (b.indexOf(ANA[i]) < 0) { sira = ANA[i]; break; }
     return GOREVLER.map(function (g) {
       // sart: bu görev o şehir bitmeden seçilemez (tırtıl hikâyede İstanbul'dan ayrılmayanı Londra'ya geri getiren yan yoldur; merkezde şehirler bitince açılır)
-      var d = g.sart && b.indexOf(g.sart) < 0 ? "kilit" : b.indexOf(g.ad) >= 0 ? "bitti" : g.ad === sira ? "sira" : g.kol && b.indexOf(g.kol) >= 0 ? "acik" : "kilit";
+      var d = !HERKESE_ACIK && g.sart && b.indexOf(g.sart) < 0 ? "kilit" : b.indexOf(g.ad) >= 0 ? "bitti" : g.ad === sira ? "sira" : HERKESE_ACIK || (g.kol && b.indexOf(g.kol) >= 0) ? "acik" : "kilit";
       return { ad: g.ad, baslik: g.baslik, tur: g.tur, durum: d };
     });
   }
@@ -114,7 +116,7 @@
 
   window.HK = { bitir: bitir, puanKaydet: puanKaydet, toplamPuan: toplamPuan, skorGoster: skorGoster, isim: isim, isimKaydet: isimKaydet,
     isimler: function () { return oku("hk_isimler", []); }, bitenler: bitenler, gorevDurumu: gorevDurumu, acikKostumler: acikKostumler, seciliKostum: seciliKostum, kostumSec: kostumSec,
-    KOSTUMLER: KOSTUMLER, taraf: taraf, merkezVar: function () { return bitenler().length > 0; },
+    KOSTUMLER: KOSTUMLER, taraf: taraf, herkeseAcik: HERKESE_ACIK, merkezVar: function () { return HERKESE_ACIK ? !!taraf() : bitenler().length > 0; },
     merkezeDon: function () { location.href = "../istanbul/index.html?merkez=1"; } };
 
   function oyun() { return window.__menu || {}; }
