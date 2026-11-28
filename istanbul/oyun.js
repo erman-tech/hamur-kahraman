@@ -17,7 +17,7 @@
   addEventListener("resize", olcekle); olcekle();
 
   // ---------- varlıklar ----------
-  var R = {}, resimAdlari = ["arka_a.jpg", "ka_dur", "ka_kos1", "ka_kos2", "ka_uc", "ka_at", "sa_dur", "sa_kos1", "sa_kos2", "sa_uc", "sa_at", "a_yur1", "a_yur2", "a_uc1", "a_uc2", "a_yuv", "makara", "a_platform", "klaket", "a_top", "yonetmen", "bariyer", "arka_p.jpg", "arka_p_gri.jpg", "kp_dur", "kp_kos1", "kp_kos2", "kp_uc", "kp_at", "sp_dur", "sp_kos1", "sp_kos2", "sp_uc", "sp_at", "p_yur1", "p_yur2", "p_uc1", "p_uc2", "p_yuv", "boya", "p_platform", "dalga", "p_top", "ressam", "sis1", "sis2", "sis3", "shuriken", "simsek", "arka.jpg", "arka_l.jpg", "kl_dur", "kl_kos1", "kl_kos2", "kl_kos3", "kl_kos4", "l_yur1", "l_yur2", "l_uc1", "l_uc2", "l_yuv", "arka_t.jpg", "kt_dur", "kt_kos1", "kt_kos2", "kt_uc", "kt_at", "st_dur", "st_kos1", "st_kos2", "st_uc", "st_at", "t_platform", "onigiri", "t_yuv", "t_yur1", "t_yur2", "t_uc1", "t_uc2", "ejder", "kl_uc", "kl_at", "sl_dur", "sl_kos1", "sl_kos2", "sl_uc", "sl_at", "kont", "cay", "otobus", "k_dur", "k_kos1", "k_kos2", "k_uc", "k_at", "s_dur", "s_kos1", "s_kos2", "s_uc", "s_at",
+  var R = {}, resimAdlari = ["k_egil", "ka_egil", "kp_egil", "kl_egil", "kt_egil", "s_egil", "sa_egil", "sp_egil", "sl_egil", "st_egil", "arka_a.jpg", "ka_dur", "ka_kos1", "ka_kos2", "ka_uc", "ka_at", "sa_dur", "sa_kos1", "sa_kos2", "sa_uc", "sa_at", "a_yur1", "a_yur2", "a_uc1", "a_uc2", "a_yuv", "makara", "a_platform", "klaket", "a_top", "yonetmen", "bariyer", "arka_p.jpg", "arka_p_gri.jpg", "kp_dur", "kp_kos1", "kp_kos2", "kp_uc", "kp_at", "sp_dur", "sp_kos1", "sp_kos2", "sp_uc", "sp_at", "p_yur1", "p_yur2", "p_uc1", "p_uc2", "p_yuv", "boya", "p_platform", "dalga", "p_top", "ressam", "sis1", "sis2", "sis3", "shuriken", "simsek", "arka.jpg", "arka_l.jpg", "kl_dur", "kl_kos1", "kl_kos2", "kl_kos3", "kl_kos4", "l_yur1", "l_yur2", "l_uc1", "l_uc2", "l_yuv", "arka_t.jpg", "kt_dur", "kt_kos1", "kt_kos2", "kt_uc", "kt_at", "st_dur", "st_kos1", "st_kos2", "st_uc", "st_at", "t_platform", "onigiri", "t_yuv", "t_yur1", "t_yur2", "t_uc1", "t_uc2", "ejder", "kl_uc", "kl_at", "sl_dur", "sl_kos1", "sl_kos2", "sl_uc", "sl_at", "kont", "cay", "otobus", "k_dur", "k_kos1", "k_kos2", "k_uc", "k_at", "s_dur", "s_kos1", "s_kos2", "s_uc", "s_at",
     "pb1", "pb2", "ps1", "ps2", "yur1", "yur2", "uc1", "uc2", "kral", "platform", "simit", "meteor", "kalp", "sandik", "yildiz"];
   resimAdlari.forEach(function (a) {
     var im = new Image(); im.dene = 0; im.onerror = function () { var b = this; if (b.dene++ < 4) setTimeout(function () { b.src = b.src.split("?")[0] + "?d=" + b.dene; }, 600 * b.dene); }; // yavaş ağda yüklenemeyen görsel yeniden denenir
@@ -397,9 +397,9 @@
     if (canli && T.ates && k.bekleme <= 0 && k.mermi >= 1) {
       k.mermi -= 1; o.mermiUyari = false;
       k.bekleme = 0.38; k.atSn = 0.25;
-      o.mermiler.push({ x: k.x + k.yon * 50, y: k.y - (k.egik ? 40 : 95), vx: k.yon * 760, yol: 0, tur: D.secim === "iyi" ? "ag" : "elektrik", tohum: Math.random() * 99 });
+      o.mermiler.push({ x: k.x + k.yon * (k.egik ? 70 : 50), y: k.y - (k.egik ? 62 : 95), vx: k.yon * 760, yol: 0, tur: D.secim === "iyi" ? "ag" : "elektrik", tohum: Math.random() * 99 });
       cal(D.secim === "iyi" ? "e_ag" : "e_elektrik", 0.38);
-      parca(o, k.x + k.yon * 60, k.y - (k.egik ? 40 : 95), D.secim === "iyi" ? "#ffffff" : "#ffd23a", 5); // elden çıkış kıvılcımı
+      parca(o, k.x + k.yon * (k.egik ? 80 : 60), k.y - (k.egik ? 62 : 95), D.secim === "iyi" ? "#ffffff" : "#ffd23a", 5); // elden çıkış kıvılcımı
     }
 
     // --- papağan ---
@@ -664,7 +664,7 @@
     c.fillStyle = 'rgba(40,30,30,.22)'; c.beginPath(); c.ellipse(k.x, ZEMIN + 2, 38 - Math.min(20, (ZEMIN - k.y) / 20), 8, 0, 0, 7); c.fill();
     var poz = k.atSn > 0 ? "at" : !k.yerde ? "uc" : Math.abs(k.vx) > 25 ? (R[on + "kos4"] ? "kos" + (1 + Math.floor(k.adim / 46) % 4) : Math.floor(k.adim / 62) % 2 ? "kos1" : "kos2") : "dur";
     if (!(k.dokunulmaz > 0 && kare() % 2 && Math.floor(o.t * 16) % 2) && !(o.duman && o.duman.sn > 0.4))
-      if (k.egik && R[on + "egil"] && R[on + "egil"].naturalWidth) ciz(R[on + "egil"], k.x, k.y, 0.55, k.yon < 0); // eğilme: çömelme pozu (varsa)
+      if (k.egik && R[on + "egil"] && R[on + "egil"].naturalWidth) ciz(R[on + "egil"], k.x + k.yon * 14, k.y, 0.55, k.yon < 0); // eğilme: diz çökmüş, kolu ileride; uzanan kol tuvali öne genişlettiği için gövde k.x'e gelsin diye 14 px kaydırılır
       else if (k.egik) { c.save(); c.translate(Math.round(k.x), Math.round(k.y)); c.scale(1.12, 0.62); ciz(R[on + poz], 0, 0, 0.55, k.yon < 0); c.restore(); } // çömelme pozu yoksa basık çizim (geçici)
       else ciz(R[on + poz], k.x + (poz === "dur" ? titre(1) * 0.6 : 0), k.y + (poz === "uc" ? -20 : 0), 0.55, k.yon < 0);
     if (o.dublor) { // dublör: kahramanın duruş pozu + başının üstünde klaket; son saniyede titrer
