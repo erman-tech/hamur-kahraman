@@ -745,7 +745,7 @@
     yazi(ad(), 232, 62, 34, D.secim === "iyi" ? "#ff6a5a" : "#d8d8e0");
     c.restore();
     if (kostum().guc && o.durSn > 0) { c.fillStyle = "rgba(120,220,255,.16)"; c.fillRect(0, 0, G, Y); }
-    // görev kutusu: küçük ve yarı saydam, oyun alanını kapatmasın (28 Kas, Erman: "kaba ve büyük, ekranı meşgul ediyor")
+    // görev kutusu: küçük ve yarı saydam, oyun alanını kapatmasın (28 Kas: büyük kutu ekranı meşgul ediyordu)
     var gx = G - 238; c.save(); c.globalAlpha = 0.82;
     c.fillStyle = "rgba(20,25,60,.26)"; yuvarlak(gx - 12, 14, 238, 92, 14); c.fill();
     yazi("GÖREVLER", gx, 34, 13, "#ffd23a");
