@@ -745,12 +745,14 @@
     yazi(ad(), 232, 62, 34, D.secim === "iyi" ? "#ff6a5a" : "#d8d8e0");
     c.restore();
     if (kostum().guc && o.durSn > 0) { c.fillStyle = "rgba(120,220,255,.16)"; c.fillRect(0, 0, G, Y); }
-    var gx = G - 330;
-    c.fillStyle = "rgba(20,25,60,.55)"; yuvarlak(gx - 16, 14, 330, 132, 22); c.fill();
-    yazi("GÖREVLER", gx, 44, 22, "#ffd23a");
-    gorevSatir(gx, 74, sehir().toplaAd + " topla", o.simit, GOREV_SIMIT);
-    gorevSatir(gx, 102, "Kötü yakala", o.yakalanan, GOREV_KOTU);
-    yazi((kr.yenildi ? "✔ " : "• ") + sehir().kralEki + " yen", gx, 130, 22, kr.yenildi ? "#8dff9a" : "#fff");
+    // görev kutusu: küçük ve yarı saydam, oyun alanını kapatmasın (28 Kas, Erman: "kaba ve büyük, ekranı meşgul ediyor")
+    var gx = G - 238; c.save(); c.globalAlpha = 0.82;
+    c.fillStyle = "rgba(20,25,60,.26)"; yuvarlak(gx - 12, 14, 238, 92, 14); c.fill();
+    yazi("GÖREVLER", gx, 34, 13, "#ffd23a");
+    gorevSatir(gx, 55, sehir().toplaAd + " topla", o.simit, GOREV_SIMIT, 15);
+    gorevSatir(gx, 75, "Kötü yakala", o.yakalanan, GOREV_KOTU, 15);
+    yazi((kr.yenildi ? "✔ " : "• ") + sehir().kralEki + " yen", gx, 95, 15, kr.yenildi ? "#8dff9a" : "#fff");
+    c.restore();
     if (o.kral && o.kral.sis > 0 && !o.kral.yenildi) { // sis saldırısı: ekran sisle kaplanır
       var sa = Math.min(1, o.kral.sis / 0.5, (3.2 - o.kral.sis) / 0.5) * 0.5;
       c.save(); c.globalAlpha = Math.min(1, sa * 1.7);
@@ -773,7 +775,7 @@
       yazi("+50 puan", G / 2, 362 - bz, 40, "#8dff9a", "center");
     }
   }
-  function gorevSatir(x, y, ad, n, hedef) { var t = n >= hedef; yazi((t ? "✔ " : "• ") + ad + "  " + Math.min(n, hedef) + "/" + hedef, x, y, 22, t ? "#8dff9a" : "#fff"); }
+  function gorevSatir(x, y, ad, n, hedef, boy) { var t = n >= hedef; yazi((t ? "✔ " : "• ") + ad + "  " + Math.min(n, hedef) + "/" + hedef, x, y, boy || 22, t ? "#8dff9a" : "#fff"); }
   function yuvarlak(x, y, g, yk, r) { c.beginPath(); c.moveTo(x + r, y); c.arcTo(x + g, y, x + g, y + yk, r); c.arcTo(x + g, y + yk, x, y + yk, r); c.arcTo(x, y + yk, x, y, r); c.arcTo(x, y, x + g, y, r); c.closePath(); }
   function simsek(x0, y0, x1, y1, tohum) {
     var n = 6, i, kr2 = kare();
