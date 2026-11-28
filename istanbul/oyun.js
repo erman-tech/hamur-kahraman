@@ -234,8 +234,8 @@
   $("diger").style.display = "none"; // taraf değişmez
 
   // ---------- tuşlar ----------
-  var T = { sol: false, sag: false, yukari: false, ates: false, zaman: false }, yukariYeni = false, zamanYeni = false;
-  var HARITA = { ArrowLeft: "sol", KeyA: "sol", ArrowRight: "sag", KeyD: "sag", ArrowUp: "yukari", KeyW: "yukari", Space: "yukari",
+  var T = { sol: false, sag: false, yukari: false, asagi: false, ates: false, zaman: false }, yukariYeni = false, zamanYeni = false;
+  var HARITA = { ArrowLeft: "sol", KeyA: "sol", ArrowRight: "sag", KeyD: "sag", ArrowUp: "yukari", KeyW: "yukari", Space: "yukari", ArrowDown: "asagi", KeyS: "asagi",
     KeyX: "ates", KeyF: "ates", Enter: "ates", KeyZ: "zaman", KeyC: "zaman" };
   function tus(ad, basili) { if (ad === "yukari" && basili && !T.yukari) yukariYeni = true; if (ad === "zaman" && basili && !T.zaman) zamanYeni = true; T[ad] = basili; }
   addEventListener("keydown", function (e) { if (e.target && e.target.tagName === "INPUT") return; var a = HARITA[e.code]; if (a) { tus(a, true); e.preventDefault(); } });
@@ -253,11 +253,11 @@
   function joyYaz(dx, dy) {
     var u = Math.sqrt(dx * dx + dy * dy); if (u > JOY_R) { dx = dx / u * JOY_R; dy = dy / u * JOY_R; }
     joyTopuz.style.transform = "translate(" + dx + "px," + dy + "px)";
-    tus("sag", dx > 18); tus("sol", dx < -18); tus("yukari", dy < -38);
+    tus("sag", dx > 18); tus("sol", dx < -18); tus("yukari", dy < -38); tus("asagi", dy > 38);
   }
   function joyBitir() {
     joy = null; joyTaban.classList.remove("acik"); joyTaban.style.left = "120px"; joyTaban.style.top = "600px";
-    joyTopuz.style.transform = ""; tus("sag", false); tus("sol", false); tus("yukari", false);
+    joyTopuz.style.transform = ""; tus("sag", false); tus("sol", false); tus("yukari", false); tus("asagi", false);
   }
   $("joyAlan").addEventListener("touchstart", function (e) {
     e.preventDefault(); if (joy) return;
@@ -324,7 +324,7 @@
     D.oyun = bolumKur(); ekranAc("oyun");
     muzikBasla();
     cal(sehir().pBasla, 1);
-    mesajVer(DOKUNMATIK ? "Sol el: yürü, yukarı it zıpla   Sağ el: ✸ " + (D.secim === "iyi" ? "ağ at" : "elektrik at") : "Yürü: ← →   Zıpla ve uç: ↑ ya da Boşluk   " + (D.secim === "iyi" ? "Ağ at: X" : "Elektrik at: X"), 7);
+    mesajVer(DOKUNMATIK ? "Sol el: yürü, yukarı it zıpla, aşağı it eğil   Sağ el: ✸ " + (D.secim === "iyi" ? "ağ at" : "elektrik at") : "Yürü: ← →   Zıpla ve uç: ↑ ya da Boşluk   Eğil: ↓   " + (D.secim === "iyi" ? "Ağ at: X" : "Elektrik at: X"), 7);
   }
   function ad() { return D.secim === "iyi" ? "Cesur" : "Ürkek"; }
   function mesajVer(m, sn) { D.oyun.mesaj = m; D.oyun.mesajSn = sn; }
@@ -359,11 +359,13 @@
 
     // --- kahraman ---
     var canli = o.bitti !== "kayip";
-    var hedef = canli ? ((T.sag ? 1 : 0) - (T.sol ? 1 : 0)) * 310 : 0;
+    k.egik = canli && T.asagi && !T.yukari && k.yerde; // eğilme: yerde aşağı basılıyken çömelir, durur; atış alçaktan çıkar (yuvarlananı vurur)
+    var hedef = canli && !k.egik ? ((T.sag ? 1 : 0) - (T.sol ? 1 : 0)) * 310 : 0;
     k.vx += (hedef - k.vx) * Math.min(1, dt * (hedef ? 12 : 22)); if (!hedef && Math.abs(k.vx) < 25) k.vx = 0;
     if (hedef) k.yon = hedef > 0 ? 1 : -1;
     if (canli && yukariYeni && k.yerde) { k.vy = -640; k.yerde = false; }
-    else if (canli && T.yukari && !k.yerde && k.yakit > 0) { k.vy += (-300 - k.vy) * Math.min(1, dt * 7); k.yakit -= dt / 3.5; k.ucuyor = true; }
+    // uçuş: 28 Kas'a kadar hedef -300'dü; yerçekimiyle dengede ancak ~57 px/sn tırmanıyordu (dikey uçuş ağır çekim gibiydi). -540: ~300 px/sn, yürüme hızına (310) denk.
+    else if (canli && T.yukari && !k.yerde && k.yakit > 0) { k.vy += (-540 - k.vy) * Math.min(1, dt * 7); k.yakit -= dt / 3.5; k.ucuyor = true; }
     else k.ucuyor = false;
     yukariYeni = false;
     k.vy += 1700 * dt; if (k.vy > 900) k.vy = 900;
@@ -394,9 +396,9 @@
     if (canli && T.ates && k.bekleme <= 0 && k.mermi >= 1) {
       k.mermi -= 1; o.mermiUyari = false;
       k.bekleme = 0.38; k.atSn = 0.25;
-      o.mermiler.push({ x: k.x + k.yon * 50, y: k.y - 95, vx: k.yon * 760, yol: 0, tur: D.secim === "iyi" ? "ag" : "elektrik", tohum: Math.random() * 99 });
+      o.mermiler.push({ x: k.x + k.yon * 50, y: k.y - (k.egik ? 40 : 95), vx: k.yon * 760, yol: 0, tur: D.secim === "iyi" ? "ag" : "elektrik", tohum: Math.random() * 99 });
       cal(D.secim === "iyi" ? "e_ag" : "e_elektrik", 0.38);
-      parca(o, k.x + k.yon * 60, k.y - 95, D.secim === "iyi" ? "#ffffff" : "#ffd23a", 5); // elden çıkış kıvılcımı
+      parca(o, k.x + k.yon * 60, k.y - (k.egik ? 40 : 95), D.secim === "iyi" ? "#ffffff" : "#ffd23a", 5); // elden çıkış kıvılcımı
     }
 
     // --- papağan ---
@@ -473,7 +475,7 @@
           if (e.dalSn <= 0 && Math.abs(e.x - k.x) < 380 && !o.bitti) { e.dalSn = o.dalAra + Math.random() * 3; e.dal = 1.3; e.dalY = Math.min(ZEMIN - 20, k.y - 20); cal("e_meteor", 0.2); }
         }
       }
-      if (kutuCakis(k.x, k.y, 44, 116, e.x, e.y, e.g, e.y_)) incit(o);
+      if (kutuCakis(k.x, k.y, 44, k.egik ? 72 : 116, e.x, e.y, e.g, e.y_)) incit(o);
     }
 
     // --- aniden yuvarlanarak gelen düşman ---
@@ -481,7 +483,7 @@
     if (o.yuvarSn <= 0 && !o.bitti && k.x > 700 && k.x < UZUNLUK - 1300) {
       o.yuvarSn = o.yuvarAra + Math.random() * 4;
       o.kotuler.push({ tur: "yuv", x: o.kam + G + 480, y: ZEMIN, hiz: 360, aci: 0, g: 64, y_: 64 });
-      mesajVer("Dikkat! Yuvarlanan geliyor, zıpla!", 1.6); cal("e_meteor", 0.3);
+      mesajVer("Dikkat! Yuvarlanan geliyor! Zıpla ya da eğilip vur!", 1.6); cal("e_meteor", 0.3);
     }
 
     // --- Meteor Kralı ---
@@ -505,7 +507,7 @@
         if (kr.ozelSn <= 0) {
           kr.ozelSn = 6.5 + Math.random() * 2;
           o.kotuler.push({ tur: "yuv", x: kr.x - 60, y: ZEMIN, hiz: 380, aci: 0, g: 64, y_: 64 }, { tur: "yuv", x: kr.x + 200, y: ZEMIN, hiz: 380, aci: 0, g: 64, y_: 64 });
-          mesajVer("Motor! Film kutuları geliyor, zıpla!", 1.8); cal("e_meteor", 0.4);
+          mesajVer("Motor! Film kutuları geliyor! Zıpla ya da eğilip vur!", 1.8); cal("e_meteor", 0.4);
         }
       }
       if (D.sehir === "paris") { // Gölge Ressam: üç boya topunu birden fırlatır, ekranı gri lekeler kaplar
@@ -525,7 +527,7 @@
         }
         if (kr.isin > 0) kr.isin -= dt;
       }
-      if (kutuCakis(k.x, k.y, 44, 116, kr.x, kr.y, kr.g - 40, kr.y_ - 40)) incit(o);
+      if (kutuCakis(k.x, k.y, 44, k.egik ? 72 : 116, kr.x, kr.y, kr.g - 40, kr.y_ - 40)) incit(o);
     }
 
     for (i = o.dalgalar.length - 1; i >= 0; i--) { // yer şimşekleri
@@ -541,7 +543,7 @@
     }
     for (i = o.meteorlar.length - 1; i >= 0; i--) {
       m = o.meteorlar[i]; m.vy += m.yer * dt; m.x += m.vx * dt; m.y += m.vy * dt;
-      if (kutuCakis(k.x, k.y, 44, 116, m.x, m.y + 30, 50, 60)) { incit(o); parca(o, m.x, m.y, "#ff8a2a", 8); o.meteorlar.splice(i, 1); continue; }
+      if (kutuCakis(k.x, k.y, 44, k.egik ? 72 : 116, m.x, m.y + 30, 50, 60)) { incit(o); parca(o, m.x, m.y, "#ff8a2a", 8); o.meteorlar.splice(i, 1); continue; }
       if (m.y > ZEMIN - 20) { parca(o, m.x, ZEMIN - 10, "#ff8a2a", 8); o.meteorlar.splice(i, 1); }
     }
 
@@ -661,7 +663,8 @@
     c.fillStyle = 'rgba(40,30,30,.22)'; c.beginPath(); c.ellipse(k.x, ZEMIN + 2, 38 - Math.min(20, (ZEMIN - k.y) / 20), 8, 0, 0, 7); c.fill();
     var poz = k.atSn > 0 ? "at" : !k.yerde ? "uc" : Math.abs(k.vx) > 25 ? (R[on + "kos4"] ? "kos" + (1 + Math.floor(k.adim / 46) % 4) : Math.floor(k.adim / 62) % 2 ? "kos1" : "kos2") : "dur";
     if (!(k.dokunulmaz > 0 && kare() % 2 && Math.floor(o.t * 16) % 2) && !(o.duman && o.duman.sn > 0.4))
-      ciz(R[on + poz], k.x + (poz === "dur" ? titre(1) * 0.6 : 0), k.y + (poz === "uc" ? -20 : 0), 0.55, k.yon < 0);
+      if (k.egik) { c.save(); c.translate(Math.round(k.x), Math.round(k.y)); c.scale(1.12, 0.62); ciz(R[on + poz], 0, 0, 0.55, k.yon < 0); c.restore(); } // eğilme: hamur gibi basılır
+      else ciz(R[on + poz], k.x + (poz === "dur" ? titre(1) * 0.6 : 0), k.y + (poz === "uc" ? -20 : 0), 0.55, k.yon < 0);
     if (o.dublor) { // dublör: kahramanın duruş pozu + başının üstünde klaket; son saniyede titrer
       if (!(o.dublor.sn < 1 && kare() % 2)) { ciz(R[on + "dur"], o.dublor.x + titre(2), ZEMIN, 0.55, o.dublor.yon < 0); ciz(R.klaket, o.dublor.x, ZEMIN - 175, 0.3, false); }
     }
