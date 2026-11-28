@@ -364,8 +364,9 @@
     k.vx += (hedef - k.vx) * Math.min(1, dt * (hedef ? 12 : 22)); if (!hedef && Math.abs(k.vx) < 25) k.vx = 0;
     if (hedef) k.yon = hedef > 0 ? 1 : -1;
     if (canli && yukariYeni && k.yerde) { k.vy = -640; k.yerde = false; }
-    // uçuş: 28 Kas'a kadar hedef -300'dü; yerçekimiyle dengede ancak ~57 px/sn tırmanıyordu (dikey uçuş ağır çekim gibiydi). -540: ~300 px/sn, yürüme hızına (310) denk.
-    else if (canli && T.yukari && !k.yerde && k.yakit > 0) { k.vy += (-540 - k.vy) * Math.min(1, dt * 7); k.yakit -= dt / 3.5; k.ucuyor = true; }
+    // uçuş: önce zıplama kendi yayını tamamlar (itki zıplamayı frenlemez; eskiden -640'ı hemen -300'e çekiyordu, dikeyde ağır çekim gibiydi),
+    // tepe noktasından sonra itki devreye girer: yakıt bitene kadar yavaşça yükselir (yerçekimiyle dengede ~97 px/sn). -540 fazla hızlıydı (28 Kas).
+    else if (canli && T.yukari && !k.yerde && k.yakit > 0) { if (k.vy > -340) k.vy += (-340 - k.vy) * Math.min(1, dt * 7); k.yakit -= dt / 3.5; k.ucuyor = true; }
     else k.ucuyor = false;
     yukariYeni = false;
     k.vy += 1700 * dt; if (k.vy > 900) k.vy = 900;
@@ -663,7 +664,8 @@
     c.fillStyle = 'rgba(40,30,30,.22)'; c.beginPath(); c.ellipse(k.x, ZEMIN + 2, 38 - Math.min(20, (ZEMIN - k.y) / 20), 8, 0, 0, 7); c.fill();
     var poz = k.atSn > 0 ? "at" : !k.yerde ? "uc" : Math.abs(k.vx) > 25 ? (R[on + "kos4"] ? "kos" + (1 + Math.floor(k.adim / 46) % 4) : Math.floor(k.adim / 62) % 2 ? "kos1" : "kos2") : "dur";
     if (!(k.dokunulmaz > 0 && kare() % 2 && Math.floor(o.t * 16) % 2) && !(o.duman && o.duman.sn > 0.4))
-      if (k.egik) { c.save(); c.translate(Math.round(k.x), Math.round(k.y)); c.scale(1.12, 0.62); ciz(R[on + poz], 0, 0, 0.55, k.yon < 0); c.restore(); } // eğilme: hamur gibi basılır
+      if (k.egik && R[on + "egil"] && R[on + "egil"].naturalWidth) ciz(R[on + "egil"], k.x, k.y, 0.55, k.yon < 0); // eğilme: çömelme pozu (varsa)
+      else if (k.egik) { c.save(); c.translate(Math.round(k.x), Math.round(k.y)); c.scale(1.12, 0.62); ciz(R[on + poz], 0, 0, 0.55, k.yon < 0); c.restore(); } // çömelme pozu yoksa basık çizim (geçici)
       else ciz(R[on + poz], k.x + (poz === "dur" ? titre(1) * 0.6 : 0), k.y + (poz === "uc" ? -20 : 0), 0.55, k.yon < 0);
     if (o.dublor) { // dublör: kahramanın duruş pozu + başının üstünde klaket; son saniyede titrer
       if (!(o.dublor.sn < 1 && kare() % 2)) { ciz(R[on + "dur"], o.dublor.x + titre(2), ZEMIN, 0.55, o.dublor.yon < 0); ciz(R.klaket, o.dublor.x, ZEMIN - 175, 0.3, false); }
