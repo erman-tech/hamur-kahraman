@@ -199,7 +199,7 @@
     var ad = b.dataset.gorev, sira = !b.classList.contains("bitti"), seri = D.secim, kk = HK.seciliKostum(), bit = HK.bitenler();
     SIRA.forEach(function (s) { if (bit.indexOf(s) >= 0) D.kurtarilan[s] = true; });
     if (SEHIRLER[ad]) {
-      D.kostum = kostumSehri(kk);
+      D.kostum = kostumSehri(kk); if (!SEHIRLER[D.kostum] || !SEHIRLER[D.kostum].guc) D.kostum = null; // güçsüz (Klasik) kostümle şehir kendi kostümü ve gücüyle oynanır; güçlü kostüm seçildiyse o kalır (28 Kas: güçler kaybolmuştu)
       var bas = function () { D.sehir = ad; oyunBaslat(); }, gs = SEHIRLER[ad].gecis;
       if (sira && gs) filmOynat(gs[seri], bas); else bas(); // bitmemiş şehrin hikâye filmi izlenir; bitmiş şehrin tekrarında film yok
       return;
